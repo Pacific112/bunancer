@@ -1,0 +1,32 @@
+[ ] Load Balancer with support for different servers
+[ ] Proxy traffic to single server
+[ ] Round Robin algorithm
+[ ] X-Forwarded-IP header or something
+[ ] Health checks
+  [ ] Possibility to add / remove servers from the pool
+[ ] error handling
+[ ] Timeouts
+[ ] External place for config storage
+[ ] Support for streaming / different http features?
+[ ] Some dashboard with stats (custom React Server components?)
+  [ ] Good occasion for real time ???
+  [ ] Pool / config management
+[ ] Support for different modules
+  [ ] Health Check
+  [ ] Rate Limiter
+  [ ] Whatever user might need
+[ ] Metrics (Sentry?)
+[ ] Tests
+  [ ] Unit
+  [ ] Load testing
+[ ] Documentation
+[ ] Support horizontal scaling
+[ ] Rate Limiter
+  [ ] IP only
+  [ ] per path config
+  [ ] x requests in time
+  [ ] Geo IP
+  [ ] config live!
+[ ] Auth Support
+  [ ] JWT
+  [ ] OAuth maybe?
