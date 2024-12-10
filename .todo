@@ -1,21 +1,28 @@
-[ ] Load Balancer with support for different servers
-[ ] Proxy traffic to single server
-[ ] Round Robin algorithm
+[x] Load Balancer with support for different servers
+[x] Proxy traffic to single server
+[x] Round Robin algorithm
 [ ] X-Forwarded-IP header or something
 [ ] Health checks
   [ ] Possibility to add / remove servers from the pool
 [ ] error handling
 [ ] Timeouts
+[ ] Async / Concurrency support
+  [ ] Should counter be locked? How to approach it better
+  [ ] Hard requirement is that requests must always go to different servers
 [ ] External place for config storage
 [ ] Support for streaming / different http features?
 [ ] Some dashboard with stats (custom React Server components?)
   [ ] Good occasion for real time ???
   [ ] Pool / config management
+[ ] Start test servers in parallel in more clever way
+[ ] HTTPS support? Out of the box?
 [ ] Support for different modules
   [ ] Health Check
   [ ] Rate Limiter
   [ ] Whatever user might need
+  [ ] Check nginx modules
 [ ] Metrics (Sentry?)
+  [ ] Number of connections for each server
 [ ] Tests
   [ ] Unit
   [ ] Load testing
@@ -30,3 +37,5 @@
 [ ] Auth Support
   [ ] JWT
   [ ] OAuth maybe?
+[ ] MonoRepo?
+[ ] Maybe TCP mode? Bun supports
