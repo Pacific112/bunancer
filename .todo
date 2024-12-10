@@ -1,7 +1,6 @@
 [x] Load Balancer with support for different servers
 [x] Proxy traffic to single server
 [x] Round Robin algorithm
-[ ] X-Forwarded-IP header or something
 [ ] Health checks
   [ ] Possibility to add / remove servers from the pool
 [ ] error handling
@@ -10,11 +9,15 @@
   [ ] Should counter be locked? How to approach it better
   [ ] Hard requirement is that requests must always go to different servers
 [ ] External place for config storage
+[ ] Deployment to fly.io
 [ ] Support for streaming / different http features?
+[ ] X-Forwarded-IP header or something
 [ ] Some dashboard with stats (custom React Server components?)
   [ ] Good occasion for real time ???
   [ ] Pool / config management
 [ ] Start test servers in parallel in more clever way
+[ ] Security considerations
+  [ ] For example should any of the headers be actually removed?
 [ ] HTTPS support? Out of the box?
 [ ] Support for different modules
   [ ] Health Check
