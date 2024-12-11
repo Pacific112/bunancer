@@ -29,6 +29,7 @@
 [ ] Tests
   [ ] Unit
   [ ] Load testing
+[ ] XState maybe?
 [ ] Documentation
 [ ] Support horizontal scaling
 [ ] Rate Limiter

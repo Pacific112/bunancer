@@ -2,12 +2,16 @@ import {initializePool, type Server} from "./server-pool.ts";
 
 const serverDefinitions: Server[] = [
 	{
+		id: '1',
 		host: "http://localhost",
 		port: "3001",
+		healthPath: '/health'
 	},
 	{
+		id: '2',
 		host: "http://localhost",
 		port: "3002",
+		healthPath: '/health'
 	},
 ];
 
@@ -17,9 +21,10 @@ export const startLoadBalancer = () => {
 
 	return {
 		routeRequest: async (request: Request) => {
-			counter = (counter + 1) % servers.length
+			const avServers = servers();
+			counter = (counter + 1) % avServers.length
 
-			const server = servers[counter]
+			const server = avServers[counter]
 			return requestTo(server, request)
 		},
 	};
