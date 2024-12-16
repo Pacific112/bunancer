@@ -1,16 +1,19 @@
 {
-	"name": "buniter",
-	"module": "index.ts",
-	"type": "module",
-	"devDependencies": {
-		"@types/bun": "latest",
-		"prettier": "3.4.2"
-	},
-	"peerDependencies": {
-		"typescript": "^5.0.0"
-	},
-	"scripts": {
-		"server-1": "SERVER_NUMBER=1 bun --port=3001 --watch run ./src/test-server.ts ",
-		"server-2": "SERVER_NUMBER=2 bun --port=3002 --watch run ./src/test-server.ts "
-	}
+  "name": "buniter",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prettier": "3.4.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "server-1": "SERVER_NUMBER=1 bun --port=3001 --watch run ./src/test-server.ts ",
+    "server-2": "SERVER_NUMBER=2 bun --port=3002 --watch run ./src/test-server.ts "
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  }
 }

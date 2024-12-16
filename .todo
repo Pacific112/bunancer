@@ -4,16 +4,17 @@
 [x] Health checks
   [x] Possibility to add / remove servers from the pool
 [x] error handling
-[ ] Timeouts
-[ ] Async / Concurrency support
-  [ ] Should counter be locked? How to approach it better
-  [ ] Hard requirement is that requests must always go to different servers
-[ ] External place for config storage
+[x] Timeouts
+[x] External place for config storage
 [ ] Deployment to fly.io
 [ ] Modularize code please. Make better use of closures and functions
 [ ] Support for streaming / different http features?
 [ ] Should server pool be it's own class / type? It should handle health checks by itself
 [ ] X-Forwarded-IP header or something
+[ ] Async / Concurrency support
+  [ ] Should counter be locked? How to approach it better
+  [ ] Hard requirement is that requests must always go to different servers
+  [ ] Is it even needed when written like this? Probably would be needed if async operation between start of the function and counter
 [ ] Circuit breaker patter
 [ ] Global timeout settings
 [ ] Should I repeat failed request against different server

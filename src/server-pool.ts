@@ -1,4 +1,4 @@
-export type Server = {
+type Server = {
 	id: string;
 	host: string;
 	port: string;
