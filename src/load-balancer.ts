@@ -5,13 +5,19 @@ const serverDefinitions: Server[] = [
 		id: '1',
 		host: "http://localhost",
 		port: "3001",
-		healthPath: '/health'
+		health: {
+			path: '/health',
+			interval: 5000
+		}
 	},
 	{
 		id: '2',
 		host: "http://localhost",
 		port: "3002",
-		healthPath: '/health'
+		health: {
+			path: '/health',
+			interval: 5000
+		}
 	},
 ];
 
