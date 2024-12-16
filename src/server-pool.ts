@@ -40,15 +40,27 @@ export const initializePool = (servers: Server[]) => {
 		)
 	}
 
+	const handleResponse = (response: Response, server: Server) => {
+		if ([502,503,504].includes(response.status)) {
+			unavailableServers.add(server.id)
+		}
+	}
+
 	return {
 		servers: () => {
 			return servers.filter(s => !unavailableServers.has(s.id));
 		},
 		requestTo: (server: Server, request: Request) => {
-			return fetch(toUrl(server), {
+			const fetchPromise = fetch(toUrl(server), {
 				body: request.body,
 				headers: request.headers,
-			})
+			});
+
+			fetchPromise
+				.then(r => handleResponse(r, server))
+				.catch(() => unavailableServers.add(server.id))
+
+			return fetchPromise
 		}
 	};
 };
