@@ -1,10 +1,9 @@
-import {startLoadBalancer} from "./src/load-balancer.ts";
+import { startLoadBalancer } from "./src/load-balancer.ts";
 
-const {routeRequest} = startLoadBalancer()
+const { routeRequest } = startLoadBalancer();
 
 Bun.serve({
 	fetch(request) {
-		return routeRequest(request)
-	}
-})
-
+		return routeRequest(request);
+	},
+});
