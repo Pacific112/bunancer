@@ -7,11 +7,17 @@
 [x] Timeouts
 [x] External place for config storage
 [ ] Start test servers in parallel in more clever way - Simple CLI?
-[ ] Mono repo
+  [ ] Start process in detached
+  [ ] Keep track of current processes
+  [ ] Kill process
+  [ ] Log to files and allow to access logs
+  [ ] Is this the best way to generate instance id?
+  [ ] Do I even need commander?
 [ ] Make sure that it works nicely on browser
 [ ] Modularize code please. Make better use of closures and functions
 [ ] Should server pool be it's own class / type? It should handle health checks by itself
 [ ] X-Forwarded-IP header or something
+[ ] Mono repo
 [ ] Async / Concurrency support
   [ ] Should counter be locked? How to approach it better
   [ ] Hard requirement is that requests must always go to different servers
@@ -20,6 +26,7 @@
 [ ] Global timeout settings
 [ ] Should I repeat failed request against different server
 [ ] Servers can register themselves in server pool
+[ ] Changesets -> https://github.com/changesets/changesets
 [ ] Dashboard with stats:
   [ ] Hono
   [ ] Allows to configure load balancer via RCP
