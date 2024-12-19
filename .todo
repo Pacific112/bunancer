@@ -7,17 +7,23 @@
 [x] Timeouts
 [x] External place for config storage
 [ ] Start test servers in parallel in more clever way - Simple CLI?
-  [ ] Start process in detached
-  [ ] Keep track of current processes
-  [ ] Kill process
-  [ ] Log to files and allow to access logs
+  [x] Start detached process
+  [x] Keep track of current processes
+  [x] Kill process
+  [x] Log to files and allow to access logs
   [ ] Is this the best way to generate instance id?
-  [ ] Do I even need commander?
-[ ] Make sure that it works nicely on browser
+  [ ] More interactive CLI
+  [ ] More types etc
+  [ ] Can I have
+[ ] Introduce pino for logger
+  [ ] Standard access logs on stub server
+[ ] CLI:
+  [ ] Restart all servers
+  [ ] Kill all servers
+[ ] Make sure that it works nicely on browser - no double logs for some reason
 [ ] Modularize code please. Make better use of closures and functions
 [ ] Should server pool be it's own class / type? It should handle health checks by itself
-[ ] X-Forwarded-IP header or something
-[ ] Mono repo
+[ ] Monorepo
 [ ] Async / Concurrency support
   [ ] Should counter be locked? How to approach it better
   [ ] Hard requirement is that requests must always go to different servers
@@ -42,6 +48,7 @@
       [ ] shutdown
       [ ] Add new one
 [ ] Deployment to fly.io
+  [ ] X-Forwarded-IP header or something - to make sure it works
   [ ] Fly launch for
 [ ] Security considerations
   [ ] For example should any of the headers be actually removed?
