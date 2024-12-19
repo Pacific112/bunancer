@@ -1,5 +1,5 @@
-import { startLoadBalancer } from "./src/load-balancer.ts";
-import { loadConfig } from "./src/config.ts";
+import { startLoadBalancer } from "src/load-balancer/load-balancer.ts";
+import { loadConfig } from "src/load-balancer/config.ts";
 
 const config = await loadConfig();
 const { routeRequest } = startLoadBalancer(config);

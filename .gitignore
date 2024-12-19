@@ -34,7 +34,7 @@ lib-cov
 coverage
 *.lcov
 
-# nyc test coverage
+# nyc stub-server coverage
 
 .nyc_output
 

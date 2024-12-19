@@ -10,8 +10,8 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "server-1": "SERVER_NUMBER=1 bun --port=3001 --watch run ./src/test-server.ts ",
-    "server-2": "SERVER_NUMBER=2 bun --port=3002 --watch run ./src/test-server.ts "
+    "server-1": "SERVER_NUMBER=1 bun --port=3001 --watch run src/stub-server/server.ts ",
+    "server-2": "SERVER_NUMBER=2 bun --port=3002 --watch run src/stub-server/server.ts "
   },
   "dependencies": {
     "zod": "^3.24.1"

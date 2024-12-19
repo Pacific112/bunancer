@@ -6,24 +6,40 @@
 [x] error handling
 [x] Timeouts
 [x] External place for config storage
-[ ] Deployment to fly.io
+[ ] Start test servers in parallel in more clever way - Simple CLI?
+[ ] Mono repo
+[ ] Make sure that it works nicely on browser
 [ ] Modularize code please. Make better use of closures and functions
-[ ] Support for streaming / different http features?
 [ ] Should server pool be it's own class / type? It should handle health checks by itself
 [ ] X-Forwarded-IP header or something
 [ ] Async / Concurrency support
   [ ] Should counter be locked? How to approach it better
   [ ] Hard requirement is that requests must always go to different servers
   [ ] Is it even needed when written like this? Probably would be needed if async operation between start of the function and counter
-[ ] Circuit breaker patter
+[ ] Circuit breaker pattern
 [ ] Global timeout settings
 [ ] Should I repeat failed request against different server
-[ ] Some dashboard with stats (custom React Server components?)
-  [ ] Good occasion for real time ???
+[ ] Servers can register themselves in server pool
+[ ] Dashboard with stats:
+  [ ] Hono
+  [ ] Allows to configure load balancer via RCP
   [ ] Pool / config management
-[ ] Start test servers in parallel in more clever way
+  [ ] Timeout management
+  [ ] Debug / teaching mode
+    [ ] Displays connected servers in real time
+    [ ] Displays them on graph
+    [ ] Displays health checks that are made to each server
+    [ ] Allows to communicate with test servers in real time
+      [ ] Timeout
+      [ ] 500
+      [ ] shutdown
+      [ ] Add new one
+[ ] Deployment to fly.io
+  [ ] Fly launch for
 [ ] Security considerations
   [ ] For example should any of the headers be actually removed?
+  [ ] OAuth / JWKS / Basic Auth - only load balancer is actually secured
+  [ ] Configurable via dashboard
 [ ] HTTPS support? Out of the box?
 [ ] Support for different modules
   [ ] Health Check
@@ -38,6 +54,7 @@
 [ ] XState maybe?
 [ ] Documentation
 [ ] Support horizontal scaling
+[ ] Support for streaming / different http features?
 [ ] Rate Limiter
   [ ] IP only
   [ ] per path config
