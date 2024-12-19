@@ -25,7 +25,7 @@ program
 		const proc = Bun.spawn(
 			["bun", `--port=${port}`, "./src/stub-server/server.ts"],
 			{
-				stdout: logFile,
+				stdout: options.detached ? logFile : "inherit",
 				env: {
 					...process.env,
 					SERVER_NUMBER: instanceId,
@@ -43,7 +43,7 @@ program
 const loadRunningServers = async () => {
 	return (await Bun.file(STUB_SERVERS_FILE).text())
 		.split("\n")
-		.filter(s => s.length > 0)
+		.filter((s) => s.length > 0)
 		.map((s) => s.split("|"))
 		.map(([instanceId, pid, port]) => ({ instanceId, pid, port }));
 };
@@ -63,17 +63,16 @@ const revalidateProcesses = (
 	runningServers: Awaited<ReturnType<typeof loadRunningServers>>,
 ) => {
 	const actuallyRunning = runningServers.filter(isRunning);
-	const content = actuallyRunning
-		.reduce(
-			(s1, { instanceId, pid, port }) => s1 + `${instanceId}|${pid}|${port}\n`,
-			"",
-		);
+	const content = actuallyRunning.reduce(
+		(s1, { instanceId, pid, port }) => s1 + `${instanceId}|${pid}|${port}\n`,
+		"",
+	);
 
 	const writer = Bun.file(STUB_SERVERS_FILE).writer();
 	writer.write(content);
 	writer.flush();
 
-	return actuallyRunning
+	return actuallyRunning;
 };
 
 program
@@ -81,7 +80,7 @@ program
 	.description("List all running servers")
 	.action(async () => {
 		const runningServers = await loadRunningServers();
-		const actuallyRunning = revalidateProcesses(runningServers)
+		const actuallyRunning = revalidateProcesses(runningServers);
 
 		actuallyRunning.forEach(({ port, pid, instanceId }, index) => {
 			console.log(`Server ${index + 1}: ${instanceId} - ${pid} - :${port}`);
@@ -89,21 +88,22 @@ program
 	});
 
 program
-	.command('logs')
-	.argument('<id>', 'Server ID')
-	.description('Show logs for a specific server')
+	.command("logs")
+	.argument("<id>", "Server ID")
+	.description("Show logs for a specific server")
 	.action(async (id) => {
 		const runningServers = await loadRunningServers();
-		const actuallyRunning = revalidateProcesses(runningServers)
+		const actuallyRunning = revalidateProcesses(runningServers);
 
-		const wantedServer = actuallyRunning.find(({instanceId}) => instanceId === id)
+		const wantedServer = actuallyRunning.find(
+			({ instanceId }) => instanceId === id,
+		);
 		if (!wantedServer) {
-			console.log("Server not found")
-			return
+			console.log("Server not found");
+			return;
 		}
 
-		console.log(await Bun.file(pathToLogFile(wantedServer.instanceId)).text())
-
+		console.log(await Bun.file(pathToLogFile(wantedServer.instanceId)).text());
 	});
 
 program
@@ -112,20 +112,32 @@ program
 	.description("Stop a specific server")
 	.action(async (id) => {
 		const runningServers = await loadRunningServers();
-		const actuallyRunning = revalidateProcesses(runningServers)
+		const actuallyRunning = revalidateProcesses(runningServers);
 
-		const serverToKill = actuallyRunning.find(({instanceId}) => instanceId === id)
+		const serverToKill = actuallyRunning.find(
+			({ instanceId }) => instanceId === id,
+		);
 		if (!serverToKill) {
-			console.log(`Server ${id} is not running`)
-			return
+			console.log(`Server ${id} is not running`);
+			return;
 		}
 
 		if (!isRunning(serverToKill)) {
-			console.log(`Server ${id} is not running`)
-			return
+			console.log(`Server ${id} is not running`);
+			return;
 		}
 
-		process.kill(Number(serverToKill.pid))
+		process.kill(Number(serverToKill.pid));
+	});
+
+program
+	.command("stop-all")
+	.description("Stop all servers")
+	.action(async () => {
+		const runningServers = await loadRunningServers();
+		revalidateProcesses(runningServers).forEach(({ pid }) =>
+			process.kill(Number(pid)),
+		);
 	});
 
 program.parse();

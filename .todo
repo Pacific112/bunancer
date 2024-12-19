@@ -6,20 +6,11 @@
 [x] error handling
 [x] Timeouts
 [x] External place for config storage
-[ ] Start test servers in parallel in more clever way - Simple CLI?
+[x] Start test servers in parallel in more clever way - Simple CLI?
   [x] Start detached process
   [x] Keep track of current processes
   [x] Kill process
   [x] Log to files and allow to access logs
-  [ ] Is this the best way to generate instance id?
-  [ ] More interactive CLI
-  [ ] More types etc
-  [ ] Can I have
-[ ] Introduce pino for logger
-  [ ] Standard access logs on stub server
-[ ] CLI:
-  [ ] Restart all servers
-  [ ] Kill all servers
 [ ] Make sure that it works nicely on browser - no double logs for some reason
 [ ] Modularize code please. Make better use of closures and functions
 [ ] Should server pool be it's own class / type? It should handle health checks by itself
@@ -30,15 +21,23 @@
   [ ] Is it even needed when written like this? Probably would be needed if async operation between start of the function and counter
 [ ] Circuit breaker pattern
 [ ] Global timeout settings
-[ ] Should I repeat failed request against different server
 [ ] Servers can register themselves in server pool
-[ ] Changesets -> https://github.com/changesets/changesets
+[ ] CLI:
+  [ ] Restart all servers
+  [ ] Kill all servers
+  [ ] Is this the best way to generate instance id?
+  [ ] More interactive CLI
+  [ ] More types etc
+  [ ] Can I have
+[ ] Introduce pino for logging
+  [ ] Standard access logs on stub server
 [ ] Dashboard with stats:
   [ ] Hono
   [ ] Allows to configure load balancer via RCP
   [ ] Pool / config management
   [ ] Timeout management
   [ ] Debug / teaching mode
+    [ ] Extract common logic from CLI to separate lib
     [ ] Displays connected servers in real time
     [ ] Displays them on graph
     [ ] Displays health checks that are made to each server
@@ -54,6 +53,8 @@
   [ ] For example should any of the headers be actually removed?
   [ ] OAuth / JWKS / Basic Auth - only load balancer is actually secured
   [ ] Configurable via dashboard
+[ ] Changesets -> https://github.com/changesets/changesets
+[ ] Should I repeat failed request against different server
 [ ] HTTPS support? Out of the box?
 [ ] Support for different modules
   [ ] Health Check
