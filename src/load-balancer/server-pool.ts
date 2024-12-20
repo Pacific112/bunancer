@@ -1,4 +1,4 @@
-import type { ServerConfig } from "load-balancer/config-schema.ts";
+import type { AppConfig, ServerConfig } from "load-balancer/config-schema.ts";
 
 const toUrl = (server: ServerConfig) => `${server.host}:${server.port}`;
 
@@ -25,7 +25,7 @@ const setupHealthCheck = (
 	}, server.health.interval);
 };
 
-export const initializePool = (servers: ServerConfig[]) => {
+export const initializePool = ({ servers, timeout }: AppConfig) => {
 	const unavailableServers = new Set<string>();
 
 	for (const server of servers) {
@@ -50,9 +50,7 @@ export const initializePool = (servers: ServerConfig[]) => {
 			const fetchPromise = fetch(toUrl(server), {
 				body: request.body,
 				headers: request.headers,
-				signal: server.timeout
-					? AbortSignal.timeout(server.timeout.ms)
-					: undefined,
+				signal: timeout ? AbortSignal.timeout(timeout.ms) : undefined,
 			});
 
 			fetchPromise

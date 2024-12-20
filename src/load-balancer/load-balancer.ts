@@ -3,7 +3,7 @@ import type { AppConfig } from "load-balancer/config-schema.ts";
 
 export const startLoadBalancer = (config: AppConfig) => {
 	let counter = -1;
-	const { servers, requestTo } = initializePool(config.servers);
+	const { servers, requestTo } = initializePool(config);
 
 	return {
 		routeRequest: async (request: Request) => {
