@@ -28,7 +28,7 @@ program
 				stdout: options.detached ? logFile : "inherit",
 				env: {
 					...process.env,
-					SERVER_NUMBER: instanceId,
+					SERVER_IDENTIFIER: instanceId,
 				},
 			},
 		);
