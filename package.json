@@ -1,19 +1,19 @@
 {
-  "name": "buniter",
-  "module": "index.ts",
-  "type": "module",
-  "devDependencies": {
-    "@types/bun": "latest",
-    "prettier": "3.4.2"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "scripts": {
-    "stub-server": "bun src/stub-server/cli.ts"
-  },
-  "dependencies": {
-    "commander": "^12.1.0",
-    "zod": "^3.24.1"
-  }
+	"name": "buniter",
+	"module": "index.ts",
+	"type": "module",
+	"devDependencies": {
+		"@types/bun": "latest",
+		"prettier": "3.4.2"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	},
+	"scripts": {
+		"stub-server": "bun src/stub-server/cli.ts"
+	},
+	"dependencies": {
+		"commander": "^12.1.0",
+		"zod": "^3.24.1"
+	}
 }

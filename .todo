@@ -11,10 +11,9 @@
   [x] Keep track of current processes
   [x] Kill process
   [x] Log to files and allow to access logs
-[ ] Make sure that it works nicely on browser - no double logs for some reason
+[x] Make sure that it works nicely on browser - no double logs for some reason
 [ ] Modularize code please. Make better use of closures and functions
 [ ] Should server pool be it's own class / type? It should handle health checks by itself
-[ ] Monorepo
 [ ] Async / Concurrency support
   [ ] Should counter be locked? How to approach it better
   [ ] Hard requirement is that requests must always go to different servers
@@ -23,10 +22,9 @@
 [ ] Global timeout settings
 [ ] Servers can register themselves in server pool
 [ ] CLI:
-  [ ] Restart all servers
-  [ ] Kill all servers
+  [x] Kill all servers
   [ ] Is this the best way to generate instance id?
-  [ ] More interactive CLI
+  [ ] More interactive CLI - use https://github.com/bombshell-dev/clack
   [ ] More types etc
   [ ] Can I have
 [ ] Introduce pino for logging
@@ -46,6 +44,7 @@
       [ ] 500
       [ ] shutdown
       [ ] Add new one
+[ ] Monorepo
 [ ] Deployment to fly.io
   [ ] X-Forwarded-IP header or something - to make sure it works
   [ ] Fly launch for

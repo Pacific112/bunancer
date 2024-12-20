@@ -1,28 +1,40 @@
 {
-  "servers": [
-    {
-      "id": "1",
-      "host": "http://localhost",
-      "port": "3001",
-      "health": {
-        "path": "/health",
-        "interval": 5000
-      },
-      "timeout": {
-        "ms": 3000
-      }
-    },
-    {
-      "id": "2",
-      "host": "http://localhost",
-      "port": "3002",
-      "health": {
-        "path": "/health",
-        "interval": 5000
-      },
-      "timeout": {
-        "ms": 3000
-      }
-    }
-  ]
+	"servers": [
+		{
+			"id": "1",
+			"host": "http://localhost",
+			"port": "3001",
+			"health": {
+				"path": "/health",
+				"interval": 5000
+			},
+			"timeout": {
+				"ms": 3000
+			}
+		},
+		{
+			"id": "2",
+			"host": "http://localhost",
+			"port": "3002",
+			"health": {
+				"path": "/health",
+				"interval": 5000
+			},
+			"timeout": {
+				"ms": 3000
+			}
+		},
+		{
+			"id": "3",
+			"host": "http://localhost",
+			"port": "3003",
+			"health": {
+				"path": "/health",
+				"interval": 5000
+			},
+			"timeout": {
+				"ms": 3000
+			}
+		}
+	]
 }

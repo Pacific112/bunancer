@@ -17,7 +17,7 @@ type ServerPool = {
 
 const toUrl = (server: Server) => `${server.host}:${server.port}`;
 
-const HEALTH_CHECK_TIMEOUT = 500
+const HEALTH_CHECK_TIMEOUT = 500;
 
 const setupHealthCheck = (
 	server: Server,

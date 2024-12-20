@@ -21,20 +21,20 @@ const configSchema = z.object({
 	servers: z.array(serverSchema),
 });
 
-export type AppConfig = z.infer<typeof configSchema>
+export type AppConfig = z.infer<typeof configSchema>;
 
 export const loadConfig = async () => {
 	const path = process.env.CONFIG_PATH || DEFAULT_CONFIG_PATH;
 	const file = Bun.file(path, { type: "application/json" });
 	if (!(await file.exists())) {
-		throw new Error(`File ${path} do not exists`)
+		throw new Error(`File ${path} do not exists`);
 	}
 
-	const fileContent = await file.json()
-	const parsedConfig = await configSchema.safeParseAsync(fileContent)
+	const fileContent = await file.json();
+	const parsedConfig = await configSchema.safeParseAsync(fileContent);
 	if (parsedConfig.success) {
-		return parsedConfig.data
+		return parsedConfig.data;
 	}
 
-	throw parsedConfig.error
+	throw parsedConfig.error;
 };
