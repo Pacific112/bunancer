@@ -46,6 +46,20 @@ export const initializePool = ({ servers, timeout }: AppConfig) => {
 		servers: () => {
 			return servers.filter((s) => !unavailableServers.has(s.id));
 		},
+		addServer: (server: ServerConfig) => {
+			if (servers.every((s) => s.id !== server.id)) {
+				servers.push(server);
+				setupHealthCheck(
+					server,
+					(id) => unavailableServers.delete(id),
+					(id) => unavailableServers.add(id),
+				);
+
+				return { ok: true };
+			}
+
+			return { ok: false, error: "Server already exists" };
+		},
 		requestTo: (server: ServerConfig, request: Request) => {
 			const fetchPromise = fetch(toUrl(server), {
 				body: request.body,
@@ -61,3 +75,5 @@ export const initializePool = ({ servers, timeout }: AppConfig) => {
 		},
 	};
 };
+
+export type ServerPool = ReturnType<typeof initializePool>;

@@ -1,9 +1,8 @@
-import { initializePool } from "./server-pool.ts";
-import type { AppConfig } from "load-balancer/config-schema.ts";
+import { type ServerPool } from "./server-pool.ts";
 
-export const startLoadBalancer = (config: AppConfig) => {
+export const startLoadBalancer = (serverPool: ServerPool) => {
 	let counter = -1;
-	const { servers, requestTo } = initializePool(config);
+	const { servers, requestTo } = serverPool;
 
 	return {
 		routeRequest: async (request: Request) => {

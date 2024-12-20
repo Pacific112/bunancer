@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const serverSchema = z.object({
+export const serverSchema = z.object({
 	id: z.string(),
 	host: z.string().url(),
 	port: z.string().regex(/\d+/),
