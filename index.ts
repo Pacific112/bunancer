@@ -9,3 +9,10 @@ Bun.serve({
 		return routeRequest(request);
 	},
 });
+
+Bun.serve({
+	port: 40999,
+	fetch(request) {
+		return new Response("")
+	},
+});
