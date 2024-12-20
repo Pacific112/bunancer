@@ -1,5 +1,5 @@
 import { initializePool } from "./server-pool.ts";
-import type { AppConfig } from "./config.ts";
+import type { AppConfig } from "load-balancer/config-schema.ts";
 
 export const startLoadBalancer = (config: AppConfig) => {
 	let counter = -1;

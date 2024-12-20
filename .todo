@@ -12,14 +12,11 @@
   [x] Kill process
   [x] Log to files and allow to access logs
 [x] Make sure that it works nicely on browser - no double logs for some reason
-[ ] Modularize code please. Make better use of closures and functions
-[ ] Should server pool be it's own class / type? It should handle health checks by itself
 [ ] Async / Concurrency support
   [ ] Should counter be locked? How to approach it better
   [ ] Hard requirement is that requests must always go to different servers
   [ ] Is it even needed when written like this? Probably would be needed if async operation between start of the function and counter
 [ ] Circuit breaker pattern
-[ ] Global timeout settings
 [ ] Servers can register themselves in server pool
 [ ] CLI:
   [x] Kill all servers
@@ -27,6 +24,9 @@
   [ ] More interactive CLI - use https://github.com/bombshell-dev/clack
   [ ] More types etc
   [ ] Can I have
+[ ] Modularize code please. Make better use of closures and functions
+[ ] Should server pool be it's own class / type? It should handle health checks by itself
+[ ] Global timeout settings
 [ ] Introduce pino for logging
   [ ] Standard access logs on stub server
 [ ] Dashboard with stats:

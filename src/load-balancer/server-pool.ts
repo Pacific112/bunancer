@@ -1,26 +1,11 @@
-type Server = {
-	id: string;
-	host: string;
-	port: string;
-	health: {
-		path: string;
-		interval: number;
-	};
-	timeout?: {
-		ms: number;
-	};
-};
+import type { ServerConfig } from "load-balancer/config-schema.ts";
 
-type ServerPool = {
-	servers: Server[];
-};
-
-const toUrl = (server: Server) => `${server.host}:${server.port}`;
+const toUrl = (server: ServerConfig) => `${server.host}:${server.port}`;
 
 const HEALTH_CHECK_TIMEOUT = 500;
 
 const setupHealthCheck = (
-	server: Server,
+	server: ServerConfig,
 	onSuccess: (id: string) => void,
 	onError: (id: string) => void,
 ) => {
@@ -40,7 +25,7 @@ const setupHealthCheck = (
 	}, server.health.interval);
 };
 
-export const initializePool = (servers: Server[]) => {
+export const initializePool = (servers: ServerConfig[]) => {
 	const unavailableServers = new Set<string>();
 
 	for (const server of servers) {
@@ -51,7 +36,7 @@ export const initializePool = (servers: Server[]) => {
 		);
 	}
 
-	const handleResponse = (response: Response, server: Server) => {
+	const handleResponse = (response: Response, server: ServerConfig) => {
 		if ([502, 503, 504].includes(response.status)) {
 			unavailableServers.add(server.id);
 		}
@@ -61,7 +46,7 @@ export const initializePool = (servers: Server[]) => {
 		servers: () => {
 			return servers.filter((s) => !unavailableServers.has(s.id));
 		},
-		requestTo: (server: Server, request: Request) => {
+		requestTo: (server: ServerConfig, request: Request) => {
 			const fetchPromise = fetch(toUrl(server), {
 				body: request.body,
 				headers: request.headers,
