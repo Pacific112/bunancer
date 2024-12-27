@@ -17,12 +17,14 @@
   [x] Hard requirement is that requests must always go to different servers
   [x] Is it even needed when written like this? Probably would be needed if async operation between start of the function and counter
 [x] Servers can register themselves in server pool
-[ ] CLI:
+[x] CLI:
   [x] Kill all servers
-  [ ] Is this the best way to generate instance id?
-  [ ] More interactive CLI - use https://github.com/bombshell-dev/clack
-  [ ] More types etc
-  [ ] Can I have
+  [x] Is this the best way to generate instance id?
+  [x] More interactive CLI - use https://github.com/bombshell-dev/clack
+  [x] Options:
+    [x] Servers -> Logs / Kill / Back
+    [x] Add Server -> full config
+    [x] Quit
 [ ] Config should be persistent so after restarting load balancer servers do not need - also nice for development as watch breaks stuff
 [ ] Modularize code please. Make better use of closures and functions
 [ ] Should server pool be it's own class / type? It should handle health checks by itself
@@ -31,6 +33,7 @@
   [ ] Standard access logs on stub server
 [ ] Dashboard with stats:
   [ ] Hono
+  [ ] React Flow
   [ ] Allows to configure load balancer via RCP
   [ ] Pool / config management
   [ ] Timeout management
@@ -70,6 +73,17 @@
   [ ] Rate Limiter
   [ ] Whatever user might need
   [ ] Check nginx modules
+[ ] CLI improvements:
+  [ ] Logs streaming
+  [ ] Fuzzy search
+  [ ] Actual URL to be displayed
+  [ ] Custom select component - separator and disabled options
+  [ ] Custom wait until button press component
+  [ ] Better handle errors and cancellations like CTRL+C
+  [ ] Make sure that after stop, entry is removed from servers.txt
+  [ ] Small refactor if needed:
+    [ ] More types etc
+    [ ] Split commands into files???
 [ ] Metrics (Sentry?)
   [ ] Number of connections for each server
 [ ] Tests

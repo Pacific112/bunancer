@@ -1,44 +1,7 @@
 import { program } from "commander";
 import { appendFile, mkdir } from "node:fs/promises";
-
-program.name("stub-server").description("CLI to manage test servers");
-
-const STUBS_DIR = "./stubs";
-const STUB_LOGS_DIR = `${STUBS_DIR}/logs`;
-const STUB_SERVERS_FILE = `${STUBS_DIR}/servers.txt`;
-const pathToLogFile = (instanceId: string) =>
-	`${STUB_LOGS_DIR}/${instanceId}.log`;
-
-program
-	.command("run")
-	.description("Run a new test server instance")
-	.option("-p, --port <number>", "Specify port number")
-	.option("-d, --detached", "Detaches process from the parent")
-	.action(async (options) => {
-		const port =
-			options.port || Math.floor(Math.random() * (65535 - 3000) + 3000);
-		const instanceId = Math.random().toString(36).substr(2, 9);
-
-		await mkdir(STUBS_DIR, { recursive: true });
-		const logFile = Bun.file(pathToLogFile(instanceId));
-
-		const proc = Bun.spawn(
-			["bun", `--port=${port}`, "./src/stub-server/server.ts"],
-			{
-				stdout: options.detached ? logFile : "inherit",
-				env: {
-					...process.env,
-					SERVER_IDENTIFIER: instanceId,
-				},
-			},
-		);
-
-		await appendFile(STUB_SERVERS_FILE, `${instanceId}|${proc.pid}|${port}\n`);
-
-		if (options.detached) {
-			proc.unref();
-		}
-	});
+import { cancel, confirm, group, isCancel, select, text } from "@clack/prompts";
+import * as crypto from "node:crypto";
 
 const loadRunningServers = async () => {
 	return (await Bun.file(STUB_SERVERS_FILE).text())
@@ -59,7 +22,7 @@ const isRunning = (
 	}
 };
 
-const revalidateProcesses = (
+const revalidateProcesses = async (
 	runningServers: Awaited<ReturnType<typeof loadRunningServers>>,
 ) => {
 	const actuallyRunning = runningServers.filter(isRunning);
@@ -68,76 +31,148 @@ const revalidateProcesses = (
 		"",
 	);
 
-	const writer = Bun.file(STUB_SERVERS_FILE).writer();
-	writer.write(content);
-	writer.flush();
-
+	await Bun.write(STUB_SERVERS_FILE, content);
 	return actuallyRunning;
 };
 
-program
-	.command("list")
-	.description("List all running servers")
-	.action(async () => {
-		const runningServers = await loadRunningServers();
-		const actuallyRunning = revalidateProcesses(runningServers);
+const runServer = async ({
+	instanceId,
+	port,
+	detached,
+}: {
+	instanceId: string;
+	port: string;
+	detached: boolean;
+}) => {
+	await mkdir(STUBS_DIR, { recursive: true });
+	const logFile = Bun.file(pathToLogFile(instanceId));
 
-		actuallyRunning.forEach(({ port, pid, instanceId }, index) => {
-			console.log(`Server ${index + 1}: ${instanceId} - ${pid} - :${port}`);
+	const proc = Bun.spawn(
+		["bun", `--port=${port}`, "./src/stub-server/server.ts"],
+		{
+			stdout: detached ? logFile : "inherit",
+			env: {
+				...process.env,
+				SERVER_IDENTIFIER: instanceId,
+			},
+		},
+	);
+
+	await appendFile(STUB_SERVERS_FILE, `${instanceId}|${proc.pid}|${port}\n`);
+
+	if (detached) {
+		proc.unref();
+	}
+
+	return proc.pid;
+};
+
+const STUBS_DIR = "./stubs";
+const STUB_LOGS_DIR = `${STUBS_DIR}/logs`;
+const STUB_SERVERS_FILE = `${STUBS_DIR}/servers.txt`;
+const pathToLogFile = (instanceId: string) =>
+	`${STUB_LOGS_DIR}/${instanceId}.log`;
+
+program.name("stub-server").description("CLI to manage test servers");
+
+let runningServers = await revalidateProcesses(await loadRunningServers());
+
+while (true) {
+	console.clear();
+
+	const options = runningServers.map((s) => ({
+		value: s.instanceId,
+		label: `[${s.pid}] ${s.instanceId}:${s.port}`,
+	}));
+	const selectedOption = await select({
+		message: "Stub Servers",
+		options: [
+			...options,
+			{ value: "add-new", label: "Add New" },
+			{ value: "stop-all", label: "Stop All" },
+			{ value: "quit", label: "Quit" },
+		],
+	});
+
+	if (isCancel(selectedOption)) {
+		cancel("Bye bye!");
+		break;
+	}
+
+	if (selectedOption === "add-new") {
+		const port = Math.floor(Math.random() * (65535 - 3000) + 3000) + "";
+		const instanceId = crypto.randomUUID().slice(0, 13);
+		const config = await group({
+			instanceId: () =>
+				text({
+					message: "Instance ID",
+					placeholder: instanceId,
+					defaultValue: instanceId,
+				}),
+			port: () =>
+				text({
+					message: "Port",
+					placeholder: port,
+					defaultValue: port,
+				}),
+			detached: () =>
+				text({
+					message: "Detached mode (y/n)",
+					placeholder: "y",
+					defaultValue: "y",
+				}),
 		});
+
+		const pid = await runServer({
+			...config,
+			detached: config.detached === "y",
+		});
+		runningServers.push({ instanceId, pid: pid + "", port });
+		runningServers = await loadRunningServers();
+		continue;
+	}
+
+	if (selectedOption === "stop-all") {
+		await confirm({ message: "Are you sure?" });
+		runningServers
+			.filter(isRunning)
+			.forEach(({ pid }) => process.kill(Number(pid)));
+		await Bun.write(STUB_SERVERS_FILE, "");
+		runningServers = [];
+	}
+	if (selectedOption === "quit") {
+		break;
+	}
+
+	console.clear();
+
+	const selectedServer = runningServers.find(
+		({ instanceId }) => instanceId === selectedOption,
+	);
+	if (!selectedServer) {
+		continue;
+	}
+	const option = await select({
+		message: `[${selectedServer.pid}] ${selectedServer.instanceId}:${selectedServer.port}`,
+		options: [
+			{ value: "logs", label: "Logs" },
+			{ value: "stop", label: "Stop" },
+			{ value: "back", label: "Back" },
+		],
 	});
-
-program
-	.command("logs")
-	.argument("<id>", "Server ID")
-	.description("Show logs for a specific server")
-	.action(async (id) => {
-		const runningServers = await loadRunningServers();
-		const actuallyRunning = revalidateProcesses(runningServers);
-
-		const wantedServer = actuallyRunning.find(
-			({ instanceId }) => instanceId === id,
+	if (option === "logs") {
+		console.log(
+			await Bun.file(pathToLogFile(selectedServer.instanceId)).text(),
 		);
-		if (!wantedServer) {
-			console.log("Server not found");
-			return;
+		await confirm({ message: "Continue?" });
+	}
+	if (option === "stop") {
+		if (isRunning(selectedServer)) {
+			process.kill(Number(selectedServer.pid));
+			await revalidateProcesses(runningServers);
 		}
-
-		console.log(await Bun.file(pathToLogFile(wantedServer.instanceId)).text());
-	});
-
-program
-	.command("stop")
-	.argument("<id>", "Server ID")
-	.description("Stop a specific server")
-	.action(async (id) => {
-		const runningServers = await loadRunningServers();
-		const actuallyRunning = revalidateProcesses(runningServers);
-
-		const serverToKill = actuallyRunning.find(
-			({ instanceId }) => instanceId === id,
+		runningServers = runningServers.filter(
+			(r) => r.instanceId !== selectedServer.instanceId,
 		);
-		if (!serverToKill) {
-			console.log(`Server ${id} is not running`);
-			return;
-		}
-
-		if (!isRunning(serverToKill)) {
-			console.log(`Server ${id} is not running`);
-			return;
-		}
-
-		process.kill(Number(serverToKill.pid));
-	});
-
-program
-	.command("stop-all")
-	.description("Stop all servers")
-	.action(async () => {
-		const runningServers = await loadRunningServers();
-		revalidateProcesses(runningServers).forEach(({ pid }) =>
-			process.kill(Number(pid)),
-		);
-	});
-
-program.parse();
+	}
+}
