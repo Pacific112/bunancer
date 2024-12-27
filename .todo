@@ -25,10 +25,6 @@
     [x] Servers -> Logs / Kill / Back
     [x] Add Server -> full config
     [x] Quit
-[ ] Config should be persistent so after restarting load balancer servers do not need - also nice for development as watch breaks stuff
-[ ] Global timeout settings
-[ ] Introduce pino for logging
-  [ ] Standard access logs on stub server
 [ ] Dashboard with stats:
   [ ] Hono
   [ ] React Flow
@@ -47,6 +43,11 @@
       [ ] Add new one
 [ ] Monorepo
 [ ] Handle case when there is no servers in pool - currently error
+[ ] Config should be persistent so after restarting load balancer servers do not need - also nice for development as watch breaks stuff
+[ ] Fix mutable config - better types?
+[ ] Global timeout settings
+[ ] Introduce pino for logging
+  [ ] Standard access logs on stub server
 [ ] Auto register
   [ ] Add Basic Auth
   [ ] Use different protocol for communication - some RPC would be much better
