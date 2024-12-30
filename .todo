@@ -27,8 +27,12 @@
     [x] Quit
 [x] Setup Vite
 [ ] Dashboard with stats:
-  [ ] Allows to configure load balancer via RCP
   [ ] Pool / config management
+    [ ] Display pools and server statuses
+    [ ] Make sure statuses are displayed dynamically via SSE
+    [ ] Basic CRUD:
+      [ ] Add New Server to the pool
+      [ ] Kill Server
   [ ] Request Flow
     [ ] React Flow
     [ ] Extract common logic from CLI to separate lib
@@ -40,7 +44,9 @@
       [ ] 500
       [ ] shutdown
       [ ] Add new one
+  [ ] Pool management
   [ ] Timeout management
+  [ ] Allows to configure load balancer
 [ ] Figure out the best way to deploy React app
   [ ] Serve from Bun?
   [ ] Separate deployment?
@@ -92,6 +98,9 @@
   [ ] Check nginx modules
 [ ] Metrics (Sentry?)
   [ ] Number of connections for each server
+  [ ] Throughput
+  [ ] Status codes etc
+[ ] Logs gathered from all servers (for the dashboard)
 [ ] Tests
   [ ] Unit
   [ ] Load testing
