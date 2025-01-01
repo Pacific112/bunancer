@@ -1,6 +1,6 @@
 import type { AppConfig, ServerConfig } from "load-balancer/config-schema.ts";
 
-const toUrl = (server: ServerConfig) => `${server.host}:${server.port}`;
+export const toUrl = (server: ServerConfig) => `${server.host}:${server.port}`;
 
 const HEALTH_CHECK_TIMEOUT = 500;
 
@@ -43,8 +43,11 @@ export const initializePool = ({ servers, timeout }: AppConfig) => {
 	};
 
 	return {
-		servers: () => {
-			return servers.filter((s) => !unavailableServers.has(s.id));
+		get allServers() {
+			return servers.map((s) => ({
+				...s,
+				status: unavailableServers.has(s.id) ? "offline" : "online",
+			}));
 		},
 		addServer: (server: ServerConfig) => {
 			if (servers.every((s) => s.id !== server.id)) {
@@ -60,7 +63,13 @@ export const initializePool = ({ servers, timeout }: AppConfig) => {
 
 			return { ok: false, error: "Server already exists" };
 		},
-		requestTo: (server: ServerConfig, request: Request) => {
+		requestTo: (
+			request: Request,
+			selector: (servers: ServerConfig[]) => ServerConfig,
+		) => {
+			const server = selector(
+				servers.filter((s) => !unavailableServers.has(s.id)),
+			);
 			const fetchPromise = fetch(toUrl(server), {
 				body: request.body,
 				headers: request.headers,

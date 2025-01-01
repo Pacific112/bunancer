@@ -1,5 +1,5 @@
 import { loadConfig } from "load-balancer/config.ts";
-import { initializePool } from "load-balancer/server-pool.ts";
+import { initializePool, toUrl } from "load-balancer/server-pool.ts";
 import { startLoadBalancer } from "load-balancer/load-balancer.ts";
 import { serverSchema } from "load-balancer/config-schema.ts";
 
@@ -31,6 +31,31 @@ Bun.serve({
 				{
 					status: 400,
 				},
+			);
+		}
+
+		return new Response("Not Found!", { status: 404 });
+	},
+});
+
+Bun.serve({
+	port: 41234,
+	async fetch(request) {
+		if (request.method === "GET" && request.url.endsWith("/config")) {
+			return new Response(
+				JSON.stringify({
+					serverPools: [
+						{
+							id: "pool1",
+							name: "Test",
+							servers: serverPool.allServers.map((s) => ({
+								id: s.id,
+								status: s.status,
+								ip: toUrl(s),
+							})),
+						},
+					],
+				}),
 			);
 		}
 
