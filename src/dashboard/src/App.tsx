@@ -3,8 +3,6 @@ import { useState } from "react";
 import { Server, ServerPool as ServerPoolType } from "@/types/types";
 import { ServerPool } from "@/components/server-pool";
 import { DashboardSummary } from "@/components/dashboard-summary";
-import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
 
 // Initial mock data for server pools
 const initialServerPools: ServerPoolType[] = [
@@ -31,7 +29,7 @@ const initialServerPools: ServerPoolType[] = [
 			{
 				id: "web3",
 				name: "Web Server 3",
-				status: "maintenance",
+				status: "online",
 				ip: "192.168.1.12",
 				load: 0,
 				responseTime: 0,
@@ -124,9 +122,6 @@ function App() {
 		<div className="container mx-auto p-4">
 			<div className="flex justify-between items-center mb-6">
 				<h1 className="text-3xl font-bold">Load Balancer Admin Dashboard</h1>
-				<Button variant="outline" size="sm">
-					<RefreshCw className="mr-2 h-4 w-4" /> Refresh
-				</Button>
 			</div>
 			<DashboardSummary serverPools={serverPools} />
 			{serverPools.map((pool) => (

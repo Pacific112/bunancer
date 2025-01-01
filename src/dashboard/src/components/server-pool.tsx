@@ -13,7 +13,6 @@ interface ServerPoolProps {
 
 export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
 	const [showAddForm, setShowAddForm] = useState(false);
-	const [newServers, setNewServers] = useState<string[]>([]);
 
 	const onlineServers = pool.servers.filter(
 		(server) => server.status === "online",
@@ -22,13 +21,7 @@ export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
 
 	const handleAddServer = (server: Server) => {
 		onAddServer(pool.id, server);
-		setNewServers((prev) => [...prev, server.id]);
 		setShowAddForm(false);
-
-		// Simulate server coming online after 3 seconds
-		setTimeout(() => {
-			setNewServers((prev) => prev.filter((id) => id !== server.id));
-		}, 3000);
 	};
 
 	return (
@@ -59,11 +52,7 @@ export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
 				)}
 				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 					{pool.servers.map((server) => (
-						<ServerStatus
-							key={server.id}
-							server={server}
-							isNew={newServers.includes(server.id)}
-						/>
+						<ServerStatus key={server.id} server={server} />
 					))}
 				</div>
 			</CardContent>
