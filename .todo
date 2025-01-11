@@ -28,7 +28,7 @@
 [x] Setup Vite
 [ ] Dashboard with stats:
   [ ] Pool / config management
-    [ ] Display pools and server statuses
+    [x] Display pools and server statuses
     [ ] Make sure statuses are displayed dynamically via SSE
     [ ] Basic CRUD:
       [ ] Add New Server to the pool
@@ -44,9 +44,12 @@
       [ ] 500
       [ ] shutdown
       [ ] Add new one
+  [ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect
   [ ] Pool management
   [ ] Timeout management
   [ ] Allows to configure load balancer
+[ ] Figure out types - they should be common between server and client
+[ ] Get rid of hardcoded links
 [ ] Figure out the best way to deploy React app
   [ ] Serve from Bun?
   [ ] Separate deployment?
@@ -59,6 +62,8 @@
 [ ] Handle case when there is no servers in pool - currently error
 [ ] Config should be persistent so after restarting load balancer servers do not need - also nice for development as watch breaks stuff
 [ ] Fix mutable config - better types?
+[ ] Retry with backoff - after fail or health check
+[ ] After some tries server should become dead
 [ ] Global timeout settings
 [ ] Introduce pino for logging
   [ ] Standard access logs on stub server

@@ -1,89 +1,17 @@
-import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Server, ServerPool as ServerPoolType } from "@/types/types";
 import { ServerPool } from "@/components/server-pool";
 import { DashboardSummary } from "@/components/dashboard-summary";
 
-// Initial mock data for server pools
-const initialServerPools: ServerPoolType[] = [
-	{
-		id: "pool1",
-		name: "Web Servers",
-		servers: [
-			{
-				id: "web1",
-				name: "Web Server 1",
-				status: "online",
-				ip: "192.168.1.10",
-				load: 65,
-				responseTime: 120,
-			},
-			{
-				id: "web2",
-				name: "Web Server 2",
-				status: "online",
-				ip: "192.168.1.11",
-				load: 78,
-				responseTime: 135,
-			},
-			{
-				id: "web3",
-				name: "Web Server 3",
-				status: "online",
-				ip: "192.168.1.12",
-				load: 0,
-				responseTime: 0,
-			},
-		],
-	},
-	{
-		id: "pool2",
-		name: "Application Servers",
-		servers: [
-			{
-				id: "app1",
-				name: "App Server 1",
-				status: "online",
-				ip: "192.168.2.10",
-				load: 82,
-				responseTime: 95,
-			},
-			{
-				id: "app2",
-				name: "App Server 2",
-				status: "offline",
-				ip: "192.168.2.11",
-				load: 0,
-				responseTime: 0,
-			},
-		],
-	},
-	{
-		id: "pool3",
-		name: "Database Servers",
-		servers: [
-			{
-				id: "db1",
-				name: "DB Server 1",
-				status: "online",
-				ip: "192.168.3.10",
-				load: 45,
-				responseTime: 75,
-			},
-			{
-				id: "db2",
-				name: "DB Server 2",
-				status: "online",
-				ip: "192.168.3.11",
-				load: 52,
-				responseTime: 80,
-			},
-		],
-	},
-];
-
 function App() {
-	const [serverPools, setServerPools] = useState(initialServerPools);
+	const [serverPools, setServerPools] = useState<ServerPoolType[]>([]);
+
+	// TODO to be replaced by SSR
+	useEffect(() => {
+		fetch("http://localhost:41234/status")
+			.then((r) => r.json())
+			.then((r) => setServerPools(r.serverPools));
+	}, []);
 
 	const handleAddServer = (poolId: string, newServer: Server) => {
 		setServerPools((prevPools) =>

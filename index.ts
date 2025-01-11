@@ -41,8 +41,8 @@ Bun.serve({
 Bun.serve({
 	port: 41234,
 	async fetch(request) {
-		if (request.method === "GET" && request.url.endsWith("/config")) {
-			return new Response(
+		if (request.method === "GET" && request.url.endsWith("/status")) {
+			let res = new Response(
 				JSON.stringify({
 					serverPools: [
 						{
@@ -50,6 +50,7 @@ Bun.serve({
 							name: "Test",
 							servers: serverPool.allServers.map((s) => ({
 								id: s.id,
+								name: s.id,
 								status: s.status,
 								ip: toUrl(s),
 							})),
@@ -57,6 +58,9 @@ Bun.serve({
 					],
 				}),
 			);
+			res.headers.set('Access-Control-Allow-Origin', '*');
+			res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+			return res;
 		}
 
 		return new Response("Not Found!", { status: 404 });
