@@ -13,6 +13,21 @@ function App() {
 			.then((r) => setServerPools(r.serverPools));
 	}, []);
 
+	useEffect(() => {
+		const source = new EventSource("http://localhost:41234/sse");
+		source.addEventListener("new-server", (e) =>
+			setServerPools(([ss]) => [
+				{
+					...ss,
+					servers: [...ss.servers, JSON.parse(e.data)],
+				},
+			]),
+		);
+
+		return () => source.close();
+	}, []);
+
+	console.log(serverPools);
 	const handleAddServer = (poolId: string, newServer: Server) => {
 		setServerPools((prevPools) =>
 			prevPools.map((pool) =>

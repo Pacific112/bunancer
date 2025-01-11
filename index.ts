@@ -1,7 +1,11 @@
 import { loadConfig } from "load-balancer/config.ts";
 import { initializePool, toUrl } from "load-balancer/server-pool.ts";
 import { startLoadBalancer } from "load-balancer/load-balancer.ts";
-import { serverSchema } from "load-balancer/config-schema.ts";
+import {
+	type ServerConfig,
+	serverSchema,
+} from "load-balancer/config-schema.ts";
+import { undefined } from "zod";
 
 const config = await loadConfig();
 const serverPool = initializePool(config);
@@ -38,11 +42,12 @@ Bun.serve({
 	},
 });
 
+const textEncoder = new TextEncoder();
 Bun.serve({
 	port: 41234,
 	async fetch(request) {
 		if (request.method === "GET" && request.url.endsWith("/status")) {
-			let res = new Response(
+			const res = new Response(
 				JSON.stringify({
 					serverPools: [
 						{
@@ -58,8 +63,61 @@ Bun.serve({
 					],
 				}),
 			);
-			res.headers.set('Access-Control-Allow-Origin', '*');
-			res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+			res.headers.set("Access-Control-Allow-Origin", "*");
+			res.headers.set(
+				"Access-Control-Allow-Methods",
+				"GET, POST, PUT, DELETE, OPTIONS",
+			);
+			return res;
+		}
+		if (request.method === "GET" && request.url.endsWith("/sse")) {
+			let timerId: Timer | undefined = undefined;
+			let listener: (s: ServerConfig) => void;
+			const res = new Response(
+				new ReadableStream({
+					start: (controller) => {
+						listener = (s) => {
+							console.log("listener")
+							controller.enqueue(
+								textEncoder.encode(
+									`event: new-server\ndata: ${JSON.stringify({
+										id: s.id,
+										name: s.id,
+										status: "online",
+										ip: toUrl(s),
+									})}\n\n`,
+								),
+							);
+						};
+						console.log("enquuu")
+						controller.enqueue(
+							textEncoder.encode("event: test\ndata: testtest\n\n"),
+						);
+						serverPool.eventEmitter.on("new-server", listener);
+						timerId = setInterval(() => {
+							controller.enqueue(
+								textEncoder.encode(`event: ping\ndata: ping\n\n`),
+							);
+						}, 5000);
+					},
+					cancel: () => {
+						if (timerId) {
+							clearInterval(timerId);
+						}
+						if (listener) {
+							serverPool.eventEmitter.off("new-server", listener);
+						}
+					},
+				}),
+			);
+			res.headers.set("Access-Control-Allow-Origin", "*");
+			res.headers.set(
+				"Access-Control-Allow-Methods",
+				"GET, POST, PUT, DELETE, OPTIONS",
+			);
+			res.headers.set("Content-Type", "text/event-stream");
+			res.headers.set("Cache-Control", "no-cache");
+
 			return res;
 		}
 

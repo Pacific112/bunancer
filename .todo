@@ -29,7 +29,16 @@
 [ ] Dashboard with stats:
   [ ] Pool / config management
     [x] Display pools and server statuses
-    [ ] Make sure statuses are displayed dynamically via SSE
+    [x] Make sure statuses are displayed dynamically via SSE
+    [ ] Prepare small abstractions
+      [ ] cors
+      [ ] SSE backend side
+      [ ] Better usage of event emitter
+      [ ] SSE frontend - useSyncExternalStore, parsing etc.
+    [ ] Support following events:
+      [ ] Server online
+      [ ] Server offline
+      [ ]
     [ ] Basic CRUD:
       [ ] Add New Server to the pool
       [ ] Kill Server
