@@ -77,7 +77,6 @@ Bun.serve({
 				new ReadableStream({
 					start: (controller) => {
 						listener = (s) => {
-							console.log("listener")
 							controller.enqueue(
 								textEncoder.encode(
 									`event: new-server\ndata: ${JSON.stringify({
@@ -89,10 +88,6 @@ Bun.serve({
 								),
 							);
 						};
-						console.log("enquuu")
-						controller.enqueue(
-							textEncoder.encode("event: test\ndata: testtest\n\n"),
-						);
 						serverPool.eventEmitter.on("new-server", listener);
 						timerId = setInterval(() => {
 							controller.enqueue(
