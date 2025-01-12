@@ -1,5 +1,5 @@
 import type { AppConfig, ServerConfig } from "load-balancer/config-schema.ts";
-import { EventEmitter } from "node:events";
+import { globalEmitter } from "load-balancer/global-emitter.ts";
 
 export const toUrl = (server: ServerConfig) => `${server.host}:${server.port}`;
 
@@ -28,7 +28,6 @@ const setupHealthCheck = (
 
 export const initializePool = ({ servers, timeout }: AppConfig) => {
 	const unavailableServers = new Set<string>();
-	const eventEmitter = new EventEmitter();
 
 	for (const server of servers) {
 		setupHealthCheck(
@@ -45,7 +44,6 @@ export const initializePool = ({ servers, timeout }: AppConfig) => {
 	};
 
 	return {
-		eventEmitter,
 		get allServers() {
 			return servers.map((s) => ({
 				...s,
@@ -60,7 +58,7 @@ export const initializePool = ({ servers, timeout }: AppConfig) => {
 					(id) => unavailableServers.delete(id),
 					(id) => unavailableServers.add(id),
 				);
-				eventEmitter.emit("new-server", server);
+				globalEmitter.emit("new-server", server);
 
 				return { ok: true };
 			}

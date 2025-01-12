@@ -7,6 +7,7 @@ import {
 } from "load-balancer/config-schema.ts";
 import { sse } from "load-balancer/sse.ts";
 import { cors } from "load-balancer/cors.ts";
+import { globalEmitter } from "load-balancer/global-emitter.ts";
 
 const config = await loadConfig();
 const serverPool = initializePool(config);
@@ -78,9 +79,9 @@ Bun.serve({
 					});
 				};
 
-				serverPool.eventEmitter.on("new-server", listener);
+				globalEmitter.on("new-server", listener);
 				return () => {
-					serverPool.eventEmitter.off("new-server", listener);
+					globalEmitter.off("new-server", listener);
 				};
 			});
 		}

@@ -33,7 +33,7 @@
     [ ] Prepare small abstractions
       [x] cors
       [x] SSE backend side
-      [ ] Better usage of event emitter
+      [x] Better usage of event emitter
       [ ] SSE frontend - useSyncExternalStore, parsing etc.
     [ ] Support following events:
       [ ] Server online
@@ -57,8 +57,11 @@
   [ ] Pool management
   [ ] Timeout management
   [ ] Allows to configure load balancer
-[ ] Figure out types - they should be common between server and client
-[ ] Get rid of hardcoded links
+[ ] Tech
+  [ ] Figure out types - they should be common between server and client
+  [ ] Get rid of hardcoded links
+  [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
+    [ ] Should this emitter be global?
 [ ] Figure out the best way to deploy React app
   [ ] Serve from Bun?
   [ ] Separate deployment?
