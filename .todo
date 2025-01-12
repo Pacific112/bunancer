@@ -31,8 +31,8 @@
     [x] Display pools and server statuses
     [x] Make sure statuses are displayed dynamically via SSE
     [ ] Prepare small abstractions
-      [ ] cors
-      [ ] SSE backend side
+      [x] cors
+      [x] SSE backend side
       [ ] Better usage of event emitter
       [ ] SSE frontend - useSyncExternalStore, parsing etc.
     [ ] Support following events:

@@ -6,6 +6,7 @@ import {
 	serverSchema,
 } from "load-balancer/config-schema.ts";
 import { sse } from "load-balancer/sse.ts";
+import { cors } from "load-balancer/cors.ts";
 
 const config = await loadConfig();
 const serverPool = initializePool(config);
@@ -42,12 +43,11 @@ Bun.serve({
 	},
 });
 
-const textEncoder = new TextEncoder();
 Bun.serve({
 	port: 41234,
-	async fetch(request) {
+	fetch: cors((request) => {
 		if (request.method === "GET" && request.url.endsWith("/status")) {
-			const res = new Response(
+			return new Response(
 				JSON.stringify({
 					serverPools: [
 						{
@@ -63,15 +63,9 @@ Bun.serve({
 					],
 				}),
 			);
-			res.headers.set("Access-Control-Allow-Origin", "*");
-			res.headers.set(
-				"Access-Control-Allow-Methods",
-				"GET, POST, PUT, DELETE, OPTIONS",
-			);
-			return res;
 		}
 		if (request.method === "GET" && request.url.endsWith("/sse")) {
-			const res = sse((enqueue) => {
+			return sse((enqueue) => {
 				const listener = (s: ServerConfig) => {
 					enqueue({
 						name: "new-server",
@@ -89,16 +83,8 @@ Bun.serve({
 					serverPool.eventEmitter.off("new-server", listener);
 				};
 			});
-
-			res.headers.set("Access-Control-Allow-Origin", "*");
-			res.headers.set(
-				"Access-Control-Allow-Methods",
-				"GET, POST, PUT, DELETE, OPTIONS",
-			);
-
-			return res;
 		}
 
 		return new Response("Not Found!", { status: 404 });
-	},
+	}),
 });
