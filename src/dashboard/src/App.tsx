@@ -23,6 +23,28 @@ function App() {
 				},
 			]),
 		);
+		source.addEventListener("server-online", (e) => {
+			const eid = JSON.parse(e.data);
+			setServerPools((ss) =>
+				ss.map((p) => ({
+					...p,
+					servers: p.servers.map((s) =>
+						s.id === eid ? { ...s, status: "online" } : s,
+					),
+				})),
+			);
+		});
+		source.addEventListener("server-offline", (e) => {
+			const eid = JSON.parse(e.data);
+			setServerPools((ss) =>
+				ss.map((p) => ({
+					...p,
+					servers: p.servers.map((s) => {
+						return s.id === eid ? { ...s, status: "offline" } : s;
+					}),
+				})),
+			);
+		});
 
 		return () => source.close();
 	}, []);

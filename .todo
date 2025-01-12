@@ -30,21 +30,20 @@
   [ ] Pool / config management
     [x] Display pools and server statuses
     [x] Make sure statuses are displayed dynamically via SSE
-    [ ] Prepare small abstractions
+    [x] Prepare small abstractions
       [x] cors
       [x] SSE backend side
       [x] Better usage of event emitter
-      [ ] SSE frontend - useSyncExternalStore, parsing etc.
-    [ ] Support following events:
-      [ ] Server online
-      [ ] Server offline
+    [x] Support following events:
+      [x] Server online
+      [x] Server offline
     [ ] Basic CRUD:
       [ ] Add simple router abstraction
+      [ ] Extract common logic from CLI to separate lib
       [ ] Add New Server to the pool
       [ ] Kill Server
   [ ] Request Flow
     [ ] React Flow
-    [ ] Extract common logic from CLI to separate lib
     [ ] Displays connected servers in real time
     [ ] Displays them on graph
     [ ] Displays health checks that are made to each server
@@ -59,9 +58,15 @@
   [ ] Allows to configure load balancer
 [ ] Tech
   [ ] Figure out types - they should be common between server and client
+  [ ] Health check - I don't like current implementation
   [ ] Get rid of hardcoded links
   [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
     [ ] Should this emitter be global?
+[ ] SSE frontend - useSyncExternalStore, parsing, at least state should be provided by the server etc.
+  [ ] better abstraction - parsing at least
+  [ ] nested objects update
+  [ ] better sse event names
+  [ ] Figure out typing between server and frontend
 [ ] Figure out the best way to deploy React app
   [ ] Serve from Bun?
   [ ] Separate deployment?

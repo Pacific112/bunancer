@@ -67,7 +67,7 @@ Bun.serve({
 		}
 		if (request.method === "GET" && request.url.endsWith("/sse")) {
 			return sse((enqueue) => {
-				const listener = (s: ServerConfig) => {
+				const newServerListener = (s: ServerConfig) => {
 					enqueue({
 						name: "new-server",
 						data: {
@@ -78,10 +78,18 @@ Bun.serve({
 						},
 					});
 				};
+				const serverOnlineListener = (id: string) =>
+					enqueue({ name: "server-online", data: id });
+				const serverOfflineListener = (id: string) =>
+					enqueue({ name: "server-offline", data: id });
 
-				globalEmitter.on("new-server", listener);
+				globalEmitter.on("pool:new-server", newServerListener);
+				globalEmitter.on("pool:server-online", serverOnlineListener);
+				globalEmitter.on("pool:server-offline", serverOfflineListener);
 				return () => {
-					globalEmitter.off("new-server", listener);
+					globalEmitter.off("pool:new-server", newServerListener);
+					globalEmitter.off("pool:server-online", serverOnlineListener);
+					globalEmitter.off("pool:server-offline", serverOfflineListener);
 				};
 			});
 		}
