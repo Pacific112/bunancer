@@ -5,7 +5,7 @@ import {
 	type ServerConfig,
 	serverSchema,
 } from "load-balancer/config-schema.ts";
-import { undefined } from "zod";
+import { sse } from "load-balancer/sse.ts";
 
 const config = await loadConfig();
 const serverPool = initializePool(config);
@@ -71,47 +71,30 @@ Bun.serve({
 			return res;
 		}
 		if (request.method === "GET" && request.url.endsWith("/sse")) {
-			let timerId: Timer | undefined = undefined;
-			let listener: (s: ServerConfig) => void;
-			const res = new Response(
-				new ReadableStream({
-					start: (controller) => {
-						listener = (s) => {
-							controller.enqueue(
-								textEncoder.encode(
-									`event: new-server\ndata: ${JSON.stringify({
-										id: s.id,
-										name: s.id,
-										status: "online",
-										ip: toUrl(s),
-									})}\n\n`,
-								),
-							);
-						};
-						serverPool.eventEmitter.on("new-server", listener);
-						timerId = setInterval(() => {
-							controller.enqueue(
-								textEncoder.encode(`event: ping\ndata: ping\n\n`),
-							);
-						}, 5000);
-					},
-					cancel: () => {
-						if (timerId) {
-							clearInterval(timerId);
-						}
-						if (listener) {
-							serverPool.eventEmitter.off("new-server", listener);
-						}
-					},
-				}),
-			);
+			const res = sse((enqueue) => {
+				const listener = (s: ServerConfig) => {
+					enqueue({
+						name: "new-server",
+						data: {
+							id: s.id,
+							name: s.id,
+							status: "online",
+							ip: toUrl(s),
+						},
+					});
+				};
+
+				serverPool.eventEmitter.on("new-server", listener);
+				return () => {
+					serverPool.eventEmitter.off("new-server", listener);
+				};
+			});
+
 			res.headers.set("Access-Control-Allow-Origin", "*");
 			res.headers.set(
 				"Access-Control-Allow-Methods",
 				"GET, POST, PUT, DELETE, OPTIONS",
 			);
-			res.headers.set("Content-Type", "text/event-stream");
-			res.headers.set("Cache-Control", "no-cache");
 
 			return res;
 		}

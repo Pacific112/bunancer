@@ -38,8 +38,8 @@
     [ ] Support following events:
       [ ] Server online
       [ ] Server offline
-      [ ]
     [ ] Basic CRUD:
+      [ ] Add simple router abstraction
       [ ] Add New Server to the pool
       [ ] Kill Server
   [ ] Request Flow
