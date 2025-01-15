@@ -49,7 +49,6 @@ function App() {
 		return () => source.close();
 	}, []);
 
-	console.log(serverPools);
 	const handleAddServer = (poolId: string, newServer: Server) => {
 		setServerPools((prevPools) =>
 			prevPools.map((pool) =>

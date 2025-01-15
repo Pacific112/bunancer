@@ -7,6 +7,11 @@ type GetRoute = {
 	path: string;
 	handler: Handler;
 };
+type PostRoute = {
+	method: "GET";
+	path: string;
+	handler: Handler;
+};
 type RouteDefinition = GetRoute;
 
 type TrieNode = {
@@ -23,7 +28,7 @@ type TrieRoot = {
 
 export const get = (path: string, handler: Handler): GetRoute => ({
 	method: "GET",
-	path: path,
+	path,
 	handler,
 });
 
@@ -36,8 +41,7 @@ const buildTrieRouter = (routes: RouteDefinition[]) => {
 			trie.set(route.method, { method: route.method, nodes: new Map() });
 		}
 
-		let currentNode: { nodes: Map<string, TrieNode>; handler?: Handler } =
-			trie.get(route.method)!;
+		let currentNode: TrieRoot | TrieNode = trie.get(route.method)!;
 		for (const path of splitPath(route.path)) {
 			if (!currentNode.nodes.has(path)) {
 				currentNode.nodes.set(path, { path, nodes: new Map() });
@@ -54,24 +58,32 @@ const buildTrieRouter = (routes: RouteDefinition[]) => {
 	return trie;
 };
 
+const findRequestHandler = (
+	trieRouter: Map<RouteDefinition["method"], TrieRoot>,
+	req: Request,
+) => {
+	const method = req.method as RouteDefinition["method"];
+	const path = new URL(req.url).pathname;
+	const pathParts = splitPath(path);
+
+	let currentNode: TrieRoot | TrieNode | undefined = trieRouter.get(method);
+	for (const pathPart of pathParts) {
+		if (!currentNode) break;
+		currentNode = currentNode.nodes.get(pathPart);
+	}
+
+	return currentNode;
+};
+
 export const router = (...routes: RouteDefinition[]) => {
 	const trieRouter = buildTrieRouter(routes);
 
 	return (req: Request) => {
-		const method = req.method as RouteDefinition["method"];
-		const path = new URL(req.url).pathname;
-		const pathParts = splitPath(path);
-
-		let currentNode: TrieRoot | TrieNode | undefined = trieRouter.get(method);
-		for (const pathPart of pathParts) {
-			if (!currentNode) break;
-			currentNode = currentNode.nodes.get(pathPart);
-		}
-
-		if (!currentNode || !currentNode.handler) {
+		const reqHandler = findRequestHandler(trieRouter, req);
+		if (!reqHandler || !reqHandler.handler) {
 			return new Response(undefined, { status: 404 });
 		}
 
-		return currentNode.handler({ req });
+		return reqHandler.handler({ req });
 	};
 };
