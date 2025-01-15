@@ -1,34 +1,49 @@
+import z from "zod";
+
 type Params = {
 	req: Request;
 };
 type Handler = (p: Params) => Response;
+type HandlerWithBody<T> = (body: T, p: Params) => Response;
 type GetRoute = {
 	method: "GET";
 	path: string;
 	handler: Handler;
 };
 type PostRoute = {
-	method: "GET";
+	method: "POST";
 	path: string;
-	handler: Handler;
+	bodySchema: z.ZodTypeAny;
+	handler: HandlerWithBody<unknown>;
 };
-type RouteDefinition = GetRoute;
+type RouteDefinition = GetRoute | PostRoute;
 
 type TrieNode = {
 	path: string;
-	handler?: Handler;
+	route?: RouteDefinition;
 	nodes: Map<string, TrieNode>;
 };
 
 type TrieRoot = {
 	method: RouteDefinition["method"];
-	handler?: Handler;
+	route?: RouteDefinition;
 	nodes: Map<string, TrieNode>;
 };
 
 export const get = (path: string, handler: Handler): GetRoute => ({
 	method: "GET",
 	path,
+	handler,
+});
+
+export const post = <T extends z.ZodTypeAny>(
+	path: string,
+	bodySchema: T,
+	handler: HandlerWithBody<z.infer<T>>,
+): PostRoute => ({
+	method: "POST",
+	path,
+	bodySchema,
 	handler,
 });
 
@@ -49,10 +64,10 @@ const buildTrieRouter = (routes: RouteDefinition[]) => {
 			currentNode = currentNode.nodes.get(path)!;
 		}
 
-		if (currentNode.handler) {
+		if (currentNode.route) {
 			throw new Error("Duplicated route");
 		}
-		currentNode.handler = route.handler;
+		currentNode.route = route;
 	}
 
 	return trie;
@@ -78,12 +93,25 @@ const findRequestHandler = (
 export const router = (...routes: RouteDefinition[]) => {
 	const trieRouter = buildTrieRouter(routes);
 
-	return (req: Request) => {
+	return async (req: Request) => {
 		const reqHandler = findRequestHandler(trieRouter, req);
-		if (!reqHandler || !reqHandler.handler) {
+		if (!reqHandler || !reqHandler.route) {
 			return new Response(undefined, { status: 404 });
 		}
 
-		return reqHandler.handler({ req });
+		const { route } = reqHandler;
+		if (!("bodySchema" in route)) {
+			return route.handler({ req });
+		}
+
+		const jsonBody = await req.json()
+		const parsedBody = await route.bodySchema.safeParseAsync(jsonBody);
+		if (parsedBody.success) {
+			return route.handler(parsedBody.data, { req });
+		}
+
+		return new Response(`Cannot parse config: ${parsedBody.error.message}`, {
+			status: 400,
+		});
 	};
 };

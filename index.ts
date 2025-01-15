@@ -8,7 +8,7 @@ import {
 import { sse, type SseSetup } from "load-balancer/sse.ts";
 import { cors } from "load-balancer/cors.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
-import { get, router } from "load-balancer/router.ts";
+import { get, post, router } from "load-balancer/router.ts";
 
 const config = await loadConfig();
 const serverPool = initializePool(config);
@@ -22,27 +22,14 @@ Bun.serve({
 
 Bun.serve({
 	port: 40999,
-	async fetch(request) {
-		if (request.method === "POST" && request.url.endsWith("/register")) {
-			const parsedConfig = await serverSchema.safeParseAsync(
-				await request.json(),
-			);
-			if (parsedConfig.success) {
-				const result = serverPool.addServer(parsedConfig.data);
-				return result.ok
-					? new Response()
-					: new Response(result.error, { status: 400 });
-			}
-			return new Response(
-				`Cannot parse config: ${parsedConfig.error.message}`,
-				{
-					status: 400,
-				},
-			);
-		}
-
-		return new Response("Not Found!", { status: 404 });
-	},
+	fetch: router(
+		post("/register", serverSchema, (body) => {
+			const result = serverPool.addServer(body);
+			return result.ok
+				? new Response()
+				: new Response(result.error, { status: 400 });
+		}),
+	),
 });
 
 const statusHandler = () => {
