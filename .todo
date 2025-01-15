@@ -84,6 +84,10 @@
 [ ] Global timeout settings
 [ ] Introduce pino for logging
   [ ] Standard access logs on stub server
+[ ] Deployment to fly.io
+  [ ] X-Forwarded-IP header or something - to make sure it works
+  [ ] Fly launch for
+=============================================
 [ ] Auto register
   [ ] Add Basic Auth
   [ ] Use different protocol for communication - some RPC would be much better
@@ -92,9 +96,6 @@
   [ ] Deduplicate servers - not only id but also do not allow same configuration
   [ ] Graceful shutdown + deregister
   [ ] Typing + separate package for registering
-[ ] Deployment to fly.io
-  [ ] X-Forwarded-IP header or something - to make sure it works
-  [ ] Fly launch for
 [ ] Security considerations
   [ ] For example should any of the headers be actually removed?
   [ ] OAuth / JWKS / Basic Auth - only load balancer is actually secured

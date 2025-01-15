@@ -4,6 +4,7 @@ type ServerSentEvent = {
 };
 type CleanUp = () => void;
 type EnqueueEvent = (event: ServerSentEvent) => void;
+export type SseSetup = (enqueue: EnqueueEvent) => CleanUp;
 
 const toPayload = (event: ServerSentEvent) => {
 	return `event: ${event.name}\ndata: ${JSON.stringify(event.data)}\n\n`;
@@ -17,31 +18,32 @@ const encoder = () => {
 	};
 };
 
-export const sse = (setup: (enqueue: EnqueueEvent) => CleanUp) => {
+export const sse = (setup: SseSetup) => {
 	const { encode } = encoder();
 	let pingTimerId: Timer | undefined;
 	let cleanUp: () => void = () => {};
 
-	return new Response(
-		new ReadableStream({
-			start: (controller) => {
-				controller.enqueue(encode(pingEvent()))
-				pingTimerId = setInterval(
-					() => controller.enqueue(encode(pingEvent())),
-					5000,
-				);
-				cleanUp = setup((event) => controller.enqueue(encode(event)));
+	return () =>
+		new Response(
+			new ReadableStream({
+				start: (controller) => {
+					controller.enqueue(encode(pingEvent()));
+					pingTimerId = setInterval(
+						() => controller.enqueue(encode(pingEvent())),
+						5000,
+					);
+					cleanUp = setup((event) => controller.enqueue(encode(event)));
+				},
+				cancel: () => {
+					if (pingTimerId) clearInterval(pingTimerId);
+					cleanUp();
+				},
+			}),
+			{
+				headers: {
+					"Content-Type": "text/event-stream",
+					"Cache-Control": "no-cache",
+				},
 			},
-			cancel: () => {
-				if (pingTimerId) clearInterval(pingTimerId);
-				cleanUp();
-			},
-		}),
-		{
-			headers: {
-				"Content-Type": "text/event-stream",
-				"Cache-Control": "no-cache",
-			},
-		},
-	);
+		);
 };

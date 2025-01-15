@@ -5,9 +5,10 @@ import {
 	type ServerConfig,
 	serverSchema,
 } from "load-balancer/config-schema.ts";
-import { sse } from "load-balancer/sse.ts";
+import { sse, type SseSetup } from "load-balancer/sse.ts";
 import { cors } from "load-balancer/cors.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
+import { get, router } from "load-balancer/router.ts";
 
 const config = await loadConfig();
 const serverPool = initializePool(config);
@@ -44,56 +45,55 @@ Bun.serve({
 	},
 });
 
+const statusHandler = () => {
+	return new Response(
+		JSON.stringify({
+			serverPools: [
+				{
+					id: "pool1",
+					name: "Test",
+					servers: serverPool.allServers.map((s) => ({
+						id: s.id,
+						name: s.id,
+						status: s.status,
+						ip: toUrl(s),
+					})),
+				},
+			],
+		}),
+	);
+};
+
+const sseHandler: SseSetup = (enqueue) => {
+	const newServerListener = (s: ServerConfig) => {
+		enqueue({
+			name: "new-server",
+			data: {
+				id: s.id,
+				name: s.id,
+				status: "online",
+				ip: toUrl(s),
+			},
+		});
+	};
+	const serverOnlineListener = (id: string) =>
+		enqueue({ name: "server-online", data: id });
+	const serverOfflineListener = (id: string) =>
+		enqueue({ name: "server-offline", data: id });
+
+	globalEmitter.on("pool:new-server", newServerListener);
+	globalEmitter.on("pool:server-online", serverOnlineListener);
+	globalEmitter.on("pool:server-offline", serverOfflineListener);
+	return () => {
+		globalEmitter.off("pool:new-server", newServerListener);
+		globalEmitter.off("pool:server-online", serverOnlineListener);
+		globalEmitter.off("pool:server-offline", serverOfflineListener);
+	};
+};
+
 Bun.serve({
 	port: 41234,
-	fetch: cors((request) => {
-		if (request.method === "GET" && request.url.endsWith("/status")) {
-			return new Response(
-				JSON.stringify({
-					serverPools: [
-						{
-							id: "pool1",
-							name: "Test",
-							servers: serverPool.allServers.map((s) => ({
-								id: s.id,
-								name: s.id,
-								status: s.status,
-								ip: toUrl(s),
-							})),
-						},
-					],
-				}),
-			);
-		}
-		if (request.method === "GET" && request.url.endsWith("/sse")) {
-			return sse((enqueue) => {
-				const newServerListener = (s: ServerConfig) => {
-					enqueue({
-						name: "new-server",
-						data: {
-							id: s.id,
-							name: s.id,
-							status: "online",
-							ip: toUrl(s),
-						},
-					});
-				};
-				const serverOnlineListener = (id: string) =>
-					enqueue({ name: "server-online", data: id });
-				const serverOfflineListener = (id: string) =>
-					enqueue({ name: "server-offline", data: id });
-
-				globalEmitter.on("pool:new-server", newServerListener);
-				globalEmitter.on("pool:server-online", serverOnlineListener);
-				globalEmitter.on("pool:server-offline", serverOfflineListener);
-				return () => {
-					globalEmitter.off("pool:new-server", newServerListener);
-					globalEmitter.off("pool:server-online", serverOnlineListener);
-					globalEmitter.off("pool:server-offline", serverOfflineListener);
-				};
-			});
-		}
-
-		return new Response("Not Found!", { status: 404 });
-	}),
+	fetch: cors(
+		router(get("/status", statusHandler), get("/sse", sse(sseHandler))),
+	),
 });
