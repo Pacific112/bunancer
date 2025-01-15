@@ -4,7 +4,7 @@ type Params = {
 type Handler = (p: Params) => Response;
 type GetRoute = {
 	method: "GET";
-	paths: string[];
+	path: string;
 	handler: Handler;
 };
 type RouteDefinition = GetRoute;
@@ -23,11 +23,13 @@ type TrieRoot = {
 
 export const get = (path: string, handler: Handler): GetRoute => ({
 	method: "GET",
-	paths: path.split("/"),
+	path: path,
 	handler,
 });
 
-export const router = (...routes: RouteDefinition[]) => {
+const splitPath = (path: string) => path.split("/").filter((p) => p !== "");
+
+const buildTrieRouter = (routes: RouteDefinition[]) => {
 	const trie = new Map<RouteDefinition["method"], TrieRoot>();
 	for (const route of routes) {
 		if (!trie.has(route.method)) {
@@ -36,7 +38,7 @@ export const router = (...routes: RouteDefinition[]) => {
 
 		let currentNode: { nodes: Map<string, TrieNode>; handler?: Handler } =
 			trie.get(route.method)!;
-		for (const path of route.paths) {
+		for (const path of splitPath(route.path)) {
 			if (!currentNode.nodes.has(path)) {
 				currentNode.nodes.set(path, { path, nodes: new Map() });
 			}
@@ -49,21 +51,24 @@ export const router = (...routes: RouteDefinition[]) => {
 		currentNode.handler = route.handler;
 	}
 
+	return trie;
+};
+
+export const router = (...routes: RouteDefinition[]) => {
+	const trieRouter = buildTrieRouter(routes);
+
 	return (req: Request) => {
 		const method = req.method as RouteDefinition["method"];
 		const path = new URL(req.url).pathname;
-		const pathParts = path.split("/");
+		const pathParts = splitPath(path);
 
-		let currentNode: TrieRoot | TrieNode | undefined = trie.get(method);
+		let currentNode: TrieRoot | TrieNode | undefined = trieRouter.get(method);
 		for (const pathPart of pathParts) {
 			if (!currentNode) break;
 			currentNode = currentNode.nodes.get(pathPart);
 		}
 
-		if (!currentNode) {
-			return new Response(undefined, { status: 404 });
-		}
-		if (!currentNode.handler) {
+		if (!currentNode || !currentNode.handler) {
 			return new Response(undefined, { status: 404 });
 		}
 
