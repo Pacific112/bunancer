@@ -16,3 +16,8 @@ await fetch("http://localhost:40999/register", {
 		host: `http://${server.hostname}`,
 	}),
 });
+
+console.log(
+	`[${new Date().toISOString()}] Server ${Bun.env.SERVER_IDENTIFIER} started`,
+);
+console.log(`[${new Date().toISOString()}] Listening on ${server.port}`);
