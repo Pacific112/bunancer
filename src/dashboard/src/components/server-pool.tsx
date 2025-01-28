@@ -4,11 +4,11 @@ import { ServerStatus } from "@/components/server-status";
 import { AddServerForm } from "@/components/add-server-form";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import type { Server, ServerPool } from "@/types/types";
+import type { CreateServer, ServerPool } from "@/types/types";
 
 interface ServerPoolProps {
 	pool: ServerPool;
-	onAddServer: (poolId: string, server: Server) => void;
+	onAddServer: (poolId: string, server: CreateServer) => void;
 }
 
 export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
@@ -19,7 +19,7 @@ export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
 	).length;
 	const totalServers = pool.servers.length;
 
-	const handleAddServer = (server: Server) => {
+	const handleAddServer = (server: CreateServer) => {
 		onAddServer(pool.id, server);
 		setShowAddForm(false);
 	};
@@ -47,7 +47,7 @@ export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
 				</div>
 				{showAddForm && (
 					<div className="mb-4">
-						<AddServerForm onAddServer={handleAddServer} poolId={pool.id} />
+						<AddServerForm onAddServer={handleAddServer} />
 					</div>
 				)}
 				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

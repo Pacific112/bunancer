@@ -9,6 +9,8 @@ import { sse, type SseSetup } from "load-balancer/sse.ts";
 import { cors } from "load-balancer/cors.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
 import { get, post, router } from "load-balancer/router.ts";
+import { runServer } from "stub-server/sdk.ts";
+import { z } from "zod";
 
 const config = await loadConfig();
 const serverPool = initializePool(config);
@@ -52,7 +54,7 @@ const statusHandler = () => {
 };
 
 const sseHandler: SseSetup = (enqueue) => {
-	const newServerListener = (s: ServerConfig) => {
+	const newServerListener = (s: ServerConfig) =>
 		enqueue({
 			name: "new-server",
 			data: {
@@ -62,7 +64,6 @@ const sseHandler: SseSetup = (enqueue) => {
 				ip: toUrl(s),
 			},
 		});
-	};
 	const serverOnlineListener = (id: string) =>
 		enqueue({ name: "server-online", data: id });
 	const serverOfflineListener = (id: string) =>
@@ -81,6 +82,20 @@ const sseHandler: SseSetup = (enqueue) => {
 Bun.serve({
 	port: 41234,
 	fetch: cors(
-		router(get("/status", statusHandler), get("/sse", sse(sseHandler))),
+		router(
+			get("/status", statusHandler),
+			get("/sse", sse(sseHandler)),
+			post(
+				"/servers",
+				z.object({
+					instanceId: z.string(),
+					port: z.string().regex(/\d+/),
+				}),
+				async (body) => {
+					await runServer(body);
+					return new Response();
+				},
+			),
+		),
 	),
 });

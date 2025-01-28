@@ -4,7 +4,7 @@ type Params = {
 	req: Request;
 };
 type Handler = (p: Params) => Response;
-type HandlerWithBody<T> = (body: T, p: Params) => Response;
+type HandlerWithBody<T> = (body: T, p: Params) => Response | Promise<Response>;
 type GetRoute = {
 	method: "GET";
 	path: string;

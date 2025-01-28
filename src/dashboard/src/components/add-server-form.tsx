@@ -2,30 +2,25 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Server } from "@/types/types";
+import { CreateServer } from "@/types/types";
 
 interface AddServerFormProps {
-	onAddServer: (server: Server) => void;
-	poolId: string;
+	onAddServer: (server: CreateServer) => void;
 }
 
-export function AddServerForm({ onAddServer, poolId }: AddServerFormProps) {
-	const [serverName, setServerName] = useState("");
-	const [serverIp, setServerIp] = useState("");
+export function AddServerForm({ onAddServer }: AddServerFormProps) {
+	const [serverName, setServerName] = useState(crypto.randomUUID().slice(0, 13));
+	const [serverPort, setServerPort] = useState(Math.floor(Math.random() * (65535 - 3000) + 3000) + "");
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		const newServer: Server = {
-			id: `${poolId}-${Date.now()}`,
-			name: serverName,
-			status: "loading",
-			ip: serverIp,
-			load: 0,
-			responseTime: 0,
+		const newServer: CreateServer = {
+			instanceId: serverName,
+			port: serverPort,
 		};
 		onAddServer(newServer);
 		setServerName("");
-		setServerIp("");
+		setServerPort("");
 	};
 
 	return (
@@ -40,11 +35,12 @@ export function AddServerForm({ onAddServer, poolId }: AddServerFormProps) {
 				/>
 			</div>
 			<div>
-				<Label htmlFor="serverIp">Server IP</Label>
+				<Label htmlFor="serverPort">Server Port</Label>
 				<Input
-					id="serverIp"
-					value={serverIp}
-					onChange={(e) => setServerIp(e.target.value)}
+					id="serverPort"
+					value={serverPort}
+					onChange={(e) => setServerPort(e.target.value)}
+					type="number"
 					required
 				/>
 			</div>

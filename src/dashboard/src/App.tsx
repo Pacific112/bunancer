@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Server, ServerPool as ServerPoolType } from "@/types/types";
+import { CreateServer, ServerPool as ServerPoolType } from "@/types/types";
 import { ServerPool } from "@/components/server-pool";
 import { DashboardSummary } from "@/components/dashboard-summary";
 
@@ -15,14 +15,21 @@ function App() {
 
 	useEffect(() => {
 		const source = new EventSource("http://localhost:41234/sse");
-		source.addEventListener("new-server", (e) =>
-			setServerPools(([ss]) => [
-				{
-					...ss,
-					servers: [...ss.servers, JSON.parse(e.data)],
-				},
-			]),
-		);
+		source.addEventListener("new-server", (e) => {
+			const parsedServer = JSON.parse(e.data);
+			return setServerPools(([ss]) => {
+				const servIndex = ss.servers.findIndex((s) => s.id === parsedServer.id);
+				return [
+					{
+						...ss,
+						servers:
+							servIndex === -1
+								? [...ss.servers, parsedServer]
+								: ss.servers.toSpliced(servIndex, 1, parsedServer),
+					},
+				];
+			});
+		});
 		source.addEventListener("server-online", (e) => {
 			const eid = JSON.parse(e.data);
 			setServerPools((ss) =>
@@ -49,37 +56,32 @@ function App() {
 		return () => source.close();
 	}, []);
 
-	const handleAddServer = (poolId: string, newServer: Server) => {
+	const handleAddServer = (poolId: string, newServer: CreateServer) => {
 		setServerPools((prevPools) =>
 			prevPools.map((pool) =>
 				pool.id === poolId
-					? { ...pool, servers: [...pool.servers, newServer] }
+					? {
+							...pool,
+							servers: [
+								...pool.servers,
+								{
+									id: newServer.instanceId,
+									responseTime: 0,
+									ip: `http://localhost:${newServer.port}`,
+									status: "loading",
+									name: newServer.instanceId,
+									load: 0,
+								},
+							],
+						}
 					: pool,
 			),
 		);
 
-		// Simulate server coming online after 3 seconds
-		setTimeout(() => {
-			setServerPools((prevPools) =>
-				prevPools.map((pool) =>
-					pool.id === poolId
-						? {
-								...pool,
-								servers: pool.servers.map((server) =>
-									server.id === newServer.id
-										? {
-												...server,
-												status: "online",
-												load: Math.floor(Math.random() * 50) + 30,
-												responseTime: Math.floor(Math.random() * 100) + 50,
-											}
-										: server,
-								),
-							}
-						: pool,
-				),
-			);
-		}, 3000);
+		fetch("http://localhost:41234/servers", {
+			body: JSON.stringify(newServer),
+			method: "POST",
+		});
 	};
 
 	return (

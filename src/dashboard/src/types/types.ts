@@ -7,6 +7,11 @@ export interface Server {
 	responseTime: number;
 }
 
+export interface CreateServer {
+	instanceId: string;
+	port: string;
+}
+
 export interface ServerPool {
 	id: string;
 	name: string;

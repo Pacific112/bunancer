@@ -1,4 +1,5 @@
-import { appendFile, mkdir } from "node:fs/promises";
+import { appendFile, mkdir,  } from "node:fs/promises";
+import { log } from "@clack/prompts";
 
 const STUBS_DIR = "./stubs";
 const STUB_LOGS_DIR = `${STUBS_DIR}/logs`;
@@ -39,14 +40,15 @@ export const revalidateProcesses = async (runningServers: RunningServer[]) => {
 export const runServer = async ({
 	instanceId,
 	port,
-	detached,
+	detached = true,
 }: {
 	instanceId: string;
 	port: string;
-	detached: boolean;
+	detached?: boolean;
 }) => {
 	await mkdir(STUBS_DIR, { recursive: true });
-	const logFile = Bun.file(pathToLogFile(instanceId));
+	const logFile = Bun.file(pathToLogFile(instanceId), {});
+	await Bun.write(logFile, " ")
 
 	const proc = Bun.spawn(
 		["bun", `--port=${port}`, "./src/stub-server/server.ts"],
