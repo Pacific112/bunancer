@@ -38,8 +38,8 @@
       [x] Server online
       [x] Server offline
     [ ] Basic CRUD:
-      [ ] Add simple router abstraction
-      [ ] Extract common logic from CLI to separate lib
+      [x] Add simple router abstraction
+      [x] Extract common logic from CLI to separate sdk
       [ ] Add New Server to the pool
       [ ] Kill Server
   [ ] Request Flow
