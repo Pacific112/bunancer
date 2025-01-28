@@ -1,8 +1,17 @@
 import { Server } from "@/types/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ServerIcon } from "lucide-react";
+import { FileText, ServerIcon, StopCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button.tsx";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog.tsx";
+import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 
 interface ServerStatusProps {
 	server: Server;
@@ -17,20 +26,54 @@ export function ServerStatus({ server }: ServerStatusProps) {
 			)}
 		>
 			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-				<CardTitle className="text-sm font-medium">{server.name}</CardTitle>
-				<Badge
-					variant={
-						server.status === "online"
-							? "default"
-							: server.status === "offline"
-								? "destructive"
-								: server.status === "loading"
-									? "secondary"
-									: "default"
-					}
-				>
-					{server.status}
-				</Badge>
+				<div className="flex items-center space-x-2">
+					<CardTitle className="text-sm font-medium">{server.name}</CardTitle>
+					<Badge
+						variant={
+							server.status === "online"
+								? "default"
+								: server.status === "offline"
+									? "destructive"
+									: server.status === "loading"
+										? "secondary"
+										: "default"
+						}
+					>
+						{server.status}
+					</Badge>
+				</div>
+				<div className="flex">
+					{server.status === "online" && (
+						<Button
+							variant="ghost"
+							size="icon"
+							onClick={() => console.log("stop")}
+							title="Stop Server"
+						>
+							<StopCircle className="h-4 w-4" />
+						</Button>
+					)}
+					<Dialog>
+						<DialogTrigger asChild>
+							<Button variant="ghost" size="icon" title="View Logs">
+								<FileText className="h-4 w-4" />
+							</Button>
+						</DialogTrigger>
+						<DialogContent className="sm:max-w-[425px]">
+							<DialogHeader>
+								<DialogTitle>{server.name} Logs</DialogTitle>
+							</DialogHeader>
+							<ScrollArea className="h-[300px] w-full rounded-md border p-4">
+								<pre className="text-sm">
+									{`[${new Date().toISOString()}] Server ${server.name} started
+[${new Date().toISOString()}] Listening on ${server.ip}
+[${new Date().toISOString()}] Current load: ${server.load}%
+[${new Date().toISOString()}] Average response time: ${server.responseTime}ms`}
+								</pre>
+							</ScrollArea>
+						</DialogContent>
+					</Dialog>
+				</div>
 			</CardHeader>
 			<CardContent>
 				<div className="flex items-center space-x-2 text-sm text-muted-foreground">
