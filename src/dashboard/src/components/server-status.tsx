@@ -12,6 +12,17 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog.tsx";
 
 interface ServerStatusProps {
 	server: Server;
@@ -44,14 +55,33 @@ export function ServerStatus({ server }: ServerStatusProps) {
 				</div>
 				<div className="flex">
 					{server.status === "online" && (
-						<Button
-							variant="ghost"
-							size="icon"
-							onClick={() => console.log("stop")}
-							title="Stop Server"
-						>
-							<StopCircle className="h-4 w-4" />
-						</Button>
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<Button variant="ghost" size="icon" title="Stop Server">
+									<StopCircle className="h-4 w-4" />
+								</Button>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>Stop {server.name}</AlertDialogTitle>
+									<AlertDialogDescription>
+										This action cannot be undone.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogAction
+										onClick={() => {
+											fetch(`http://localhost:41234/servers/${server.id}`, {
+												method: "DELETE",
+											});
+										}}
+									>
+										Continue
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
 					)}
 					<Dialog>
 						<DialogTrigger asChild>

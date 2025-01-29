@@ -9,7 +9,7 @@ import { sse, type SseSetup } from "load-balancer/sse.ts";
 import { cors } from "load-balancer/cors.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
 import { destroy, get, post, router } from "load-balancer/router.ts";
-import { runServer } from "stub-server/sdk.ts";
+import { loadRunningServers, runServer, stopServer } from "stub-server/sdk.ts";
 import { z } from "zod";
 
 const config = await loadConfig();
@@ -96,7 +96,20 @@ Bun.serve({
 					return new Response();
 				},
 			),
-			destroy("/servers/:id", ({ pathParams }) => {
+			destroy("/servers/:id", async ({ pathParams }) => {
+				const runningServers = await loadRunningServers();
+				const selectedServer = runningServers.find(
+					(r) => r.instanceId === pathParams.id,
+				);
+				if (!selectedServer) {
+					return new Response(
+						JSON.stringify({ error: "Server is not running" }),
+						{
+							status: 400,
+						},
+					);
+				}
+				await stopServer(selectedServer);
 				return new Response();
 			}),
 		),

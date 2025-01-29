@@ -40,8 +40,9 @@
     [ ] Basic CRUD:
       [x] Add simple router abstraction
       [x] Extract common logic from CLI to separate sdk
-      [ ] Add New Server to the pool
-      [ ] Kill Server
+      [x] Add New Server to the pool
+      [x] Kill Server
+      [ ] Show server logs
   [ ] Request Flow
     [ ] React Flow
     [ ] Displays connected servers in real time
@@ -60,9 +61,11 @@
   [ ] Add support for different parameter names - currently when I use /servers/:id and /servers/:name/details things will not work
   [ ] Add early misconfiguration detection
 [ ] Tech
+  [ ] Better error handling for REST actions - currently nothing
   [ ] Figure out types - they should be common between server and client
   [ ] Health check - I don't like current implementation
   [ ] Get rid of hardcoded links
+  [ ] CORS - make sure that it actually behaves how it should and appropriate headers are added
   [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
     [ ] Should this emitter be global?
 [ ] SSE frontend - useSyncExternalStore, parsing, at least state should be provided by the server etc.
@@ -91,6 +94,7 @@
   [ ] X-Forwarded-IP header or something - to make sure it works
   [ ] Fly launch for
 =============================================
+[ ] Stream server logs instead of static display
 [ ] Auto register
   [ ] Add Basic Auth
   [ ] Use different protocol for communication - some RPC would be much better
