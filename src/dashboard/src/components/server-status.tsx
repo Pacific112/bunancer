@@ -11,7 +11,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
-import { ScrollArea } from "@/components/ui/scroll-area.tsx";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area.tsx";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -23,9 +23,22 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
+import { useEffect, useState } from "react";
 
 interface ServerStatusProps {
 	server: Server;
+}
+
+function LogsArea({ server }: { server: Server }) {
+	const [serverLogs, setServerLogs] = useState("");
+	useEffect(() => {
+		fetch(`http://localhost:41234/servers/${server.id}/logs`)
+			.then((r) => r.json())
+			.then((r) => r.logs)
+			.then(setServerLogs);
+	}, []);
+
+	return <>{serverLogs}</>;
 }
 
 export function ServerStatus({ server }: ServerStatusProps) {
@@ -93,13 +106,11 @@ export function ServerStatus({ server }: ServerStatusProps) {
 							<DialogHeader>
 								<DialogTitle>{server.name} Logs</DialogTitle>
 							</DialogHeader>
-							<ScrollArea className="h-[300px] w-full rounded-md border p-4">
+							<ScrollArea className="h-[300px] w-full rounded-md border p-4 overscroll-y-auto">
 								<pre className="text-sm">
-									{`[${new Date().toISOString()}] Server ${server.name} started
-[${new Date().toISOString()}] Listening on ${server.ip}
-[${new Date().toISOString()}] Current load: ${server.load}%
-[${new Date().toISOString()}] Average response time: ${server.responseTime}ms`}
+									<LogsArea server={server} />
 								</pre>
+								<ScrollBar orientation="horizontal" />
 							</ScrollArea>
 						</DialogContent>
 					</Dialog>

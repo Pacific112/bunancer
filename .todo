@@ -62,6 +62,9 @@
   [ ] Add early misconfiguration detection
 [ ] Tech
   [ ] Better error handling for REST actions - currently nothing
+  [ ] SDK should support stopping / fetching logs by id
+  [ ] Structured logs support
+  [ ] Configure base url or just use something better then raw fetch
   [ ] Figure out types - they should be common between server and client
   [ ] Health check - I don't like current implementation
   [ ] Get rid of hardcoded links
@@ -73,6 +76,7 @@
   [ ] nested objects update
   [ ] better sse event names
   [ ] Figure out typing between server and frontend
+  [ ] In general - split component and code improvements
 [ ] Figure out the best way to deploy React app
   [ ] Serve from Bun?
   [ ] Separate deployment?
