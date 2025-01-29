@@ -56,6 +56,9 @@
   [ ] Pool management
   [ ] Timeout management
   [ ] Allows to configure load balancer
+[ ] Router
+  [ ] Add support for different parameter names - currently when I use /servers/:id and /servers/:name/details things will not work
+  [ ] Add early misconfiguration detection
 [ ] Tech
   [ ] Figure out types - they should be common between server and client
   [ ] Health check - I don't like current implementation
