@@ -8,7 +8,7 @@ import {
 import { sse, type SseSetup } from "load-balancer/sse.ts";
 import { cors } from "load-balancer/cors.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
-import { get, post, router } from "load-balancer/router.ts";
+import { destroy, get, post, router } from "load-balancer/router.ts";
 import { runServer } from "stub-server/sdk.ts";
 import { z } from "zod";
 
@@ -96,6 +96,9 @@ Bun.serve({
 					return new Response();
 				},
 			),
+			destroy("/servers/:id", ({ pathParams }) => {
+				return new Response();
+			}),
 		),
 	),
 });
