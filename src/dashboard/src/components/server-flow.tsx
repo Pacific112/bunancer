@@ -83,10 +83,6 @@ export const ServerFlow = ({ servers }: Props) => {
 		[servers],
 	);
 
-	// const { nodes: positionedNodes, edges: positionedEdges } = useMemo(() => {
-	// 	return getLayoutedElements(nodes, edges);
-	// }, [nodes, edges]);
-
 	return (
 		<div className="w-full h-96">
 			<ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView>

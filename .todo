@@ -47,7 +47,7 @@
     [x] React Flow
     [x] Displays servers on graph
     [x] Show newly added graph
-    [ ] Use auto layout for pool
+    [x] Use auto layout for pool
     [ ] Mark dead server
     [ ] Displays health checks that are made to each server
     [ ] Display basic stats for server (in memory)
