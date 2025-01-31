@@ -48,8 +48,11 @@
     [x] Displays servers on graph
     [x] Show newly added graph
     [x] Use auto layout for pool
-    [ ] Mark dead server
-    [ ] Displays health checks that are made to each server
+    [x] Mark dead server
+    [ ] Control panel after selecting node
+      [ ] stop
+      [ ] show logs
+      [ ] Add node after selecting load balancer
     [ ] Display basic stats for server (in memory)
       [ ] Total requests
       [ ] Requests per second
@@ -109,6 +112,7 @@
   [ ] Graph support
   [ ] Expand / shrink list of servers
   [ ] Display stats for pools
+  [ ] Cool animations when creating / destroying node and edges
 [ ] Display dashboard as well (near load balancer)
 [ ] Dynamic configuration of load balancer from dashboard
 [ ] Auto register

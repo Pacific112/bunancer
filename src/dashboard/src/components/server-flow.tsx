@@ -10,6 +10,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { Server } from "@/types/types.ts";
 import { useMemo } from "react";
+import { cn } from "@/lib/utils.ts";
 
 const LoadBalancerNode = ({ data }: NodeProps) => (
 	<div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
@@ -28,12 +29,23 @@ const LoadBalancerNode = ({ data }: NodeProps) => (
 );
 
 const ServerNode = ({ data }: NodeProps) => (
-	<div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-blue-400">
-		<Handle
-			type="target"
-			position={Position.Top}
-			className="w-16 !bg-blue-400"
-		/>
+	<div
+		className={cn(
+			"px-4 py-2 shadow-md rounded-md bg-white border-2 border-blue-400",
+			{
+				"border-blue-400": data.status === "online",
+				"border-red-400": data.status === "offline",
+				"border-gray-400": data.status === "loading",
+			},
+		)}
+	>
+		{data.status === "online" ? (
+			<Handle
+				type="target"
+				position={Position.Top}
+				className="w-16 !bg-blue-400"
+			/>
+		) : null}
 		<div className="flex items-center">
 			<div className="ml-2">
 				<div className="text-lg font-bold">{data.label}</div>
@@ -65,7 +77,7 @@ export const ServerFlow = ({ servers }: Props) => {
 			...servers.map((s, i) => ({
 				id: s.id,
 				type: "server",
-				data: { label: s.id },
+				data: { label: s.id, status: s.status },
 				position: {
 					x: 250 * (i % 5),
 					y: 200 + 100 * Math.floor(i / 5),
