@@ -1,10 +1,14 @@
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ServerStatus } from "@/components/server-status";
 import { AddServerForm } from "@/components/add-server-form";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import type { CreateServer, ServerPool } from "@/types/types";
+import {
+	Dialog,
+	DialogContent,
+	DialogTrigger,
+} from "@/components/ui/dialog.tsx";
 
 interface ServerPoolProps {
 	pool: ServerPool;
@@ -12,17 +16,13 @@ interface ServerPoolProps {
 }
 
 export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
-	const [showAddForm, setShowAddForm] = useState(false);
-
 	const onlineServers = pool.servers.filter(
 		(server) => server.status === "online",
 	).length;
 	const totalServers = pool.servers.length;
 
-	const handleAddServer = (server: CreateServer) => {
+	const handleAddServer = (server: CreateServer) =>
 		onAddServer(pool.id, server);
-		setShowAddForm(false);
-	};
 
 	return (
 		<Card className="mb-6">
@@ -35,21 +35,19 @@ export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
 				</div>
 			</CardHeader>
 			<CardContent>
-				<div className="flex justify-between items-center mb-4">
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => setShowAddForm(!showAddForm)}
-					>
-						<PlusCircle className="mr-2 h-4 w-4" />
-						Add Server
-					</Button>
-				</div>
-				{showAddForm && (
-					<div className="mb-4">
+				<Dialog>
+					<DialogTrigger asChild>
+						<div className="flex justify-between items-center mb-4">
+							<Button variant="outline" size="sm">
+								<PlusCircle className="mr-2 h-4 w-4" />
+								Add Server
+							</Button>
+						</div>
+					</DialogTrigger>
+					<DialogContent>
 						<AddServerForm onAddServer={handleAddServer} />
-					</div>
-				)}
+					</DialogContent>
+				</Dialog>
 				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 					{pool.servers.map((server) => (
 						<ServerStatus key={server.id} server={server} />

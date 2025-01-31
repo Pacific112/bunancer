@@ -53,20 +53,15 @@
       [x] stop
       [x] show logs
       [ ] Add node after selecting load balancer
-    [ ] Display basic stats for server (in memory)
-      [ ] Total requests
-      [ ] Requests per second
-      [ ] Time alive
-  [ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect
-  [ ] Timeout management
 [ ] Health Checks
-  [ ] Separate state for currently unavailable servers)
+  [ ] Separate state for currently unavailable servers
   [ ] Unavailable servers for a longer time should be removed from pool
   [ ] edge should appear only when first healtch check succeds (or server is added to the pool)
   [ ] for unhealthy servers it should be dotted, for dead there should be none
-[ ] Router
-  [ ] Add support for different parameter names - currently when I use /servers/:id and /servers/:name/details things will not work
-  [ ] Add early misconfiguration detection
+[ ] Display basic stats for server (in memory)
+  [ ] Total requests
+  [ ] Requests per second
+  [ ] Time alive
 [ ] Tech
   [ ] Better error handling for REST actions - currently nothing
   [ ] SDK should support stopping / fetching logs by id
@@ -78,12 +73,17 @@
   [ ] CORS - make sure that it actually behaves how it should and appropriate headers are added
   [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
     [ ] Should this emitter be global?
+  [ ] Router
+    [ ] Add support for different parameter names - currently when I use /servers/:id and /servers/:name/details things will not work
+    [ ] Add early misconfiguration detection
 [ ] SSE frontend - useSyncExternalStore, parsing, at least state should be provided by the server etc.
   [ ] better abstraction - parsing at least
   [ ] nested objects update
   [ ] better sse event names
   [ ] Figure out typing between server and frontend
   [ ] In general - split component and code improvements
+[ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect
+  [ ] I need to at least use something better then fetch...
 [ ] Figure out the best way to deploy React app
   [ ] Serve from Bun?
   [ ] Separate deployment?
@@ -97,11 +97,13 @@
 [ ] Config should be persistent so after restarting load balancer servers do not need - also nice for development as watch breaks stuff
 [ ] Fix mutable config - better types?
 [ ] Retry with backoff - after fail or health check
+[ ] TESTS
 [ ] After some tries server should become dead
 [ ] Global timeout settings
 [ ] Introduce pino for logging
   [ ] Standard access logs on stub server
-[ ] Deployment to fly.io
+  [ ] Maybe structured logs
+[ ] Deployment to fly.io (or maybe something with less abstractions where I can simply upload containers....)
   [ ] X-Forwarded-IP header or something - to make sure it works
   [ ] Fly launch for
 =============================================
@@ -113,8 +115,9 @@
   [ ] Expand / shrink list of servers
   [ ] Display stats for pools
   [ ] Cool animations when creating / destroying node and edges
-[ ] Display dashboard as well (near load balancer)
+[ ] Display dashboard on react flow as well (near load balancer)
 [ ] Dynamic configuration of load balancer from dashboard
+[ ] Backdrop support?
 [ ] Auto register
   [ ] Add Basic Auth
   [ ] Use different protocol for communication - some RPC would be much better
