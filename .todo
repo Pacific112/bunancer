@@ -37,26 +37,30 @@
     [x] Support following events:
       [x] Server online
       [x] Server offline
-    [ ] Basic CRUD:
+    [x] Basic CRUD:
       [x] Add simple router abstraction
       [x] Extract common logic from CLI to separate sdk
       [x] Add New Server to the pool
       [x] Kill Server
-      [ ] Show server logs
+      [x] Show server logs
   [ ] Request Flow
-    [ ] React Flow
-    [ ] Displays connected servers in real time
-    [ ] Displays them on graph
+    [x] React Flow
+    [x] Displays servers on graph
+    [x] Show newly added graph
+    [ ] Use auto layout for pool
+    [ ] Mark dead server
     [ ] Displays health checks that are made to each server
-    [ ] Allows to communicate with test servers in real time
-      [ ] Timeout
-      [ ] 500
-      [ ] shutdown
-      [ ] Add new one
+    [ ] Display basic stats for server (in memory)
+      [ ] Total requests
+      [ ] Requests per second
+      [ ] Time alive
   [ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect
-  [ ] Pool management
   [ ] Timeout management
-  [ ] Allows to configure load balancer
+[ ] Health Checks
+  [ ] Separate state for currently unavailable servers)
+  [ ] Unavailable servers for a longer time should be removed from pool
+  [ ] edge should appear only when first healtch check succeds (or server is added to the pool)
+  [ ] for unhealthy servers it should be dotted, for dead there should be none
 [ ] Router
   [ ] Add support for different parameter names - currently when I use /servers/:id and /servers/:name/details things will not work
   [ ] Add early misconfiguration detection
@@ -99,6 +103,14 @@
   [ ] Fly launch for
 =============================================
 [ ] Stream server logs instead of static display
+[ ] Store stats somewhere
+  [ ] Redis?
+[ ] Support for multiple server pools
+  [ ] Graph support
+  [ ] Expand / shrink list of servers
+  [ ] Display stats for pools
+[ ] Display dashboard as well (near load balancer)
+[ ] Dynamic configuration of load balancer from dashboard
 [ ] Auto register
   [ ] Add Basic Auth
   [ ] Use different protocol for communication - some RPC would be much better
