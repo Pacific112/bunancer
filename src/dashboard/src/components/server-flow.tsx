@@ -7,7 +7,6 @@ import {
 	Position,
 	ReactFlow,
 } from "@xyflow/react";
-
 import "@xyflow/react/dist/style.css";
 import { Server } from "@/types/types.ts";
 import { useMemo } from "react";
@@ -48,7 +47,7 @@ const loadBalancerNode: Node = {
 	id: "lb",
 	type: "loadBalancer",
 	data: { label: "Load Balancer" },
-	position: { x: 250, y: 0 },
+	position: { x: 500, y: 0 },
 };
 
 const nodeTypes = {
@@ -67,7 +66,10 @@ export const ServerFlow = ({ servers }: Props) => {
 				id: s.id,
 				type: "server",
 				data: { label: s.id },
-				position: { x: 250 * i, y: 200 },
+				position: {
+					x: 250 * (i % 5),
+					y: 200 + 100 * Math.floor(i / 5),
+				},
 			})),
 		];
 	}, [servers]);
@@ -80,6 +82,10 @@ export const ServerFlow = ({ servers }: Props) => {
 			})),
 		[servers],
 	);
+
+	// const { nodes: positionedNodes, edges: positionedEdges } = useMemo(() => {
+	// 	return getLayoutedElements(nodes, edges);
+	// }, [nodes, edges]);
 
 	return (
 		<div className="w-full h-96">
