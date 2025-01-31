@@ -49,9 +49,9 @@
     [x] Show newly added graph
     [x] Use auto layout for pool
     [x] Mark dead server
-    [ ] Control panel after selecting node
-      [ ] stop
-      [ ] show logs
+    [x] Control panel after selecting node
+      [x] stop
+      [x] show logs
       [ ] Add node after selecting load balancer
     [ ] Display basic stats for server (in memory)
       [ ] Total requests
