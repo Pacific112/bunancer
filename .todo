@@ -71,6 +71,7 @@
   [ ] Health check - I don't like current implementation
   [ ] Get rid of hardcoded links
   [ ] CORS - make sure that it actually behaves how it should and appropriate headers are added
+  [ ] DialogClose should be used in dialog not in form...
   [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
     [ ] Should this emitter be global?
   [ ] Router
