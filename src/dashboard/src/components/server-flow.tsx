@@ -4,32 +4,39 @@ import {
 	Handle,
 	Node,
 	NodeProps,
+	NodeToolbar,
 	Position,
 	ReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { Server } from "@/types/types.ts";
+import { type CreateServer, Server } from "@/types/types.ts";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils.ts";
 import { Popover, PopoverContent } from "@/components/ui/popover.tsx";
 import { PopoverTrigger } from "@radix-ui/react-popover";
 import { DeleteServerDialog } from "@/components/delete-server-dialog.tsx";
 import { ShowLogsDialog } from "@/components/show-logs-dialog.tsx";
+import { AddServerDialog } from "@/components/add-server-dialog.tsx";
 
 const LoadBalancerNode = ({ data }: NodeProps) => (
-	<div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
-		<div className="flex items-center">
-			<div className="ml-2">
-				<div className="text-lg font-bold">{data.label}</div>
-				<div className="text-gray-500">Distributes Traffic</div>
+	<>
+		<div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
+			<div className="flex items-center">
+				<div className="ml-2">
+					<div className="text-lg font-bold">{data.label}</div>
+					<div className="text-gray-500">Distributes Traffic</div>
+				</div>
 			</div>
+			<Handle
+				type="source"
+				position={Position.Bottom}
+				className="w-16 !bg-stone-400"
+			/>
 		</div>
-		<Handle
-			type="source"
-			position={Position.Bottom}
-			className="w-16 !bg-stone-400"
-		/>
-	</div>
+		<NodeToolbar isVisible position={Position.Top}>
+			<AddServerDialog handleAddServer={data.onAddServer} />
+		</NodeToolbar>
+	</>
 );
 
 const ServerNode = ({ data: { server } }: NodeProps) => (
@@ -69,12 +76,14 @@ const ServerNode = ({ data: { server } }: NodeProps) => (
 	</Popover>
 );
 
-const loadBalancerNode: Node = {
+const loadBalancerNode = (
+	onAddServer: (server: CreateServer) => void,
+): Node => ({
 	id: "lb",
 	type: "loadBalancer",
-	data: { label: "Load Balancer" },
+	data: { label: "Load Balancer", onAddServer },
 	position: { x: 500, y: 0 },
-};
+});
 
 const nodeTypes = {
 	loadBalancer: LoadBalancerNode,
@@ -83,11 +92,12 @@ const nodeTypes = {
 
 type Props = {
 	servers: Server[];
+	onAddServer: (server: CreateServer) => void;
 };
-export const ServerFlow = ({ servers }: Props) => {
+export const ServerFlow = ({ servers, onAddServer }: Props) => {
 	const nodes = useMemo<Node[]>(() => {
 		return [
-			loadBalancerNode,
+			loadBalancerNode(onAddServer),
 			...servers.map((s, i) => ({
 				id: s.id,
 				type: "server",
@@ -103,7 +113,7 @@ export const ServerFlow = ({ servers }: Props) => {
 		() =>
 			servers.map((s) => ({
 				id: `lb-${s.id}`,
-				source: loadBalancerNode.id,
+				source: "lb",
 				target: s.id,
 			})),
 		[servers],

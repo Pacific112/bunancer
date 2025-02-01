@@ -94,7 +94,12 @@ function App() {
 			{serverPools.map((pool) => (
 				<ServerPool key={pool.id} pool={pool} onAddServer={handleAddServer} />
 			))}
-			{serverPools[0] && <ServerFlow servers={serverPools[0].servers} />}
+			{serverPools[0] && (
+				<ServerFlow
+					servers={serverPools[0].servers}
+					onAddServer={(server) => handleAddServer(serverPools[0].id, server)}
+				/>
+			)}
 		</div>
 	);
 }

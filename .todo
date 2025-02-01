@@ -52,7 +52,7 @@
     [x] Control panel after selecting node
       [x] stop
       [x] show logs
-      [ ] Add node after selecting load balancer
+      [x] Add node after selecting load balancer
 [ ] Health Checks
   [ ] Separate state for currently unavailable servers
   [ ] Unavailable servers for a longer time should be removed from pool
@@ -72,6 +72,7 @@
   [ ] Get rid of hardcoded links
   [ ] CORS - make sure that it actually behaves how it should and appropriate headers are added
   [ ] DialogClose should be used in dialog not in form...
+  [ ] Use NodeToolbar instead of PopoverContent (or together)
   [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
     [ ] Should this emitter be global?
   [ ] Router
