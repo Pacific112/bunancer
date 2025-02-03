@@ -55,7 +55,7 @@
       [x] Add node after selecting load balancer
 [ ] Health Checks
   [x] Separate state for currently unavailable servers
-  [ ] Unavailable servers for a longer time should be removed from pool
+  [x] Unavailable servers for a longer time should be removed from pool
   [ ] edge should appear only when first health check succeeds (or server is added to the pool)
   [ ] for unhealthy servers it should be dotted, for dead there should be none
   [ ] Retry with backoff - after fail or health check

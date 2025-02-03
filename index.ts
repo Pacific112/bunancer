@@ -1,10 +1,11 @@
 import { loadConfig } from "load-balancer/config.ts";
-import { initializePool, toUrl } from "load-balancer/server-pool.ts";
-import { startLoadBalancer } from "load-balancer/load-balancer.ts";
 import {
-	type ServerConfig,
-	serverSchema,
-} from "load-balancer/config-schema.ts";
+	initializePool,
+	type PendingServer,
+	toUrl,
+} from "load-balancer/server-pool.ts";
+import { startLoadBalancer } from "load-balancer/load-balancer.ts";
+import { serverSchema } from "load-balancer/config-schema.ts";
 import { sse, type SseSetup } from "load-balancer/sse.ts";
 import { cors } from "load-balancer/cors.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
@@ -59,13 +60,13 @@ const statusHandler = () => {
 };
 
 const sseHandler: SseSetup = (enqueue) => {
-	const newServerListener = (s: ServerConfig) =>
+	const newServerListener = (s: PendingServer) =>
 		enqueue({
 			name: "new-server",
 			data: {
 				id: s.id,
 				name: s.id,
-				status: "online",
+				status: "pending",
 				ip: toUrl(s),
 			},
 		});
@@ -73,14 +74,18 @@ const sseHandler: SseSetup = (enqueue) => {
 		enqueue({ name: "server-online", data: id });
 	const serverOfflineListener = (id: string) =>
 		enqueue({ name: "server-offline", data: id });
+	const serverKilledListener = (id: string) =>
+		enqueue({ name: "server-dead", data: id });
 
 	globalEmitter.on("pool:new-server", newServerListener);
 	globalEmitter.on("pool:server-online", serverOnlineListener);
 	globalEmitter.on("pool:server-offline", serverOfflineListener);
+	globalEmitter.on("pool:server-killed", serverKilledListener);
 	return () => {
 		globalEmitter.off("pool:new-server", newServerListener);
 		globalEmitter.off("pool:server-online", serverOnlineListener);
 		globalEmitter.off("pool:server-offline", serverOfflineListener);
+		globalEmitter.off("pool:server-killed", serverKilledListener);
 	};
 };
 

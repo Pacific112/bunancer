@@ -53,6 +53,17 @@ function App() {
 				})),
 			);
 		});
+		source.addEventListener("server-dead", (e) => {
+			const eid = JSON.parse(e.data);
+			setServerPools((ss) =>
+				ss.map((p) => ({
+					...p,
+					servers: p.servers.map((s) => {
+						return s.id === eid ? { ...s, status: "dead" } : s;
+					}),
+				})),
+			);
+		});
 
 		return () => source.close();
 	}, []);

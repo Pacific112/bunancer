@@ -25,7 +25,7 @@ export function ServerStatus({ server }: ServerStatusProps) {
 						variant={
 							server.status === "healthy"
 								? "default"
-								: server.status === "unhealthy"
+								: server.status === "unhealthy" || server.status === "dead"
 									? "destructive"
 									: server.status === "pending"
 										? "secondary"
@@ -36,7 +36,9 @@ export function ServerStatus({ server }: ServerStatusProps) {
 					</Badge>
 				</div>
 				<div className="flex">
-					{server.status === "healthy" && <DeleteServerDialog server={server} />}
+					{server.status === "healthy" && (
+						<DeleteServerDialog server={server} />
+					)}
 					<ShowLogsDialog server={server} />
 				</div>
 			</CardHeader>

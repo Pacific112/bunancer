@@ -49,6 +49,7 @@ const ServerNode = ({ data: { server } }: NodeProps) => (
 						"border-blue-400": server.status === "healthy",
 						"border-red-400": server.status === "unhealthy",
 						"border-gray-400": server.status === "pending",
+						"border-red-700 bg-red-200 opacity-30": server.status === "dead",
 					},
 				)}
 			>
