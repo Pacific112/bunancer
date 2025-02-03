@@ -53,13 +53,11 @@ const ServerNode = ({ data: { server } }: NodeProps) => (
 					},
 				)}
 			>
-				{server.status === "healthy" ? (
-					<Handle
-						type="target"
-						position={Position.Top}
-						className="w-16 !bg-blue-400"
-					/>
-				) : null}
+				<Handle
+					type="target"
+					position={Position.Top}
+					className="w-16 !bg-blue-400"
+				/>
 				<div className="flex items-center">
 					<div className="ml-2">
 						<div className="text-lg font-bold">{server.id}</div>
@@ -112,11 +110,20 @@ export const ServerFlow = ({ servers, onAddServer }: Props) => {
 	}, [servers]);
 	const edges = useMemo<Edge[]>(
 		() =>
-			servers.map((s) => ({
-				id: `lb-${s.id}`,
-				source: "lb",
-				target: s.id,
-			})),
+			servers
+				.filter((s) => s.status !== "dead")
+				.map((s) => ({
+					id: `lb-${s.id}`,
+					source: "lb",
+					target: s.id,
+					style: {
+						stroke: s.status === "unhealthy" ? "#f87171" : undefined,
+						strokeDasharray:
+							s.status === "pending" || s.status === "unhealthy"
+								? 5
+								: undefined,
+					},
+				})),
 		[servers],
 	);
 

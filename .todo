@@ -56,8 +56,8 @@
 [ ] Health Checks
   [x] Separate state for currently unavailable servers
   [x] Unavailable servers for a longer time should be removed from pool
-  [ ] edge should appear only when first health check succeeds (or server is added to the pool)
-  [ ] for unhealthy servers it should be dotted, for dead there should be none
+  [x] edge should appear only when first health check succeeds (or server is added to the pool)
+  [x] for unhealthy servers it should be dotted, for dead there should be none
   [ ] Retry with backoff - after fail or health check
   [ ] After few tries server should become dead
   [ ] After registering server first health check should be done immediately
@@ -76,6 +76,7 @@
   [ ] SDK should support stopping / fetching logs by id
   [ ] Structured logs support
   [ ] Configure base url or just use something better then raw fetch
+  [ ] Do not send SSE when state has not changed
   [ ] Figure out types - they should be common between server and client
   [ ] Health check - I don't like current implementation
   [ ] Get rid of hardcoded links
@@ -97,6 +98,7 @@
   [ ] better sse event names
   [ ] Figure out typing between server and frontend
   [ ] In general - split component and code improvements
+  [ ] Try to make look and feel between flow and dashboard rectangles similar...
 [ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect
   [ ] I need to at least use something better then fetch...
 [ ] Figure out the best way to deploy React app

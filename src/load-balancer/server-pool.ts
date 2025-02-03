@@ -21,7 +21,6 @@ const setupHealthCheck = (
 ) =>
 	setInterval(async () => {
 		try {
-			console.log("Checking health for: " + server.id)
 			const res = await fetch(`${toUrl(server)}/${server.config.health.path}`, {
 				signal: AbortSignal.timeout(HEALTH_CHECK_TIMEOUT),
 			});
