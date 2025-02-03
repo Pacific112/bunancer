@@ -15,7 +15,7 @@ export function ServerStatus({ server }: ServerStatusProps) {
 		<Card
 			className={cn(
 				"transition-all duration-500 ease-in-out",
-				server.status === "loading" && "animate-pulse",
+				server.status === "pending" && "animate-pulse",
 			)}
 		>
 			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -23,11 +23,11 @@ export function ServerStatus({ server }: ServerStatusProps) {
 					<CardTitle className="text-sm font-medium">{server.name}</CardTitle>
 					<Badge
 						variant={
-							server.status === "online"
+							server.status === "healthy"
 								? "default"
-								: server.status === "offline"
+								: server.status === "unhealthy"
 									? "destructive"
-									: server.status === "loading"
+									: server.status === "pending"
 										? "secondary"
 										: "default"
 						}
@@ -36,7 +36,7 @@ export function ServerStatus({ server }: ServerStatusProps) {
 					</Badge>
 				</div>
 				<div className="flex">
-					{server.status === "online" && <DeleteServerDialog server={server} />}
+					{server.status === "healthy" && <DeleteServerDialog server={server} />}
 					<ShowLogsDialog server={server} />
 				</div>
 			</CardHeader>

@@ -47,8 +47,8 @@ const statusHandler = () => {
 					id: "pool1",
 					name: "Test",
 					servers: serverPool.allServers.map((s) => ({
-						id: s.id,
-						name: s.id,
+						id: s.config.id,
+						name: s.config.id,
 						status: s.status,
 						ip: toUrl(s),
 					})),

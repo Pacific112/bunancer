@@ -26,8 +26,8 @@
     [x] Add Server -> full config
     [x] Quit
 [x] Setup Vite
-[ ] Dashboard with stats:
-  [ ] Pool / config management
+[x] Dashboard with stats:
+  [x] Pool / config management
     [x] Display pools and server statuses
     [x] Make sure statuses are displayed dynamically via SSE
     [x] Prepare small abstractions
@@ -43,7 +43,7 @@
       [x] Add New Server to the pool
       [x] Kill Server
       [x] Show server logs
-  [ ] Request Flow
+  [x] Request Flow
     [x] React Flow
     [x] Displays servers on graph
     [x] Show newly added graph
@@ -54,14 +54,23 @@
       [x] show logs
       [x] Add node after selecting load balancer
 [ ] Health Checks
-  [ ] Separate state for currently unavailable servers
+  [x] Separate state for currently unavailable servers
   [ ] Unavailable servers for a longer time should be removed from pool
-  [ ] edge should appear only when first healtch check succeds (or server is added to the pool)
+  [ ] edge should appear only when first health check succeeds (or server is added to the pool)
   [ ] for unhealthy servers it should be dotted, for dead there should be none
+  [ ] Retry with backoff - after fail or health check
+  [ ] After few tries server should become dead
+  [ ] After registering server first health check should be done immediately
 [ ] Display basic stats for server (in memory)
   [ ] Total requests
   [ ] Requests per second
   [ ] Time alive
+[ ] Support for multiple server pools
+  [ ] Graph support
+  [ ] Expand / shrink list of servers
+  [ ] Display stats for pools
+  [ ] Cool animations when creating / destroying node and edges
+  [ ] Better add server
 [ ] Tech
   [ ] Better error handling for REST actions - currently nothing
   [ ] SDK should support stopping / fetching logs by id
@@ -70,9 +79,13 @@
   [ ] Figure out types - they should be common between server and client
   [ ] Health check - I don't like current implementation
   [ ] Get rid of hardcoded links
+  [ ] ServerPool.allServers should be probably removed... Or maybe not
+  [ ] Config should be persistent so after restarting load balancer servers do not need - also nice for development as watch breaks stuff
   [ ] CORS - make sure that it actually behaves how it should and appropriate headers are added
   [ ] DialogClose should be used in dialog not in form...
   [ ] Use NodeToolbar instead of PopoverContent (or together)
+  [ ] Handle case when there is no servers in pool - currently error
+  [ ] Maybe setupHealthCheck can be simplified to checkHealth or something... - to avoid callbacks
   [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
     [ ] Should this emitter be global?
   [ ] Router
@@ -95,12 +108,8 @@
   [ ] Separate route handling from fetch method
 [ ] Monorepo
   [ ] Share types between Bun backend and React frontend
-[ ] Handle case when there is no servers in pool - currently error
-[ ] Config should be persistent so after restarting load balancer servers do not need - also nice for development as watch breaks stuff
 [ ] Fix mutable config - better types?
-[ ] Retry with backoff - after fail or health check
 [ ] TESTS
-[ ] After some tries server should become dead
 [ ] Global timeout settings
 [ ] Introduce pino for logging
   [ ] Standard access logs on stub server
@@ -112,11 +121,6 @@
 [ ] Stream server logs instead of static display
 [ ] Store stats somewhere
   [ ] Redis?
-[ ] Support for multiple server pools
-  [ ] Graph support
-  [ ] Expand / shrink list of servers
-  [ ] Display stats for pools
-  [ ] Cool animations when creating / destroying node and edges
 [ ] Display dashboard on react flow as well (near load balancer)
 [ ] Dynamic configuration of load balancer from dashboard
 [ ] Backdrop support?

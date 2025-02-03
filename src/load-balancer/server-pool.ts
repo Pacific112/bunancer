@@ -1,85 +1,91 @@
 import type { AppConfig, ServerConfig } from "load-balancer/config-schema.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
 
-export const toUrl = (server: ServerConfig) => `${server.host}:${server.port}`;
+export const toUrl = ({ config }: PoolServer) =>
+	`${config.host}:${config.port}`;
 
 const HEALTH_CHECK_TIMEOUT = 500;
 
+type BaseServer = { config: ServerConfig; id: string };
+type PendingServer = BaseServer & { status: "pending" };
+type HealthyServer = BaseServer & { status: "healthy" };
+type UnhealthyServer = BaseServer & { status: "unhealthy" };
+type DeadServer = BaseServer & { status: "dead" };
+type PoolServer = PendingServer | HealthyServer | UnhealthyServer | DeadServer;
+
 const setupHealthCheck = (
-	server: ServerConfig,
+	server: PoolServer,
 	onSuccess: (id: string) => void,
 	onError: (id: string) => void,
 ) => {
-	setInterval(async () => {
+	return setInterval(async () => {
 		try {
-			const res = await fetch(`${toUrl(server)}/${server.health.path}`, {
+			const res = await fetch(`${toUrl(server)}/${server.config.health.path}`, {
 				signal: AbortSignal.timeout(HEALTH_CHECK_TIMEOUT),
 			});
 			if (res.status === 200) {
-				onSuccess(server.id);
+				onSuccess(server.config.id);
 			} else {
-				onError(server.id);
+				onError(server.config.id);
 			}
 		} catch (e) {
-			onError(server.id);
+			onError(server.config.id);
 		}
-	}, server.health.interval);
+	}, server.config.health.interval);
 };
 
-export const initializePool = ({ servers, timeout }: AppConfig) => {
-	const unavailableServers = new Set<string>();
+const createPool = () => {
+	const servers: PoolServer[] = [];
+	const healthChecks: Map<string, Timer> = new Map();
 
-	for (const server of servers) {
-		setupHealthCheck(
-			server,
-			(id) => {
-				if (unavailableServers.delete(id)) {
-					globalEmitter.emit("pool:server-online", id);
-				}
-			},
-			(id) => {
-				if (!unavailableServers.has(id)) {
-					unavailableServers.add(id);
-					globalEmitter.emit("pool:server-offline", id);
-				}
-			},
-		);
-	}
+	const markAsHealthy = (serverId: string) => {
+		const server = servers.find((s) => s.id === serverId);
+		if (server) {
+			server.status = "healthy";
+			globalEmitter.emit("pool:server-online", serverId);
+		}
+	};
+	const markAsUnhealthy = (serverId: string) => {
+		const server = servers.find((s) => s.id === serverId);
+		if (server) {
+			server.status = "unhealthy";
+			globalEmitter.emit("pool:server-offline", serverId);
+		}
+	};
+	return {
+		servers,
+		addServer: (config: ServerConfig) => {
+			const pending = { id: config.id, status: "pending", config } as const;
+			servers.push(pending);
 
-	const handleResponse = (response: Response, server: ServerConfig) => {
-		if (
-			[502, 503, 504].includes(response.status) &&
-			!unavailableServers.has(server.id)
-		) {
-			unavailableServers.add(server.id);
-			globalEmitter.emit("pool:server-offline", server.id);
+			const timeoutId = setupHealthCheck(
+				pending,
+				markAsHealthy,
+				markAsUnhealthy,
+			);
+			healthChecks.set(pending.id, timeoutId);
+		},
+		markAsHealthy,
+		markAsUnhealthy,
+	};
+};
+
+export const initializePool = ({ servers: configs, timeout }: AppConfig) => {
+	const { servers, markAsUnhealthy, addServer } = createPool();
+
+	configs.forEach(addServer);
+
+	const handleResponse = (response: Response, server: HealthyServer) => {
+		if ([502, 503, 504].includes(response.status)) {
+			markAsUnhealthy(server.config.id);
 		}
 	};
 
 	return {
-		get allServers() {
-			return servers.map((s) => ({
-				...s,
-				status: unavailableServers.has(s.id) ? "offline" : "online",
-			}));
-		},
+		allServers: servers,
 		addServer: (server: ServerConfig) => {
 			if (servers.every((s) => s.id !== server.id)) {
-				servers.push(server);
-				setupHealthCheck(
-					server,
-					(id) => {
-						if (unavailableServers.delete(id)) {
-							globalEmitter.emit("pool:server-online", id);
-						}
-					},
-					(id) => {
-						if (!unavailableServers.has(id)) {
-							unavailableServers.add(id);
-							globalEmitter.emit("pool:server-offline", id);
-						}
-					},
-				);
+				addServer(server);
 				globalEmitter.emit("pool:new-server", server);
 
 				return { ok: true };
@@ -89,11 +95,10 @@ export const initializePool = ({ servers, timeout }: AppConfig) => {
 		},
 		requestTo: (
 			request: Request,
-			selector: (servers: ServerConfig[]) => ServerConfig,
+			selector: (servers: HealthyServer[]) => HealthyServer,
 		) => {
-			const server = selector(
-				servers.filter((s) => !unavailableServers.has(s.id)),
-			);
+			const healthyServers = servers.filter((s) => s.status === "healthy");
+			const server = selector(healthyServers);
 			const fetchPromise = fetch(toUrl(server), {
 				body: request.body,
 				headers: request.headers,
@@ -102,12 +107,7 @@ export const initializePool = ({ servers, timeout }: AppConfig) => {
 
 			fetchPromise
 				.then((r) => handleResponse(r, server))
-				.catch(() => {
-					if (!unavailableServers.has(server.id)) {
-						globalEmitter.emit("pool:server-offline", server.id);
-						unavailableServers.add(server.id);
-					}
-				});
+				.catch(() => markAsUnhealthy(server.config.id));
 
 			return fetchPromise;
 		},

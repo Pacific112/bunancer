@@ -46,13 +46,13 @@ const ServerNode = ({ data: { server } }: NodeProps) => (
 				className={cn(
 					"px-4 py-2 shadow-md rounded-md bg-white border-2 border-blue-400",
 					{
-						"border-blue-400": server.status === "online",
-						"border-red-400": server.status === "offline",
-						"border-gray-400": server.status === "loading",
+						"border-blue-400": server.status === "healthy",
+						"border-red-400": server.status === "unhealthy",
+						"border-gray-400": server.status === "pending",
 					},
 				)}
 			>
-				{server.status === "online" ? (
+				{server.status === "healthy" ? (
 					<Handle
 						type="target"
 						position={Position.Top}
@@ -69,7 +69,7 @@ const ServerNode = ({ data: { server } }: NodeProps) => (
 		</PopoverTrigger>
 		<PopoverContent className="w-fit p-1">
 			<div className="flex">
-				{server.status === "online" && <DeleteServerDialog server={server} />}
+				{server.status === "healthy" && <DeleteServerDialog server={server} />}
 				<ShowLogsDialog server={server} />
 			</div>
 		</PopoverContent>

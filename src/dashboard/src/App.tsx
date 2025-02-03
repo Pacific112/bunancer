@@ -37,7 +37,7 @@ function App() {
 				ss.map((p) => ({
 					...p,
 					servers: p.servers.map((s) =>
-						s.id === eid ? { ...s, status: "online" } : s,
+						s.id === eid ? { ...s, status: "healthy" } : s,
 					),
 				})),
 			);
@@ -48,7 +48,7 @@ function App() {
 				ss.map((p) => ({
 					...p,
 					servers: p.servers.map((s) => {
-						return s.id === eid ? { ...s, status: "offline" } : s;
+						return s.id === eid ? { ...s, status: "unhealthy" } : s;
 					}),
 				})),
 			);
@@ -69,7 +69,7 @@ function App() {
 									id: newServer.instanceId,
 									responseTime: 0,
 									ip: `http://localhost:${newServer.port}`,
-									status: "loading",
+									status: "pending",
 									name: newServer.instanceId,
 									load: 0,
 								},

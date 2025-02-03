@@ -1,4 +1,4 @@
-import { type AppConfig, configSchema } from "load-balancer/config-schema.ts";
+import { configSchema } from "load-balancer/config-schema.ts";
 
 const path = process.env.CONFIG_PATH || "./config.json";
 const configFile = Bun.file(path, { type: "application/json" });
@@ -16,5 +16,3 @@ export const loadConfig = async () => {
 
 	throw parsedConfig.error;
 };
-
-export const storeConfig = (config: AppConfig) => {};

@@ -1,7 +1,7 @@
 export interface Server {
 	id: string;
 	name: string;
-	status: "online" | "offline" | "loading";
+	status: "healthy" | "unhealthy" | "pending";
 	ip: string;
 	load: number;
 	responseTime: number;

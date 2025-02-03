@@ -13,12 +13,12 @@ export function DashboardSummary({ serverPools }: DashboardSummaryProps) {
 	);
 	const onlineServers = serverPools.reduce(
 		(acc, pool) =>
-			acc + pool.servers.filter((s) => s.status === "online").length,
+			acc + pool.servers.filter((s) => s.status === "healthy").length,
 		0,
 	);
 	const offlineServers = serverPools.reduce(
 		(acc, pool) =>
-			acc + pool.servers.filter((s) => s.status === "offline").length,
+			acc + pool.servers.filter((s) => s.status === "unhealthy").length,
 		0,
 	);
 

@@ -10,7 +10,7 @@ interface ServerPoolProps {
 
 export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
 	const onlineServers = pool.servers.filter(
-		(server) => server.status === "online",
+		(server) => server.status === "healthy",
 	).length;
 	const totalServers = pool.servers.length;
 
