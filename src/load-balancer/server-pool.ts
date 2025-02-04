@@ -14,25 +14,27 @@ type UnhealthyServer = BaseServer & { status: "unhealthy" };
 type DeadServer = BaseServer & { status: "dead" };
 type PoolServer = PendingServer | HealthyServer | UnhealthyServer | DeadServer;
 
+const checkHealth = async (server: PoolServer) => {
+	try {
+		const res = await fetch(`${toUrl(server)}/${server.config.health.path}`, {
+			signal: AbortSignal.timeout(HEALTH_CHECK_TIMEOUT),
+		});
+		return res.status === 200;
+	} catch (e) {
+		return false;
+	}
+};
+
 const setupHealthCheck = (
 	server: PoolServer,
 	onSuccess: (id: string) => void,
 	onError: (id: string) => void,
 ) =>
-	setInterval(async () => {
-		try {
-			const res = await fetch(`${toUrl(server)}/${server.config.health.path}`, {
-				signal: AbortSignal.timeout(HEALTH_CHECK_TIMEOUT),
-			});
-			if (res.status === 200) {
-				onSuccess(server.config.id);
-			} else {
-				onError(server.config.id);
-			}
-		} catch (e) {
-			onError(server.config.id);
-		}
-	}, server.config.health.interval);
+	setInterval(
+		async () =>
+			(await checkHealth(server)) ? onSuccess(server.id) : onError(server.id),
+		server.config.health.interval,
+	);
 
 type HealthCheckInfo = {
 	timerId: Timer;
@@ -74,12 +76,20 @@ const createPool = () => {
 	};
 	return {
 		servers,
-		addServer: (config: ServerConfig) => {
+		addServer: async (config: ServerConfig) => {
 			const pending = { id: config.id, status: "pending", config } as const;
 			servers.push(pending);
+			globalEmitter.emit("pool:new-server", pending);
+
+			const healthResult = await checkHealth(pending);
+			if (!healthResult) {
+				markAsUnhealthy(pending.id);
+				return;
+			}
 
 			const timerId = setupHealthCheck(pending, markAsHealthy, markAsUnhealthy);
 			healthChecks.set(pending.id, { timerId, failedCount: 0 });
+			markAsHealthy(pending.id);
 			return pending;
 		},
 		markAsHealthy,
@@ -100,12 +110,14 @@ export const initializePool = ({ servers: configs, timeout }: AppConfig) => {
 
 	return {
 		allServers: servers,
-		addServer: (server: ServerConfig) => {
+		addServer: async (server: ServerConfig) => {
 			if (servers.every((s) => s.id !== server.id)) {
-				const newServer = addServer(server);
-				globalEmitter.emit("pool:new-server", newServer);
+				const newServer = await addServer(server);
+				if (newServer) {
+					return { ok: true };
+				}
 
-				return { ok: true };
+				return { ok: false, error: "Server health check did not respond" };
 			}
 
 			return { ok: false, error: "Server already exists" };

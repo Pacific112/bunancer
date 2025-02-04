@@ -58,9 +58,8 @@
   [x] Unavailable servers for a longer time should be removed from pool
   [x] edge should appear only when first health check succeeds (or server is added to the pool)
   [x] for unhealthy servers it should be dotted, for dead there should be none
-  [ ] Retry with backoff - after fail or health check
-  [ ] After few tries server should become dead
-  [ ] After registering server first health check should be done immediately
+  [x] After few tries server should become dead
+  [x] After registering server first health check should be done immediately
 [ ] Display basic stats for server (in memory)
   [ ] Total requests
   [ ] Requests per second
@@ -79,6 +78,7 @@
   [ ] Do not send SSE when state has not changed
   [ ] Figure out types - they should be common between server and client
   [ ] Health check - I don't like current implementation
+  [ ] Get rid of ! operator
   [ ] Get rid of hardcoded links
   [ ] ServerPool.allServers should be probably removed... Or maybe not
   [ ] Config should be persistent so after restarting load balancer servers do not need - also nice for development as watch breaks stuff
@@ -87,6 +87,7 @@
   [ ] Use NodeToolbar instead of PopoverContent (or together)
   [ ] Handle case when there is no servers in pool - currently error
   [ ] Maybe setupHealthCheck can be simplified to checkHealth or something... - to avoid callbacks
+  [ ] Retry with backoff - after fail or health check
   [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
     [ ] Should this emitter be global?
   [ ] Router

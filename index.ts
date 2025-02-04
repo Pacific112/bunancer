@@ -31,8 +31,8 @@ Bun.serve({
 Bun.serve({
 	port: 40999,
 	fetch: router(
-		post("/register", serverSchema, (body) => {
-			const result = serverPool.addServer(body);
+		post("/register", serverSchema,async (body) => {
+			const result = await serverPool.addServer(body);
 			return result.ok
 				? new Response()
 				: new Response(result.error, { status: 400 });
