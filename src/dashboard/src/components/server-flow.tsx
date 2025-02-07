@@ -9,7 +9,7 @@ import {
 	ReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { type CreateServer, Server } from "@/types/types.ts";
+import { type CreateServer, Server, ServerStats } from "@/types/types.ts";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils.ts";
 import { Popover, PopoverContent } from "@/components/ui/popover.tsx";
@@ -65,15 +65,19 @@ const ServerNode = ({ data: { server, stats } }: NodeProps) => (
 					<div className="grid grid-cols-3 gap-px p-px justify-center">
 						<div className="text-center bg-gray-100 p-2">
 							<div className="text-xs">Total</div>
-							<div className="font-bold text-sm">{stats.total || "-"}</div>
+							<div className="font-bold text-sm">
+								{stats?.totalRequests || 0}
+							</div>
 						</div>
 						<div className="text-xs text-center bg-gray-100 p-2">
 							<div className="text-xs">Req/s</div>
-							<div className="font-bold text-sm">{stats.requestsPerSecond || "-"}</div>
+							<div className="font-bold text-sm">
+								{Math.round(stats?.requestsPerSecond) || 0}
+							</div>
 						</div>
 						<div className="text-xs text-center bg-gray-100 p-2">
 							<div className="text-xs">Error rate</div>
-							<div className="font-bold text-sm">{stats.errorRate || "-"}</div>
+							<div className="font-bold text-sm">{stats?.errorRate || 0}%</div>
 						</div>
 					</div>
 				</div>
@@ -104,7 +108,7 @@ const nodeTypes = {
 
 type Props = {
 	servers: Server[];
-	stats: Record<string, number>
+	stats: Record<string, ServerStats>;
 	onAddServer: (server: CreateServer) => void;
 };
 export const ServerFlow = ({ servers, onAddServer, stats }: Props) => {
@@ -114,7 +118,7 @@ export const ServerFlow = ({ servers, onAddServer, stats }: Props) => {
 			...servers.map((s, i) => ({
 				id: s.id,
 				type: "server",
-				data: { server: s, stats: { total: stats[s.id] } },
+				data: { server: s, stats: stats[s.id] },
 				position: {
 					x: 250 * (i % 5),
 					y: 200 + 100 * Math.floor(i / 5),
@@ -141,6 +145,7 @@ export const ServerFlow = ({ servers, onAddServer, stats }: Props) => {
 		[servers],
 	);
 
+	console.log(stats)
 	return (
 		<div className="w-full h-96">
 			<ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView>

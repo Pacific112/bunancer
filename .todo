@@ -60,10 +60,10 @@
   [x] for unhealthy servers it should be dotted, for dead there should be none
   [x] After few tries server should become dead
   [x] After registering server first health check should be done immediately
-[ ] Display basic stats for server (in memory)
+[x] Display basic stats for server (in memory)
   [x] Total requests
-  [ ] Requests per second
-  [ ] Error rate
+  [x] Requests per second
+  [x] Error rate
 [ ] Support for multiple server pools
   [ ] Graph support
   [ ] Expand / shrink list of servers
@@ -93,7 +93,10 @@
   [ ] Reboot logic (probably file, but maybe etcd worth to consider?)
   [ ] Refetch stats from living servers after reboot
   [ ] Definitely stats should sent delta not actual values.
-  [ ] More efficient stats sending. In the worker? How ofthen should stats be pushed?
+  [ ] Better algorithm for RPS. CUrrently it is not possible to go to zero
+  [ ] Try to not update RPS after every request. Instead store reuests delta and count based on this?
+  [ ] Send only stats that frontend actually needs. Right now whole object is sent
+  [ ] More efficient stats sending. In the worker? How ofhen should stats be pushed?
   [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
     [ ] Should this emitter be global?
   [ ] Router

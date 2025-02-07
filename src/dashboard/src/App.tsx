@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { CreateServer, ServerPool as ServerPoolType } from "@/types/types";
+import { CreateServer, ServerPool as ServerPoolType, ServerStats } from "@/types/types";
 import { ServerPool } from "@/components/server-pool";
 import { DashboardSummary } from "@/components/dashboard-summary";
 import { ServerFlow } from "@/components/server-flow.tsx";
 
 function App() {
 	const [serverPools, setServerPools] = useState<ServerPoolType[]>([]);
-	const [serverStats, setServerStats] = useState<Record<string, number>>({});
+	const [serverStats, setServerStats] = useState<Record<string, ServerStats>>({});
 	// TODO to be replaced by SSR
 	useEffect(() => {
 		fetch("http://localhost:41234/status")

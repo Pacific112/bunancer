@@ -1,12 +1,12 @@
 import { EventEmitter } from "node:events";
-import type { PendingServer } from "load-balancer/server-pool.ts";
+import type { PendingServer, ServerStats } from "load-balancer/server.types.ts";
 
 type EventsMap = {
 	"pool:new-server": [PendingServer];
 	"pool:server-online": [string];
 	"pool:server-offline": [string];
 	"pool:server-killed": [string];
-	"pool:stats-update": [Record<string, number>]
+	"pool:stats-update": [Record<string, ServerStats>];
 };
 
 export const globalEmitter = new EventEmitter<EventsMap>();

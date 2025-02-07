@@ -17,3 +17,11 @@ export interface ServerPool {
 	name: string;
 	servers: Server[];
 }
+
+export type ServerStats = {
+	totalRequests: number;
+	requestsPerSecond: number;
+	errorCount: number;
+	errorRate: number;
+	lastRequestTimestamp: number;
+};
