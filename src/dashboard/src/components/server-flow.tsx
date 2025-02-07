@@ -39,12 +39,12 @@ const LoadBalancerNode = ({ data }: NodeProps) => (
 	</>
 );
 
-const ServerNode = ({ data: { server } }: NodeProps) => (
+const ServerNode = ({ data: { server, stats } }: NodeProps) => (
 	<Popover>
 		<PopoverTrigger asChild>
 			<div
 				className={cn(
-					"px-4 py-2 shadow-md rounded-md bg-white border-2 border-blue-400",
+					"shadow-md rounded-md bg-white border-2 border-blue-400",
 					{
 						"border-blue-400": server.status === "healthy",
 						"border-red-400": server.status === "unhealthy",
@@ -58,10 +58,23 @@ const ServerNode = ({ data: { server } }: NodeProps) => (
 					position={Position.Top}
 					className="w-16 !bg-blue-400"
 				/>
-				<div className="flex items-center">
-					<div className="ml-2">
-						<div className="text-lg font-bold">{server.id}</div>
-						<div className="text-gray-500">Handles Requests</div>
+				<div className="flex flex-col">
+					<div className="text-lg font-bold px-4 py-2 text-center">
+						{server.id}
+					</div>
+					<div className="grid grid-cols-3 gap-px p-px justify-center">
+						<div className="text-center bg-gray-100 p-2">
+							<div className="text-xs">Total</div>
+							<div className="font-bold text-sm">{stats.total || "-"}</div>
+						</div>
+						<div className="text-xs text-center bg-gray-100 p-2">
+							<div className="text-xs">Req/s</div>
+							<div className="font-bold text-sm">{stats.requestsPerSecond || "-"}</div>
+						</div>
+						<div className="text-xs text-center bg-gray-100 p-2">
+							<div className="text-xs">Error rate</div>
+							<div className="font-bold text-sm">{stats.errorRate || "-"}</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -91,16 +104,17 @@ const nodeTypes = {
 
 type Props = {
 	servers: Server[];
+	stats: Record<string, number>
 	onAddServer: (server: CreateServer) => void;
 };
-export const ServerFlow = ({ servers, onAddServer }: Props) => {
+export const ServerFlow = ({ servers, onAddServer, stats }: Props) => {
 	const nodes = useMemo<Node[]>(() => {
 		return [
 			loadBalancerNode(onAddServer),
 			...servers.map((s, i) => ({
 				id: s.id,
 				type: "server",
-				data: { server: s },
+				data: { server: s, stats: { total: stats[s.id] } },
 				position: {
 					x: 250 * (i % 5),
 					y: 200 + 100 * Math.floor(i / 5),

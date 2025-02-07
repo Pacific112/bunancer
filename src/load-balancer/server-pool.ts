@@ -1,5 +1,6 @@
 import type { AppConfig, ServerConfig } from "load-balancer/config-schema.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
+import type { Server } from "dashboard/src/types/types.ts";
 
 export const toUrl = ({ config }: PoolServer) =>
 	`${config.host}:${config.port}`;
@@ -98,9 +99,13 @@ const createPool = () => {
 };
 
 export const initializePool = ({ servers: configs, timeout }: AppConfig) => {
+	const serverStats = new Map<string, number>();
 	const { servers, markAsUnhealthy, addServer } = createPool();
 
 	configs.forEach(addServer);
+	setInterval(() => {
+		globalEmitter.emit('pool:stats-update', Object.fromEntries(serverStats.entries()))
+	}, 500)
 
 	const handleResponse = (response: Response, server: HealthyServer) => {
 		if ([502, 503, 504].includes(response.status)) {
@@ -109,7 +114,10 @@ export const initializePool = ({ servers: configs, timeout }: AppConfig) => {
 	};
 
 	return {
-		allServers: servers,
+		allServers: {
+			servers,
+			stats: serverStats,
+		},
 		addServer: async (server: ServerConfig) => {
 			if (servers.every((s) => s.id !== server.id)) {
 				const newServer = await addServer(server);
@@ -134,6 +142,7 @@ export const initializePool = ({ servers: configs, timeout }: AppConfig) => {
 				signal: timeout ? AbortSignal.timeout(timeout.ms) : undefined,
 			});
 
+			serverStats.set(server.id, (serverStats.get(server.id) || 0) + 1);
 			fetchPromise
 				.then((r) => handleResponse(r, server))
 				.catch(() => markAsUnhealthy(server.config.id));

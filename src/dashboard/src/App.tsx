@@ -6,7 +6,7 @@ import { ServerFlow } from "@/components/server-flow.tsx";
 
 function App() {
 	const [serverPools, setServerPools] = useState<ServerPoolType[]>([]);
-
+	const [serverStats, setServerStats] = useState<Record<string, number>>({});
 	// TODO to be replaced by SSR
 	useEffect(() => {
 		fetch("http://localhost:41234/status")
@@ -64,6 +64,10 @@ function App() {
 				})),
 			);
 		});
+		source.addEventListener("stats-update", (e) => {
+			const eid = JSON.parse(e.data);
+			setServerStats(eid);
+		});
 
 		return () => source.close();
 	}, []);
@@ -108,6 +112,7 @@ function App() {
 			{serverPools[0] && (
 				<ServerFlow
 					servers={serverPools[0].servers}
+					stats={serverStats}
 					onAddServer={(server) => handleAddServer(serverPools[0].id, server)}
 				/>
 			)}

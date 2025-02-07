@@ -53,7 +53,7 @@
       [x] stop
       [x] show logs
       [x] Add node after selecting load balancer
-[ ] Health Checks
+[x] Health Checks
   [x] Separate state for currently unavailable servers
   [x] Unavailable servers for a longer time should be removed from pool
   [x] edge should appear only when first health check succeeds (or server is added to the pool)
@@ -64,12 +64,15 @@
   [ ] Total requests
   [ ] Requests per second
   [ ] Time alive
+  [ ] Show graph with number of requests per second
+  [ ] Periodically send stats update
 [ ] Support for multiple server pools
   [ ] Graph support
   [ ] Expand / shrink list of servers
   [ ] Display stats for pools
   [ ] Cool animations when creating / destroying node and edges
   [ ] Better add server
+  [ ] Display aggregated pool stats
 [ ] Tech
   [ ] Better error handling for REST actions - currently nothing
   [ ] SDK should support stopping / fetching logs by id
@@ -88,6 +91,11 @@
   [ ] Handle case when there is no servers in pool - currently error
   [ ] Maybe setupHealthCheck can be simplified to checkHealth or something... - to avoid callbacks
   [ ] Retry with backoff - after fail or health check
+  [ ] Figure out where to store stats like time alive
+  [ ] Reboot logic (probably file, but maybe etcd worth to consider?)
+  [ ] Refetch stats from living servers after reboot
+  [ ] Definitely stats should sent delta not actual values.
+  [ ] More efficient stats sending. In the worker? How ofthen should stats be pushed?
   [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
     [ ] Should this emitter be global?
   [ ] Router
@@ -98,6 +106,7 @@
   [ ] nested objects update
   [ ] better sse event names
   [ ] Figure out typing between server and frontend
+  [ ] Introduce state for storing stats on the frontend. Currently every update causes whole app to rerender
   [ ] In general - split component and code improvements
   [ ] Try to make look and feel between flow and dashboard rectangles similar...
 [ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect

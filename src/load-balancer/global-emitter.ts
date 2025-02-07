@@ -6,6 +6,7 @@ type EventsMap = {
 	"pool:server-online": [string];
 	"pool:server-offline": [string];
 	"pool:server-killed": [string];
+	"pool:stats-update": [Record<string, number>]
 };
 
 export const globalEmitter = new EventEmitter<EventsMap>();

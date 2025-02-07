@@ -31,7 +31,7 @@ Bun.serve({
 Bun.serve({
 	port: 40999,
 	fetch: router(
-		post("/register", serverSchema,async (body) => {
+		post("/register", serverSchema, async (body) => {
 			const result = await serverPool.addServer(body);
 			return result.ok
 				? new Response()
@@ -47,11 +47,12 @@ const statusHandler = () => {
 				{
 					id: "pool1",
 					name: "Test",
-					servers: serverPool.allServers.map((s) => ({
-						id: s.config.id,
-						name: s.config.id,
+					servers: serverPool.allServers.servers.map((s) => ({
+						id: s.id,
+						name: s.id,
 						status: s.status,
 						ip: toUrl(s),
+						stats: serverPool.allServers.stats.get(s.id),
 					})),
 				},
 			],
@@ -76,16 +77,20 @@ const sseHandler: SseSetup = (enqueue) => {
 		enqueue({ name: "server-offline", data: id });
 	const serverKilledListener = (id: string) =>
 		enqueue({ name: "server-dead", data: id });
+	const statsUpdateListener = (data: Record<string, number>) =>
+		enqueue({ name: "stats-update", data });
 
 	globalEmitter.on("pool:new-server", newServerListener);
 	globalEmitter.on("pool:server-online", serverOnlineListener);
 	globalEmitter.on("pool:server-offline", serverOfflineListener);
 	globalEmitter.on("pool:server-killed", serverKilledListener);
+	globalEmitter.on("pool:stats-update", statsUpdateListener);
 	return () => {
 		globalEmitter.off("pool:new-server", newServerListener);
 		globalEmitter.off("pool:server-online", serverOnlineListener);
 		globalEmitter.off("pool:server-offline", serverOfflineListener);
 		globalEmitter.off("pool:server-killed", serverKilledListener);
+		globalEmitter.off("pool:stats-update", statsUpdateListener);
 	};
 };
 
