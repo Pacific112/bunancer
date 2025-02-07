@@ -1,19 +1,14 @@
 import type { AppConfig, ServerConfig } from "load-balancer/config-schema.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
 import type { Server } from "dashboard/src/types/types.ts";
+import type { HealthyServer, PoolServer } from "load-balancer/server.types.ts";
+import { initStats } from "load-balancer/server-stats.ts";
 
 export const toUrl = ({ config }: PoolServer) =>
 	`${config.host}:${config.port}`;
 
 const HEALTH_CHECK_TIMEOUT = 500;
 const HEALTH_CHECK_RETRIES_LIMIT = 5;
-
-type BaseServer = { config: ServerConfig; id: string };
-export type PendingServer = BaseServer & { status: "pending" };
-type HealthyServer = BaseServer & { status: "healthy" };
-type UnhealthyServer = BaseServer & { status: "unhealthy" };
-type DeadServer = BaseServer & { status: "dead" };
-type PoolServer = PendingServer | HealthyServer | UnhealthyServer | DeadServer;
 
 const checkHealth = async (server: PoolServer) => {
 	try {
@@ -99,14 +94,10 @@ const createPool = () => {
 };
 
 export const initializePool = ({ servers: configs, timeout }: AppConfig) => {
-	const serverStats = new Map<string, number>();
+	const { stats, trackResponse } = initStats();
 	const { servers, markAsUnhealthy, addServer } = createPool();
 
 	configs.forEach(addServer);
-	setInterval(() => {
-		globalEmitter.emit('pool:stats-update', Object.fromEntries(serverStats.entries()))
-	}, 500)
-
 	const handleResponse = (response: Response, server: HealthyServer) => {
 		if ([502, 503, 504].includes(response.status)) {
 			markAsUnhealthy(server.config.id);
@@ -116,7 +107,7 @@ export const initializePool = ({ servers: configs, timeout }: AppConfig) => {
 	return {
 		allServers: {
 			servers,
-			stats: serverStats,
+			stats,
 		},
 		addServer: async (server: ServerConfig) => {
 			if (servers.every((s) => s.id !== server.id)) {
@@ -142,9 +133,11 @@ export const initializePool = ({ servers: configs, timeout }: AppConfig) => {
 				signal: timeout ? AbortSignal.timeout(timeout.ms) : undefined,
 			});
 
-			serverStats.set(server.id, (serverStats.get(server.id) || 0) + 1);
 			fetchPromise
-				.then((r) => handleResponse(r, server))
+				.then((r) => {
+					handleResponse(r, server);
+					trackResponse(r, server);
+				})
 				.catch(() => markAsUnhealthy(server.config.id));
 
 			return fetchPromise;

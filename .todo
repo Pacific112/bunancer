@@ -61,11 +61,9 @@
   [x] After few tries server should become dead
   [x] After registering server first health check should be done immediately
 [ ] Display basic stats for server (in memory)
-  [ ] Total requests
+  [x] Total requests
   [ ] Requests per second
-  [ ] Time alive
-  [ ] Show graph with number of requests per second
-  [ ] Periodically send stats update
+  [ ] Error rate
 [ ] Support for multiple server pools
   [ ] Graph support
   [ ] Expand / shrink list of servers
@@ -130,6 +128,8 @@
   [ ] X-Forwarded-IP header or something - to make sure it works
   [ ] Fly launch for
 =============================================
+[ ] Stats
+  [ ] Show graph with number of requests per second
 [ ] Stream server logs instead of static display
 [ ] Store stats somewhere
   [ ] Redis?
