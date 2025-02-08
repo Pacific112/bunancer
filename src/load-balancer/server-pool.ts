@@ -126,6 +126,10 @@ export const initializePool = ({ servers: configs, timeout }: AppConfig) => {
 			selector: (servers: HealthyServer[]) => HealthyServer,
 		) => {
 			const healthyServers = servers.filter((s) => s.status === "healthy");
+			if (healthyServers.length === 0) {
+				return new Response(undefined, { status: 503 });
+			}
+
 			const server = selector(healthyServers);
 			const fetchPromise = fetch(toUrl(server), {
 				body: request.body,
