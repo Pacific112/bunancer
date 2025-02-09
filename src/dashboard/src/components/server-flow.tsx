@@ -9,13 +9,15 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { type CreateServer, ServerPool, ServerStats } from "@/types/types.ts";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils.ts";
 import { Popover, PopoverContent } from "@/components/ui/popover.tsx";
 import { PopoverTrigger } from "@radix-ui/react-popover";
 import { DeleteServerDialog } from "@/components/delete-server-dialog.tsx";
 import { ShowLogsDialog } from "@/components/show-logs-dialog.tsx";
 import { AddServerDialog } from "@/components/add-server-dialog.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import { Expand, Shrink } from "lucide-react";
 
 const LoadBalancerNode = ({ data }: NodeProps) => (
 	<div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
@@ -33,23 +35,43 @@ const LoadBalancerNode = ({ data }: NodeProps) => (
 	</div>
 );
 
-const ServerPoolNode = ({ width, height, data }: NodeProps) => (
-	<>
-		<div
-			className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400"
-			style={{ width, height }}
-		>
-			<div className="flex justify-end">
-				<AddServerDialog handleAddServer={data.onAddServer} />
+const ServerPoolNode = ({ width, height, data }: NodeProps) => {
+	return (
+		<>
+			<div
+				className="px-4 shadow-md rounded-md bg-white border-2 border-stone-400 transition-all"
+				style={{
+					width,
+					height,
+				}}
+			>
+				<div className="pt-2 flex items-center">
+					<div>{data.serverPool.name}</div>
+					<AddServerDialog
+						className="ml-auto"
+						handleAddServer={data.onAddServer}
+					/>
+					<Button
+						variant="outline"
+						size="icon"
+						className="h-8 w-8"
+						onClick={data.onExpand}
+					>
+						{data.expanded ? <Shrink /> : <Expand />}
+						<span className="sr-only">
+							{data.expanded ? "Shrink" : "Expand"}
+						</span>
+					</Button>
+				</div>
+				<Handle
+					type="target"
+					position={Position.Top}
+					className="w-16 !bg-stone-400"
+				/>
 			</div>
-			<Handle
-				type="target"
-				position={Position.Top}
-				className="w-16 !bg-stone-400"
-			/>
-		</div>
-	</>
-);
+		</>
+	);
+};
 
 const ServerNode = ({ data: { server, stats } }: NodeProps) => (
 	<Popover>
@@ -126,8 +148,10 @@ const SERVERS_PER_ROW = 3;
 
 const buildNodesForPool = (
 	pool: ServerPool,
+	expanded: boolean,
 	stats: Record<string, ServerStats>,
 	onAddServer: Props["onAddServer"],
+	onExpand: () => void,
 ) => {
 	const { id, servers } = pool;
 	return [
@@ -136,23 +160,29 @@ const buildNodesForPool = (
 			type: "serverPool",
 			position: { x: -20, y: 180 },
 			data: {
+				expanded,
+				serverPool: pool,
+				onExpand,
 				onAddServer: (server: CreateServer) => onAddServer(pool, server),
 			},
 			style: {
-				width:
-					NODE_GAP +
-					(NODE_WIDTH + NODE_GAP) * Math.min(servers.length, SERVERS_PER_ROW),
-				height:
-					NODE_GAP +
-					TOOLBAR_HEIGHT +
-					(NODE_HEIGHT + NODE_GAP) *
-						Math.max(Math.ceil(servers.length / SERVERS_PER_ROW), 1),
+				width: expanded
+					? NODE_GAP +
+						(NODE_WIDTH + NODE_GAP) * Math.min(servers.length, SERVERS_PER_ROW)
+					: 300,
+				height: expanded
+					? NODE_GAP +
+						TOOLBAR_HEIGHT +
+						(NODE_HEIGHT + NODE_GAP) *
+							Math.max(Math.ceil(servers.length / SERVERS_PER_ROW), 1)
+					: 55,
 			},
 		},
 		...servers.map((s, i) => ({
 			id: s.id,
 			type: "server",
 			parentId: id,
+			hidden: !expanded,
 			data: { server: s, stats: stats[s.id] },
 			extent: "parent",
 			style: {
@@ -174,12 +204,27 @@ const buildNodesForPool = (
 };
 
 export const ServerFlow = ({ serverPools, onAddServer, stats }: Props) => {
+	const [expandedPools, setExpandedPools] = useState<string[]>([]);
+
 	const nodes = useMemo<Node[]>(() => {
 		return [
 			loadBalancerNode,
-			...serverPools.flatMap((sp) => buildNodesForPool(sp, stats, onAddServer)),
+			...serverPools.flatMap((sp) =>
+				buildNodesForPool(
+					sp,
+					expandedPools.includes(sp.id),
+					stats,
+					onAddServer,
+					() =>
+						expandedPools.includes(sp.id)
+							? setExpandedPools(
+									expandedPools.toSpliced(expandedPools.indexOf(sp.id), 1),
+								)
+							: setExpandedPools([...expandedPools, sp.id]),
+				),
+			),
 		];
-	}, [serverPools]);
+	}, [serverPools, expandedPools]);
 	const edges = useMemo<Edge[]>(
 		(): Edge[] =>
 			serverPools.map((sp) => ({
