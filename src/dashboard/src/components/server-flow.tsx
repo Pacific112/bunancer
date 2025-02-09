@@ -9,7 +9,7 @@ import {
 	ReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { type CreateServer, Server, ServerStats } from "@/types/types.ts";
+import { type CreateServer, ServerPool, ServerStats } from "@/types/types.ts";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils.ts";
 import { Popover, PopoverContent } from "@/components/ui/popover.tsx";
@@ -116,9 +116,9 @@ const nodeTypes = {
 };
 
 type Props = {
-	servers: Server[];
 	stats: Record<string, ServerStats>;
-	onAddServer: (server: CreateServer) => void;
+	serverPools: ServerPool[];
+	onAddServer: (pool: ServerPool, server: CreateServer) => void;
 };
 
 const NODE_WIDTH = 220;
@@ -126,55 +126,59 @@ const NODE_HEIGHT = 100;
 const NODE_GAP = 20;
 const SERVERS_PER_ROW = 3;
 
-export const ServerFlow = ({ servers, onAddServer, stats }: Props) => {
+const buildNodesForPool = (
+	{ id, servers }: ServerPool,
+	stats: Record<string, ServerStats>,
+) => [
+	{
+		id,
+		type: "serverPool",
+		position: { x: -20, y: 180 },
+		style: {
+			width:
+				NODE_GAP +
+				(NODE_WIDTH + NODE_GAP) * Math.min(servers.length, SERVERS_PER_ROW),
+			height:
+				NODE_GAP +
+				(NODE_HEIGHT + NODE_GAP) *
+					Math.max(Math.ceil(servers.length / SERVERS_PER_ROW), 1),
+		},
+	},
+	...servers.map((s, i) => ({
+		id: s.id,
+		type: "server",
+		parentId: id,
+		data: { server: s, stats: stats[s.id] },
+		extent: "parent",
+		style: {
+			width: NODE_WIDTH,
+			height: NODE_HEIGHT,
+		},
+		position: {
+			x:
+				NODE_GAP +
+				(NODE_WIDTH * (i % SERVERS_PER_ROW) +
+					NODE_GAP * Math.floor(i % SERVERS_PER_ROW)),
+			y: NODE_GAP + (NODE_HEIGHT + NODE_GAP) * Math.floor(i / SERVERS_PER_ROW),
+		},
+	})),
+];
+
+export const ServerFlow = ({ serverPools, onAddServer, stats }: Props) => {
 	const nodes = useMemo<Node[]>(() => {
 		return [
 			loadBalancerNode(onAddServer),
-			{
-				id: "server-pool-1",
-				type: "serverPool",
-				position: { x: -20, y: 180 },
-				style: {
-					width:
-						NODE_GAP +
-						(NODE_WIDTH + NODE_GAP) * Math.min(servers.length, SERVERS_PER_ROW),
-					height:
-						NODE_GAP +
-						(NODE_HEIGHT + NODE_GAP) *
-							Math.max(Math.ceil(servers.length / SERVERS_PER_ROW), 1),
-				},
-			},
-			...servers.map((s, i) => ({
-				id: s.id,
-				type: "server",
-				parentId: "server-pool-1",
-				data: { server: s, stats: stats[s.id] },
-				extent: "parent",
-				style: {
-					width: NODE_WIDTH,
-					height: NODE_HEIGHT,
-				},
-				position: {
-					x:
-						NODE_GAP +
-						(NODE_WIDTH * (i % SERVERS_PER_ROW) +
-							NODE_GAP * Math.floor(i % SERVERS_PER_ROW)),
-					y:
-						NODE_GAP +
-						(NODE_HEIGHT + NODE_GAP) * Math.floor(i / SERVERS_PER_ROW),
-				},
-			})),
+			...serverPools.flatMap((sp) => buildNodesForPool(sp, stats)),
 		];
-	}, [servers]);
+	}, [serverPools]);
 	const edges = useMemo<Edge[]>(
-		(): Edge[] => [
-			{
-				id: `lb-server-pool-1`,
+		(): Edge[] =>
+			serverPools.map((sp) => ({
+				id: `lb-${sp.id}`,
 				source: "lb",
-				target: "server-pool-1",
-			},
-		],
-		[servers],
+				target: sp.id,
+			})),
+		[serverPools],
 	);
 
 	return (
