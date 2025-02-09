@@ -4,7 +4,6 @@ import {
 	Handle,
 	Node,
 	NodeProps,
-	NodeToolbar,
 	Position,
 	ReactFlow,
 } from "@xyflow/react";
@@ -19,37 +18,37 @@ import { ShowLogsDialog } from "@/components/show-logs-dialog.tsx";
 import { AddServerDialog } from "@/components/add-server-dialog.tsx";
 
 const LoadBalancerNode = ({ data }: NodeProps) => (
-	<>
-		<div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
-			<div className="flex items-center">
-				<div className="ml-2">
-					<div className="text-lg font-bold">{data.label}</div>
-					<div className="text-gray-500">Distributes Traffic</div>
-				</div>
+	<div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
+		<div className="flex items-center">
+			<div className="ml-2">
+				<div className="text-lg font-bold">{data.label}</div>
+				<div className="text-gray-500">Distributes Traffic</div>
 			</div>
-			<Handle
-				type="source"
-				position={Position.Bottom}
-				className="w-16 !bg-stone-400"
-			/>
 		</div>
-		<NodeToolbar isVisible position={Position.Top}>
-			<AddServerDialog handleAddServer={data.onAddServer} />
-		</NodeToolbar>
-	</>
-);
-
-const ServerPoolNode = ({ width, height }: NodeProps) => (
-	<div
-		className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400"
-		style={{ width, height }}
-	>
 		<Handle
-			type="target"
-			position={Position.Top}
+			type="source"
+			position={Position.Bottom}
 			className="w-16 !bg-stone-400"
 		/>
 	</div>
+);
+
+const ServerPoolNode = ({ width, height, data }: NodeProps) => (
+	<>
+		<div
+			className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400"
+			style={{ width, height }}
+		>
+			<div className="flex justify-end">
+				<AddServerDialog handleAddServer={data.onAddServer} />
+			</div>
+			<Handle
+				type="target"
+				position={Position.Top}
+				className="w-16 !bg-stone-400"
+			/>
+		</div>
+	</>
 );
 
 const ServerNode = ({ data: { server, stats } }: NodeProps) => (
@@ -100,14 +99,12 @@ const ServerNode = ({ data: { server, stats } }: NodeProps) => (
 	</Popover>
 );
 
-const loadBalancerNode = (
-	onAddServer: (server: CreateServer) => void,
-): Node => ({
+const loadBalancerNode = {
 	id: "lb",
 	type: "loadBalancer",
-	data: { label: "Load Balancer", onAddServer },
+	data: { label: "Load Balancer" },
 	position: { x: 500, y: 0 },
-});
+};
 
 const nodeTypes = {
 	loadBalancer: LoadBalancerNode,
@@ -124,51 +121,63 @@ type Props = {
 const NODE_WIDTH = 220;
 const NODE_HEIGHT = 100;
 const NODE_GAP = 20;
+const TOOLBAR_HEIGHT = 35;
 const SERVERS_PER_ROW = 3;
 
 const buildNodesForPool = (
-	{ id, servers }: ServerPool,
+	pool: ServerPool,
 	stats: Record<string, ServerStats>,
-) => [
-	{
-		id,
-		type: "serverPool",
-		position: { x: -20, y: 180 },
-		style: {
-			width:
-				NODE_GAP +
-				(NODE_WIDTH + NODE_GAP) * Math.min(servers.length, SERVERS_PER_ROW),
-			height:
-				NODE_GAP +
-				(NODE_HEIGHT + NODE_GAP) *
-					Math.max(Math.ceil(servers.length / SERVERS_PER_ROW), 1),
+	onAddServer: Props["onAddServer"],
+) => {
+	const { id, servers } = pool;
+	return [
+		{
+			id,
+			type: "serverPool",
+			position: { x: -20, y: 180 },
+			data: {
+				onAddServer: (server: CreateServer) => onAddServer(pool, server),
+			},
+			style: {
+				width:
+					NODE_GAP +
+					(NODE_WIDTH + NODE_GAP) * Math.min(servers.length, SERVERS_PER_ROW),
+				height:
+					NODE_GAP +
+					TOOLBAR_HEIGHT +
+					(NODE_HEIGHT + NODE_GAP) *
+						Math.max(Math.ceil(servers.length / SERVERS_PER_ROW), 1),
+			},
 		},
-	},
-	...servers.map((s, i) => ({
-		id: s.id,
-		type: "server",
-		parentId: id,
-		data: { server: s, stats: stats[s.id] },
-		extent: "parent",
-		style: {
-			width: NODE_WIDTH,
-			height: NODE_HEIGHT,
-		},
-		position: {
-			x:
-				NODE_GAP +
-				(NODE_WIDTH * (i % SERVERS_PER_ROW) +
-					NODE_GAP * Math.floor(i % SERVERS_PER_ROW)),
-			y: NODE_GAP + (NODE_HEIGHT + NODE_GAP) * Math.floor(i / SERVERS_PER_ROW),
-		},
-	})),
-];
+		...servers.map((s, i) => ({
+			id: s.id,
+			type: "server",
+			parentId: id,
+			data: { server: s, stats: stats[s.id] },
+			extent: "parent",
+			style: {
+				width: NODE_WIDTH,
+				height: NODE_HEIGHT,
+			},
+			position: {
+				x:
+					NODE_GAP +
+					(NODE_WIDTH * (i % SERVERS_PER_ROW) +
+						NODE_GAP * Math.floor(i % SERVERS_PER_ROW)),
+				y:
+					NODE_GAP +
+					TOOLBAR_HEIGHT +
+					(NODE_HEIGHT + NODE_GAP) * Math.floor(i / SERVERS_PER_ROW),
+			},
+		})),
+	];
+};
 
 export const ServerFlow = ({ serverPools, onAddServer, stats }: Props) => {
 	const nodes = useMemo<Node[]>(() => {
 		return [
-			loadBalancerNode(onAddServer),
-			...serverPools.flatMap((sp) => buildNodesForPool(sp, stats)),
+			loadBalancerNode,
+			...serverPools.flatMap((sp) => buildNodesForPool(sp, stats, onAddServer)),
 		];
 	}, [serverPools]);
 	const edges = useMemo<Edge[]>(

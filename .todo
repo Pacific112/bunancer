@@ -121,6 +121,7 @@
   [ ] Do servers need edges? Or maybe it's enough to connect LoadBalancer with server pool?
     [ ] https://github.com/tisoap/react-flow-smart-edge - maybe?
   [ ] Make sure that padding in ServerPool is correctly calculated for all positions
+  [ ] Add Server dialog should display ServerPool name
 [ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect
   [ ] I need to at least use something better then fetch...
 [ ] Figure out the best way to deploy React app
