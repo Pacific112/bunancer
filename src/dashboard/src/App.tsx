@@ -100,7 +100,7 @@ function App() {
 			),
 		);
 
-		fetch("http://localhost:41234/servers", {
+		fetch(`http://localhost:41234/pools/${poolId}/servers`, {
 			body: JSON.stringify(newServer),
 			method: "POST",
 		});

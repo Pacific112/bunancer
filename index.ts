@@ -17,6 +17,7 @@ import {
 	stopServer,
 } from "stub-server/sdk.ts";
 import { z } from "zod";
+import type { ServerStats } from "load-balancer/server.types.ts";
 
 const config = await loadConfig();
 const serverPool = initializePool(config);
@@ -77,7 +78,7 @@ const sseHandler: SseSetup = (enqueue) => {
 		enqueue({ name: "server-offline", data: id });
 	const serverKilledListener = (id: string) =>
 		enqueue({ name: "server-dead", data: id });
-	const statsUpdateListener = (data: Record<string, number>) =>
+	const statsUpdateListener = (data: Record<string, ServerStats>) =>
 		enqueue({ name: "stats-update", data });
 
 	globalEmitter.on("pool:new-server", newServerListener);
@@ -115,12 +116,13 @@ Bun.serve({
 				return new Response(JSON.stringify({ logs }));
 			}),
 			post(
-				"/servers",
+				"/pools/:poolId/servers",
 				z.object({
 					instanceId: z.string(),
 					port: z.string().regex(/\d+/),
 				}),
-				async (body) => {
+				async (body, { pathParams: { poolId } }) => {
+					// TODO Figure out how to support poolId
 					await runServer(body);
 					return new Response();
 				},

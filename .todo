@@ -67,11 +67,11 @@
 [ ] Support for multiple server pools
   [x] Graph support
   [ ] Expand / shrink list of servers
-  [ ] Display top bar on group node - for stats and add new server button
+  [x] Display top bar on group node - for stats and add new server button
   [ ] Allow to add server to specific pool via SDK
   [ ] Create pool via SDK
   [ ] Show shadow node or something on graph to make it easy to create nie pool
-  [ ] Display aggregated pool stats
+  [ ] When pool is empty display only name and button
 [ ] Tech
   [ ] Better error handling for REST actions - currently nothing
   [ ] Allow to easily change returned error code for the server from SDK
@@ -101,6 +101,7 @@
   [ ] Try to not update RPS after every request. Instead store reuests delta and count based on this?
   [ ] Send only stats that frontend actually needs. Right now whole object is sent
   [ ] More efficient stats sending. In the worker? How ofhen should stats be pushed?
+  [ ] SDK - support for pools
   [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
     [ ] Should this emitter be global?
   [ ] Router
@@ -139,12 +140,18 @@
 [ ] Introduce pino for logging
   [ ] Standard access logs on stub server
   [ ] Maybe structured logs
+[ ] ADR
+  [ ] Why bun?
+  [ ] Why SDK
+  [ ] Routing algorithms
+  [ ] How Servers register themselves
 [ ] Deployment to fly.io (or maybe something with less abstractions where I can simply upload containers....)
   [ ] X-Forwarded-IP header or something - to make sure it works
   [ ] Fly launch for
 =============================================
 [ ] Stats
   [ ] Show graph with number of requests per second
+  [ ] Display aggregated pool stats
 [ ] Stream server logs instead of static display
 [ ] Store stats somewhere
   [ ] Redis?
@@ -159,6 +166,8 @@
   [ ] Deduplicate servers - not only id but also do not allow same configuration
   [ ] Graceful shutdown + deregister
   [ ] Typing + separate package for registering
+  [ ] What is the best way to specify pool to which server joins? Is it possible to validate it in any way
+    [ ] Currently server sends SERVER POOL when starting
 [ ] Cool animations when creating / destroying node and edges
 [ ] Security considerations
   [ ] For example should any of the headers be actually removed?
