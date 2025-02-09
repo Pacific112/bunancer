@@ -39,6 +39,19 @@ const LoadBalancerNode = ({ data }: NodeProps) => (
 	</>
 );
 
+const ServerPoolNode = ({ width, height }: NodeProps) => (
+	<div
+		className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400"
+		style={{ width, height }}
+	>
+		<Handle
+			type="target"
+			position={Position.Top}
+			className="w-16 !bg-stone-400"
+		/>
+	</div>
+);
+
 const ServerNode = ({ data: { server, stats } }: NodeProps) => (
 	<Popover>
 		<PopoverTrigger asChild>
@@ -53,11 +66,6 @@ const ServerNode = ({ data: { server, stats } }: NodeProps) => (
 					},
 				)}
 			>
-				<Handle
-					type="target"
-					position={Position.Top}
-					className="w-16 !bg-blue-400"
-				/>
 				<div className="flex flex-col">
 					<div className="text-lg font-bold px-4 py-2 text-center">
 						{server.id}
@@ -104,6 +112,7 @@ const loadBalancerNode = (
 const nodeTypes = {
 	loadBalancer: LoadBalancerNode,
 	server: ServerNode,
+	serverPool: ServerPoolNode,
 };
 
 type Props = {
@@ -111,41 +120,63 @@ type Props = {
 	stats: Record<string, ServerStats>;
 	onAddServer: (server: CreateServer) => void;
 };
+
+const NODE_WIDTH = 220;
+const NODE_HEIGHT = 100;
+const NODE_GAP = 20;
+const SERVERS_PER_ROW = 3;
+
 export const ServerFlow = ({ servers, onAddServer, stats }: Props) => {
 	const nodes = useMemo<Node[]>(() => {
 		return [
 			loadBalancerNode(onAddServer),
+			{
+				id: "server-pool-1",
+				type: "serverPool",
+				position: { x: -20, y: 180 },
+				style: {
+					width:
+						NODE_GAP +
+						(NODE_WIDTH + NODE_GAP) * Math.min(servers.length, SERVERS_PER_ROW),
+					height:
+						NODE_GAP +
+						(NODE_HEIGHT + NODE_GAP) *
+							Math.max(Math.ceil(servers.length / SERVERS_PER_ROW), 1),
+				},
+			},
 			...servers.map((s, i) => ({
 				id: s.id,
 				type: "server",
+				parentId: "server-pool-1",
 				data: { server: s, stats: stats[s.id] },
+				extent: "parent",
+				style: {
+					width: NODE_WIDTH,
+					height: NODE_HEIGHT,
+				},
 				position: {
-					x: 250 * (i % 5),
-					y: 200 + 100 * Math.floor(i / 5),
+					x:
+						NODE_GAP +
+						(NODE_WIDTH * (i % SERVERS_PER_ROW) +
+							NODE_GAP * Math.floor(i % SERVERS_PER_ROW)),
+					y:
+						NODE_GAP +
+						(NODE_HEIGHT + NODE_GAP) * Math.floor(i / SERVERS_PER_ROW),
 				},
 			})),
 		];
 	}, [servers]);
 	const edges = useMemo<Edge[]>(
-		() =>
-			servers
-				.filter((s) => s.status !== "dead")
-				.map((s) => ({
-					id: `lb-${s.id}`,
-					source: "lb",
-					target: s.id,
-					style: {
-						stroke: s.status === "unhealthy" ? "#f87171" : undefined,
-						strokeDasharray:
-							s.status === "pending" || s.status === "unhealthy"
-								? 5
-								: undefined,
-					},
-				})),
+		(): Edge[] => [
+			{
+				id: `lb-server-pool-1`,
+				source: "lb",
+				target: "server-pool-1",
+			},
+		],
 		[servers],
 	);
 
-	console.log(stats)
 	return (
 		<div className="w-full h-96">
 			<ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView>

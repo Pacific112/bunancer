@@ -67,12 +67,16 @@
 [ ] Support for multiple server pools
   [ ] Graph support
   [ ] Expand / shrink list of servers
-  [ ] Display stats for pools
-  [ ] Cool animations when creating / destroying node and edges
-  [ ] Better add server
+  [ ] Display top bar on group node - for stats and add new server button
+  [ ] Allow to add server to specific pool via SDK
+  [ ] Create pool via SDK
+  [ ] Show shadow node or something on graph to make it easy to create nie pool
   [ ] Display aggregated pool stats
 [ ] Tech
   [ ] Better error handling for REST actions - currently nothing
+  [ ] Allow to easily change returned error code for the server from SDK
+    [ ] CLI
+    [ ] Dashboard
   [ ] SDK should support stopping / fetching logs by id
   [ ] Structured logs support
   [ ] Configure base url or just use something better then raw fetch
@@ -102,14 +106,20 @@
   [ ] Router
     [ ] Add support for different parameter names - currently when I use /servers/:id and /servers/:name/details things will not work
     [ ] Add early misconfiguration detection
-[ ] SSE frontend - useSyncExternalStore, parsing, at least state should be provided by the server etc.
+[ ] Frontend -
+  [ ] useSyncExternalStore, parsing, at least state should be provided by the server etc.
   [ ] better abstraction - parsing at least
   [ ] nested objects update
+  [ ] Separate position calculation from creating nodes (move it to separate util)
+    [ ] Maybe I should use lib for this? Not sure, I have rather simple case
   [ ] better sse event names
   [ ] Figure out typing between server and frontend
   [ ] Introduce state for storing stats on the frontend. Currently every update causes whole app to rerender
   [ ] In general - split component and code improvements
   [ ] Try to make look and feel between flow and dashboard rectangles similar...
+  [ ] Probably square edges will look nicer and cleaner...
+  [ ] Do servers need edges? Or maybe it's enough to connect LoadBalancer with server pool?
+  [ ] Make sure that padding in ServerPool is correctly calculated for all positions
 [ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect
   [ ] I need to at least use something better then fetch...
 [ ] Figure out the best way to deploy React app
@@ -147,6 +157,7 @@
   [ ] Deduplicate servers - not only id but also do not allow same configuration
   [ ] Graceful shutdown + deregister
   [ ] Typing + separate package for registering
+[ ] Cool animations when creating / destroying node and edges
 [ ] Security considerations
   [ ] For example should any of the headers be actually removed?
   [ ] OAuth / JWKS / Basic Auth - only load balancer is actually secured
