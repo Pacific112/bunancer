@@ -70,7 +70,6 @@
   [x] Display top bar on group node - for stats and add new server button
   [x] When pool is empty display only name and button
 [ ] Tech
-  [ ] Better error handling for REST actions - currently nothing
   [ ] Allow to easily change returned error code for the server from SDK
     [ ] CLI
     [ ] Dashboard
@@ -98,7 +97,7 @@
   [ ] Try to not update RPS after every request. Instead store reuests delta and count based on this?
   [ ] Send only stats that frontend actually needs. Right now whole object is sent
   [ ] More efficient stats sending. In the worker? How ofhen should stats be pushed?
-  [ ] Expand / Hide pool - pools should appear only after animation has finished
+  [ ] Better error handling for REST actions - currently nothing
   [ ] SDK - support for pools
     [ ] Allow to add server to specific pool via SDK
     [ ] Create pool via SDK
@@ -108,10 +107,16 @@
   [ ] Router
     [ ] Add support for different parameter names - currently when I use /servers/:id and /servers/:name/details things will not work
     [ ] Add early misconfiguration detection
+[ ] CleanUp
+    [ ] Load Balancer
+    [ ] SDK
+    [ ] CLI
+    [ ] Introduce workspaces
 [ ] Frontend -
   [ ] useSyncExternalStore, parsing, at least state should be provided by the server etc.
   [ ] better abstraction - parsing at least
   [ ] nested objects update
+  [ ] Expand / Hide pool - pools should appear only after animation has finished
   [ ] Separate position calculation from creating nodes (move it to separate util)
     [ ] Maybe I should use lib for this? Not sure, I have rather simple case
   [ ] better sse event names
@@ -124,6 +129,7 @@
     [ ] https://github.com/tisoap/react-flow-smart-edge - maybe?
   [ ] Make sure that padding in ServerPool is correctly calculated for all positions
   [ ] Add Server dialog should display ServerPool name
+  [ ] CleanUp
 [ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect
   [ ] I need to at least use something better then fetch...
 [ ] Figure out the best way to deploy React app

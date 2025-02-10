@@ -1,9 +1,5 @@
 import { loadConfig } from "load-balancer/config.ts";
-import {
-	initializePool,
-	type PendingServer,
-	toUrl,
-} from "load-balancer/server-pool.ts";
+import { initializePool, toUrl } from "load-balancer/server-pool.ts";
 import { startLoadBalancer } from "load-balancer/load-balancer.ts";
 import { serverSchema } from "load-balancer/config-schema.ts";
 import { sse, type SseSetup } from "load-balancer/sse.ts";
@@ -17,7 +13,7 @@ import {
 	stopServer,
 } from "stub-server/sdk.ts";
 import { z } from "zod";
-import type { ServerStats } from "load-balancer/server.types.ts";
+import type { PendingServer, ServerStats } from "load-balancer/server.types.ts";
 
 const config = await loadConfig();
 const serverPool = initializePool(config);
@@ -133,12 +129,9 @@ Bun.serve({
 					(r) => r.instanceId === pathParams.id,
 				);
 				if (!selectedServer) {
-					return new Response(
-						JSON.stringify({ error: "Server is not running" }),
-						{
-							status: 400,
-						},
-					);
+					return new Response(null, {
+						status: 404,
+					});
 				}
 				await stopServer(selectedServer);
 				return new Response();
