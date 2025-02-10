@@ -169,7 +169,7 @@ const buildNodesForPool = (
 				width: expanded
 					? NODE_GAP +
 						(NODE_WIDTH + NODE_GAP) * Math.min(servers.length, SERVERS_PER_ROW)
-					: 300,
+					: 260,
 				height: expanded
 					? NODE_GAP +
 						TOOLBAR_HEIGHT +

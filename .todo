@@ -64,14 +64,11 @@
   [x] Total requests
   [x] Requests per second
   [x] Error rate
-[ ] Support for multiple server pools
+[x] Support for multiple server pools
   [x] Graph support
-  [ ] Expand / shrink list of servers
+  [x] Expand / shrink list of servers
   [x] Display top bar on group node - for stats and add new server button
-  [ ] Allow to add server to specific pool via SDK
-  [ ] Create pool via SDK
-  [ ] Show shadow node or something on graph to make it easy to create nie pool
-  [ ] When pool is empty display only name and button
+  [x] When pool is empty display only name and button
 [ ] Tech
   [ ] Better error handling for REST actions - currently nothing
   [ ] Allow to easily change returned error code for the server from SDK
@@ -101,7 +98,11 @@
   [ ] Try to not update RPS after every request. Instead store reuests delta and count based on this?
   [ ] Send only stats that frontend actually needs. Right now whole object is sent
   [ ] More efficient stats sending. In the worker? How ofhen should stats be pushed?
+  [ ] Expand / Hide pool - pools should appear only after animation has finished
   [ ] SDK - support for pools
+    [ ] Allow to add server to specific pool via SDK
+    [ ] Create pool via SDK
+    [ ] Show shadow node or something on graph to make it easy to create nie pool
   [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
     [ ] Should this emitter be global?
   [ ] Router
