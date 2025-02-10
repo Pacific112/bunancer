@@ -13,7 +13,7 @@ export const loadRunningServers = async () => {
 		.split("\n")
 		.filter((s) => s.length > 0)
 		.map((s) => s.split("|"))
-		.map(([instanceId, pid, port]) => ({ instanceId, pid, port }));
+		.map(([instanceId, pid, port]) => ({instanceId, pid, port}));
 };
 
 export const isRunning = (server: RunningServer) => {
@@ -25,10 +25,15 @@ export const isRunning = (server: RunningServer) => {
 	}
 };
 
+const findServerById = async (id: string) => {
+	const runningServers = await loadRunningServers();
+	return runningServers.find((r) => r.instanceId === id);
+};
+
 export const revalidateProcesses = async (runningServers: RunningServer[]) => {
 	const actuallyRunning = runningServers.filter(isRunning);
 	const content = actuallyRunning.reduce(
-		(s1, { instanceId, pid, port }) => s1 + `${instanceId}|${pid}|${port}\n`,
+		(s1, {instanceId, pid, port}) => s1 + `${instanceId}|${pid}|${port}\n`,
 		"",
 	);
 
@@ -37,15 +42,15 @@ export const revalidateProcesses = async (runningServers: RunningServer[]) => {
 };
 
 export const runServer = async ({
-	instanceId,
-	port,
-	detached = true,
-}: {
+																	instanceId,
+																	port,
+																	detached = true,
+																}: {
 	instanceId: string;
 	port: string;
 	detached?: boolean;
 }) => {
-	await mkdir(STUBS_DIR, { recursive: true });
+	await mkdir(STUBS_DIR, {recursive: true});
 	const logFile = Bun.file(pathToLogFile(instanceId), {});
 	await Bun.write(logFile, " ");
 
@@ -70,17 +75,31 @@ export const runServer = async ({
 };
 
 export const stopAllServers = async (servers: RunningServer[]) => {
-	servers.filter(isRunning).forEach(({ pid }) => process.kill(Number(pid)));
+	servers.filter(isRunning).forEach(({pid}) => process.kill(Number(pid)));
 	await Bun.write(STUB_SERVERS_FILE, "");
 };
 
-export const stopServer = async (server: RunningServer) => {
-	if (isRunning(server)) {
-		process.kill(Number(server.pid));
+export const stopServer = async (server: RunningServer | string) => {
+	const serverToStop =
+		typeof server === "string" ? await findServerById(server) : server;
+	if (!serverToStop) return {ok: false};
+
+	if (isRunning(serverToStop)) {
+		process.kill(Number(serverToStop.pid));
 		const runningServers = await loadRunningServers();
 		await revalidateProcesses(runningServers);
 	}
+
+	return {ok: true};
 };
 
-export const serverLogs = (server: RunningServer) =>
-	Bun.file(pathToLogFile(server.instanceId)).text();
+export const serverLogs = async (server: RunningServer | string) => {
+	const selectedServer =
+		typeof server === "string" ? await findServerById(server) : server;
+	if (!selectedServer) return {ok: false};
+
+	return {
+		ok: true,
+		data: await Bun.file(pathToLogFile(selectedServer.instanceId)).text()
+	};
+};
