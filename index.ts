@@ -39,12 +39,12 @@ const statusHandler = () => {
 				{
 					id: "pool1",
 					name: "Test",
-					servers: serverPool.allServers.servers.map((s) => ({
+					servers: serverPool.status.servers.map((s) => ({
 						id: s.id,
 						name: s.id,
 						status: s.status,
 						ip: toUrl(s),
-						stats: serverPool.allServers.stats.get(s.id),
+						stats: serverPool.status.stats.get(s.id),
 					})),
 				},
 			],

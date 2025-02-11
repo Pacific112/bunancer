@@ -72,10 +72,7 @@
 [ ] Tech
   [x] SDK should support stopping / fetching logs by id
   [x] Do not send SSE when state has not changed
-  [ ] Health check - I don't like current implementation
-  [ ] Get rid of ! operator
-  [ ] Get rid of hardcoded links
-  [ ] ServerPool.allServers should be probably removed... Or maybe not
+  [x] ServerPool.allServers should be probably removed... Or maybe not
   [ ] Config should be persistent so after restarting load balancer servers do not need - also nice for development as watch breaks stuff
   [ ] CORS - make sure that it actually behaves how it should and appropriate headers are added
   [ ] DialogClose should be used in dialog not in form...
@@ -92,6 +89,7 @@
   [ ] More efficient stats sending. In the worker? How ofhen should stats be pushed?
   [ ] Better error handling for REST actions - currently nothing
   [ ] Structured logs support
+  [ ] Health check - I don't like current implementation
   [ ] SDK - support for pools
     [ ] Allow to add server to specific pool via SDK
     [ ] Create pool via SDK
@@ -107,6 +105,8 @@
   [ ] Actually send only those stats that has changed
 [ ] CleanUp
     [ ] Load Balancer
+      [ ] Get rid of ! operator
+      [ ] Get rid of hardcoded links
     [ ] SDK
     [ ] CLI
     [ ] Introduce workspaces

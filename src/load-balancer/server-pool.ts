@@ -1,6 +1,5 @@
 import type { AppConfig, ServerConfig } from "load-balancer/config-schema.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
-import type { Server } from "dashboard/src/types/types.ts";
 import type { HealthyServer, PoolServer } from "load-balancer/server.types.ts";
 import { initStats } from "load-balancer/server-stats.ts";
 
@@ -105,9 +104,9 @@ export const initializePool = ({ servers: configs, timeout }: AppConfig) => {
 	};
 
 	return {
-		allServers: {
-			servers,
-			stats,
+		status: {
+			servers: [...servers],
+			stats: new Map(stats),
 		},
 		addServer: async (server: ServerConfig) => {
 			if (servers.every((s) => s.id !== server.id)) {
