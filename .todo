@@ -73,11 +73,8 @@
   [x] SDK should support stopping / fetching logs by id
   [x] Do not send SSE when state has not changed
   [x] ServerPool.allServers should be probably removed... Or maybe not
-  [ ] Config should be persistent so after restarting load balancer servers do not need - also nice for development as watch breaks stuff
-  [ ] CORS - make sure that it actually behaves how it should and appropriate headers are added
-  [ ] DialogClose should be used in dialog not in form...
+  [x] CORS - make sure that it actually behaves how it should and appropriate headers are added
   [ ] Handle case when there is no servers in pool - currently error
-  [ ] Maybe setupHealthCheck can be simplified to checkHealth or something... - to avoid callbacks
   [ ] Retry with backoff - after fail or health check
   [ ] Figure out where to store stats like time alive
   [ ] Reboot logic (probably file, but maybe etcd worth to consider?)
@@ -94,6 +91,7 @@
     [ ] Allow to add server to specific pool via SDK
     [ ] Create pool via SDK
     [ ] Show shadow node or something on graph to make it easy to create nie pool
+  [ ] Config should be persistent so after restarting load balancer servers do not need - also nice for development as watch breaks stuff. Use SQLITE
   [ ] Allow to easily change returned error code for the server from SDK
     [ ] CLI
     [ ] Dashboard
@@ -115,6 +113,7 @@
   [ ] useSyncExternalStore, parsing, at least state should be provided by the server etc.
   [ ] Figure out types - they should be common between server and client
   [ ] better abstraction - parsing at least
+  [ ] DialogClose should be used in dialog not in form...
   [ ] nested objects update
   [ ] Use NodeToolbar instead of PopoverContent (or together)
   [ ] Expand / Hide pool - pools should appear only after animation has finished
@@ -153,6 +152,7 @@
   [ ] Why SDK
   [ ] Routing algorithms
   [ ] How Servers register themselves
+[ ] Before deployment - do not use * for CORS. Use specific URL instead (maybe add some env for this)
 [ ] Deployment to fly.io (or maybe something with less abstractions where I can simply upload containers....)
   [ ] X-Forwarded-IP header or something - to make sure it works
   [ ] Fly launch for
