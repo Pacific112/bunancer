@@ -23,6 +23,7 @@ const calculateRPS = (currentStats: ServerStats): number => {
 
 export const initStats = () => {
 	const stats = new Map<string, ServerStats>();
+	const diff = new Map<string, ServerStats>();
 
 	const getStats = (serverId: string) => {
 		if (!stats.has(serverId)) {
@@ -32,11 +33,11 @@ export const initStats = () => {
 	};
 
 	setInterval(() => {
-		globalEmitter.emit(
-			"pool:stats-update",
-			Object.fromEntries(stats.entries()),
-		);
-	}, 500);
+		if (diff.size > 0) {
+			globalEmitter.emit("pool:stats-update", Object.fromEntries(diff.entries()));
+			diff.clear();
+		}
+	}, 5000);
 
 	return {
 		stats,
@@ -54,6 +55,7 @@ export const initStats = () => {
 
 			serverStats.lastRequestTimestamp = Date.now();
 			stats.set(server.id, serverStats);
+			diff.set(server.id, serverStats);
 		},
 	};
 };

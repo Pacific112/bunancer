@@ -71,7 +71,7 @@
   [x] When pool is empty display only name and button
 [ ] Tech
   [x] SDK should support stopping / fetching logs by id
-  [ ] Do not send SSE when state has not changed
+  [x] Do not send SSE when state has not changed
   [ ] Health check - I don't like current implementation
   [ ] Get rid of ! operator
   [ ] Get rid of hardcoded links
@@ -104,6 +104,7 @@
   [ ] Router
     [ ] Add support for different parameter names - currently when I use /servers/:id and /servers/:name/details things will not work
     [ ] Add early misconfiguration detection
+  [ ] Actually send only those stats that has changed
 [ ] CleanUp
     [ ] Load Balancer
     [ ] SDK

@@ -71,17 +71,20 @@ function App() {
 			);
 		});
 		source.addEventListener("stats-update", (e) => {
-			const eid = JSON.parse(e.data);
-			setServerStats(eid);
+			const statsUpdate = JSON.parse(e.data);
+			setServerStats((stats) => ({ ...stats, ...statsUpdate }));
 		});
 
 		return () => source.close();
 	}, []);
 
-	const handleAddServer = (poolId: string, newServer: CreateServer) => {
+	const handleAddServer = (
+		serverPool: ServerPoolType,
+		newServer: CreateServer,
+	) => {
 		setServerPools((prevPools) =>
 			prevPools.map((pool) =>
-				pool.id === poolId
+				pool.id === serverPool.id
 					? {
 							...pool,
 							servers: [
@@ -100,7 +103,7 @@ function App() {
 			),
 		);
 
-		fetch(`http://localhost:41234/pools/${poolId}/servers`, {
+		fetch(`http://localhost:41234/pools/${serverPool.id}/servers`, {
 			body: JSON.stringify(newServer),
 			method: "POST",
 		});

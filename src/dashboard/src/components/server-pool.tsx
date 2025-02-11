@@ -5,7 +5,7 @@ import { AddServerDialog } from "@/components/add-server-dialog.tsx";
 
 interface ServerPoolProps {
 	pool: ServerPool;
-	onAddServer: (poolId: string, server: CreateServer) => void;
+	onAddServer: (poolId: ServerPool, server: CreateServer) => void;
 }
 
 export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
@@ -15,7 +15,7 @@ export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
 	const totalServers = pool.servers.length;
 
 	const handleAddServer = (server: CreateServer) =>
-		onAddServer(pool.id, server);
+		onAddServer(pool, server);
 
 	return (
 		<Card className="mb-6">
