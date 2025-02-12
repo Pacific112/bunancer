@@ -92,11 +92,10 @@ const createPool = () => {
 	};
 };
 
-export const initializePool = ({ servers: configs, timeout }: AppConfig) => {
+export const initializePool = ({ timeout }: AppConfig) => {
 	const { stats, trackResponse } = initStats();
 	const { servers, markAsUnhealthy, addServer } = createPool();
 
-	configs.forEach(addServer);
 	const handleResponse = (response: Response, server: HealthyServer) => {
 		if ([502, 503, 504].includes(response.status)) {
 			markAsUnhealthy(server.config.id);

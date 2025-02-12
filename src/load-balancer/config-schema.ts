@@ -15,7 +15,6 @@ export const serverSchema = z.object({
 });
 
 export const configSchema = z.object({
-	servers: z.array(serverSchema),
 	timeout: z.optional(
 		z.object({
 			ms: z.number(),
@@ -24,4 +23,4 @@ export const configSchema = z.object({
 });
 
 export type AppConfig = z.infer<typeof configSchema>;
-export type ServerConfig = AppConfig["servers"][number];
+export type ServerConfig = z.infer<typeof serverSchema>;

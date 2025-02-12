@@ -1,6 +1,4 @@
 {
-  "servers": [
-  ],
   "timeout": {
     "ms": 3000
   }
