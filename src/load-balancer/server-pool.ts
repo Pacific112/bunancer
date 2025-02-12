@@ -1,93 +1,40 @@
 import type { AppConfig, ServerConfig } from "load-balancer/config-schema.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
-import type { HealthyServer, PoolServer } from "load-balancer/server.types.ts";
+import { type HealthyServer, type PoolServer, toUrl } from "load-balancer/server.types.ts";
 import { initStats } from "load-balancer/server-stats.ts";
-
-export const toUrl = ({ config }: PoolServer) =>
-	`${config.host}:${config.port}`;
-
-const HEALTH_CHECK_TIMEOUT = 500;
-const HEALTH_CHECK_RETRIES_LIMIT = 5;
-
-const checkHealth = async (server: PoolServer) => {
-	try {
-		const res = await fetch(`${toUrl(server)}/${server.config.health.path}`, {
-			signal: AbortSignal.timeout(HEALTH_CHECK_TIMEOUT),
-		});
-		return res.status === 200;
-	} catch (e) {
-		return false;
-	}
-};
-
-const setupHealthCheck = (
-	server: PoolServer,
-	onSuccess: (id: string) => void,
-	onError: (id: string) => void,
-) =>
-	setInterval(
-		async () =>
-			(await checkHealth(server)) ? onSuccess(server.id) : onError(server.id),
-		server.config.health.interval,
-	);
-
-type HealthCheckInfo = {
-	timerId: Timer;
-	failedCount: number;
-};
+import { setupHealthCheck } from "load-balancer/health-check.ts";
 
 const createPool = (initialServers: PoolServer[]) => {
 	const servers: PoolServer[] = [...initialServers];
-	const healthChecks: Map<string, HealthCheckInfo> = new Map();
 
-	const markAsHealthy = (serverId: string) => {
-		const server = servers.find((s) => s.id === serverId);
-		if (server) {
-			server.status = "healthy";
-			healthChecks.get(serverId)!.failedCount = 0;
-			globalEmitter.emit("pool:server-online", serverId);
-		}
+	const markAsHealthy = (server: PoolServer) => {
+		server.status = "healthy";
+		globalEmitter.emit("pool:server-online", server.id);
 	};
-	const markAsDead = (serverId: string) => {
-		const server = servers.find((s) => s.id === serverId);
-		if (server) {
-			server.status = "dead";
-			clearInterval(healthChecks.get(serverId)!.timerId);
-			globalEmitter.emit("pool:server-killed", serverId);
-		}
+	const markAsDead = (server: PoolServer) => {
+		server.status = "dead";
+		globalEmitter.emit("pool:server-killed", server.id);
 	};
-	const markAsUnhealthy = (serverId: string) => {
-		const server = servers.find((s) => s.id === serverId);
-		if (server) {
-			const failedCount = healthChecks.get(serverId)!.failedCount++;
-			if (failedCount >= HEALTH_CHECK_RETRIES_LIMIT) {
-				markAsDead(serverId);
-				return;
-			}
-
-			server.status = "unhealthy";
-			globalEmitter.emit("pool:server-offline", serverId);
-		}
+	const markAsUnhealthy = (server: PoolServer) => {
+		server.status = "unhealthy";
+		globalEmitter.emit("pool:server-offline", server.id);
 	};
 	return {
 		servers,
 		addServer: async (config: ServerConfig) => {
 			const pending = { id: config.id, status: "pending", config } as const;
+
 			servers.push(pending);
 			globalEmitter.emit("pool:new-server", pending);
 
-			const healthResult = await checkHealth(pending);
-			if (!healthResult) {
-				markAsUnhealthy(pending.id);
-				return;
-			}
+			setupHealthCheck(pending, (status) => {
+				if (status === "healthy") markAsHealthy(pending);
+				if (status === "unhealthy") markAsUnhealthy(pending);
+				if (status === "dead") markAsDead(pending);
+			});
 
-			const timerId = setupHealthCheck(pending, markAsHealthy, markAsUnhealthy);
-			healthChecks.set(pending.id, { timerId, failedCount: 0 });
-			markAsHealthy(pending.id);
 			return pending;
 		},
-		markAsHealthy,
 		markAsUnhealthy,
 	};
 };
@@ -101,7 +48,7 @@ export const initializePool = (
 
 	const handleResponse = (response: Response, server: HealthyServer) => {
 		if ([502, 503, 504].includes(response.status)) {
-			markAsUnhealthy(server.config.id);
+			markAsUnhealthy(server);
 		}
 	};
 
@@ -140,7 +87,7 @@ export const initializePool = (
 					handleResponse(r, server);
 					trackResponse(r, server);
 				})
-				.catch(() => markAsUnhealthy(server.config.id));
+				.catch(() => markAsUnhealthy(server));
 
 			return fetchPromise;
 		},

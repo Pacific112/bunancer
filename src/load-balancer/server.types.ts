@@ -7,6 +7,9 @@ export type UnhealthyServer = BaseServer & { status: "unhealthy" };
 export type DeadServer = BaseServer & { status: "dead" };
 export type PoolServer = PendingServer | HealthyServer | UnhealthyServer | DeadServer;
 
+export const toUrl = ({ config }: PoolServer) =>
+	`${config.host}:${config.port}`;
+
 export type ServerStats = {
 	totalRequests: number;
 	requestsPerSecond: number;
