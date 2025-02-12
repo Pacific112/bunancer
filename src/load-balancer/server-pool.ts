@@ -103,10 +103,7 @@ export const initializePool = ({ timeout }: AppConfig) => {
 	};
 
 	return {
-		status: {
-			servers: [...servers],
-			stats: new Map(stats),
-		},
+		status: { servers, stats },
 		addServer: async (server: ServerConfig) => {
 			if (servers.every((s) => s.id !== server.id)) {
 				const newServer = await addServer(server);

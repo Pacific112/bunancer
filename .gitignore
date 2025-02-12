@@ -175,3 +175,4 @@ dist
 .DS_Store
 
 stubs/*
+server-pool-state.json
