@@ -9,7 +9,6 @@ export class FileStorageProvider implements StorageProvider {
   }
 
   async saveState(servers: PoolServer[]): Promise<void> {
-    console.log('rel save')
     const file = Bun.file(this.#filePath);
     await Bun.write(file, JSON.stringify(servers));
   }

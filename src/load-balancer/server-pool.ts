@@ -36,8 +36,8 @@ type HealthCheckInfo = {
 	failedCount: number;
 };
 
-const createPool = () => {
-	const servers: PoolServer[] = [];
+const createPool = (initialServers: PoolServer[]) => {
+	const servers: PoolServer[] = [...initialServers];
 	const healthChecks: Map<string, HealthCheckInfo> = new Map();
 
 	const markAsHealthy = (serverId: string) => {
@@ -92,9 +92,12 @@ const createPool = () => {
 	};
 };
 
-export const initializePool = ({ timeout }: AppConfig) => {
+export const initializePool = (
+	initialServers: PoolServer[],
+	{ timeout }: AppConfig,
+) => {
 	const { stats, trackResponse } = initStats();
-	const { servers, markAsUnhealthy, addServer } = createPool();
+	const { servers, markAsUnhealthy, addServer } = createPool(initialServers);
 
 	const handleResponse = (response: Response, server: HealthyServer) => {
 		if ([502, 503, 504].includes(response.status)) {

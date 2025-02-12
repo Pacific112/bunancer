@@ -15,7 +15,6 @@ export class ServerStateStorage {
 	}
 
 	saveState(servers: PoolServer[]) {
-		console.log("saveState", servers);
 		this.#currentState = servers;
 	}
 

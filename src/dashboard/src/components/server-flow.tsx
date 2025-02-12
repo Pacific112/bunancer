@@ -204,7 +204,9 @@ const buildNodesForPool = (
 };
 
 export const ServerFlow = ({ serverPools, onAddServer, stats }: Props) => {
-	const [expandedPools, setExpandedPools] = useState<string[]>([]);
+	const [expandedPools, setExpandedPools] = useState<string[]>(
+		serverPools.filter((s) => s.servers.length > 0).map((s) => s.id),
+	);
 
 	const nodes = useMemo<Node[]>(() => {
 		return [

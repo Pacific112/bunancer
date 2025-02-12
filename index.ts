@@ -9,10 +9,14 @@ import { destroy, get, post, router } from "load-balancer/router.ts";
 import { runServer, serverLogs, stopServer } from "stub-server/sdk.ts";
 import { z } from "zod";
 import type { PendingServer, ServerStats } from "load-balancer/server.types.ts";
+import { ServerStateStorage } from "load-balancer/storage/server-state-storage.ts";
 
 const config = await loadConfig();
-const serverPool = initializePool(config);
-const { routeRequest } = startLoadBalancer(serverPool);
+
+const serverStateStorage = new ServerStateStorage();
+const poolServers = await serverStateStorage.loadState()
+const serverPool = initializePool(poolServers, config);
+const { routeRequest } = startLoadBalancer(serverPool, serverStateStorage);
 
 Bun.serve({
 	fetch(request) {
