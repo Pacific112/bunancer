@@ -96,14 +96,18 @@ const buildTrieRouter = (routes: RouteDefinition<string>[]) => {
 		let currentNode: TrieRoot<string> | TrieNode<string> = trie.get(
 			route.method,
 		)!;
-		for (let i = 0; i < splitPath(route.path).length; i++) {
-			const path = splitPath(route.path)[i];
+		const pathParts = splitPath(route.path);
+		for (let i = 0; i < pathParts.length; i++) {
+			const path = pathParts[i];
 			const pathName = path.startsWith(":") ? "*" : path;
 			if (!currentNode.nodes.has(pathName)) {
 				currentNode.nodes.set(pathName, {
 					path: pathName,
 					nodes: new Map(),
 				});
+			}
+			if (path === ":") {
+				throw new Error(`Incorrect param name ${path}`);
 			}
 			if (path.startsWith(":")) {
 				params.push({ name: path.slice(1), position: i });
@@ -113,6 +117,9 @@ const buildTrieRouter = (routes: RouteDefinition<string>[]) => {
 
 		if (currentNode.route) {
 			throw new Error("Duplicated route");
+		}
+		if (new Set(params.map(p => p.name)).size < params.length) {
+			throw new Error("Duplicated path param name");
 		}
 		currentNode.route = route;
 		if (params.length > 0) {
