@@ -1,18 +1,18 @@
-import { loadConfig } from "load-balancer/config.ts";
-import { initializePool } from "load-balancer/server-pool.ts";
+import { loadConfig } from "load-balancer/config/static-config.ts";
+import { initializePool } from "load-balancer/pool/server-pool.ts";
 import { startLoadBalancer } from "load-balancer/load-balancer.ts";
-import { serverSchema } from "load-balancer/config-schema.ts";
-import { sse, type SseSetup } from "load-balancer/sse.ts";
-import { cors } from "load-balancer/cors.ts";
+import { serverSchema } from "load-balancer/config/config-schema.ts";
+import { sse, type SseSetup } from "load-balancer/middlewares/sse.ts";
+import { cors } from "load-balancer/middlewares/cors.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
-import { destroy, get, post, router } from "load-balancer/router.ts";
+import { destroy, get, post, router } from "load-balancer/routing/router.ts";
 import { runServer, serverLogs, stopServer } from "stub-server/sdk.ts";
 import { z } from "zod";
 import {
 	type PendingServer,
 	type ServerStats,
 	toUrl,
-} from "load-balancer/server.types.ts";
+} from "load-balancer/pool/server.types.ts";
 import { ServerStateStorage } from "load-balancer/storage/server-state-storage.ts";
 
 const config = await loadConfig();

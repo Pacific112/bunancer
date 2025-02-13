@@ -69,7 +69,7 @@
   [x] Expand / shrink list of servers
   [x] Display top bar on group node - for stats and add new server button
   [x] When pool is empty display only name and button
-[ ] Tech
+[x] Tech
   [x] SDK should support stopping / fetching logs by id
   [x] Do not send SSE when state has not changed
   [x] ServerPool.allServers should be probably removed... Or maybe not
@@ -93,7 +93,7 @@
       [ ] Get rid of hardcoded links
       [ ] Do I want to mix functions with classes?
       [ ] DO I really want to do dependect injection for server state storage
-
+      [ ] Replace global emitter with something more local
     [ ] SDK
     [ ] CLI
     [ ] Introduce workspaces

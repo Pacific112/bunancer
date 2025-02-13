@@ -1,4 +1,4 @@
-import { type ServerPool } from "./server-pool.ts";
+import { type ServerPool } from "load-balancer/pool/server-pool.ts";
 import { ServerStateStorage } from "load-balancer/storage/server-state-storage.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
 

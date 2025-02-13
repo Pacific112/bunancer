@@ -1,6 +1,6 @@
 {
 	"name": "buniter",
-	"module": "index.ts",
+	"module": "src/load-balancer/index.ts",
 	"type": "module",
 	"devDependencies": {
 		"@types/bun": "^1.2.1",

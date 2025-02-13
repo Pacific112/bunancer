@@ -1,4 +1,4 @@
-import { type PoolServer, toUrl } from "load-balancer/server.types.ts";
+import { type PoolServer, toUrl } from "load-balancer/pool/server.types.ts";
 
 const HEALTH_CHECK_TIMEOUT = 500;
 const HEALTH_CHECK_RETRIES_LIMIT = 5;

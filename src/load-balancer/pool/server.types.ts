@@ -1,4 +1,4 @@
-import type { ServerConfig } from "load-balancer/config-schema.ts";
+import type { ServerConfig } from "load-balancer/config/config-schema.ts";
 
 type BaseServer = { config: ServerConfig; id: string };
 export type PendingServer = BaseServer & { status: "pending" };
