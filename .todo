@@ -75,31 +75,14 @@
   [x] ServerPool.allServers should be probably removed... Or maybe not
   [x] CORS - make sure that it actually behaves how it should and appropriate headers are added
   [x] Handle case when there is no servers in pool - currently error
-  [ ] Retry with backoff - after fail or health check
+  [x] Retry with backoff - after fail or health check
   [x] Reboot logic (probably file, but maybe etcd worth to consider?)
   [x] Refetch stats from living servers after reboot
-  [ ] Definitely stats should sent delta not actual values.
-  [ ] Better algorithm for RPS. Currently it is not possible to go to zero
-  [ ] Try to not update RPS after every request. Instead store reuests delta and count based on this?
-  [ ] Send only stats that frontend actually needs. Right now whole object is sent
-  [ ] More efficient stats sending. In the worker? How ofhen should stats be pushed?
-  [ ] Better error handling for REST actions - currently nothing
-  [ ] Structured logs support
   [x] Health check - I don't like current implementation
-  [ ] SDK - support for pools
-    [ ] Allow to add server to specific pool via SDK
-    [ ] Create pool via SDK
-    [ ] Show shadow node or something on graph to make it easy to create nie pool
   [x] Config should be persistent so after restarting load balancer servers do not need - also nice for development as watch breaks stuff. Use SQLITE
-  [ ] Allow to easily change returned error code for the server from SDK
-    [ ] CLI
-    [ ] Dashboard
-  [ ] Should I use better event emitter then built into node? https://www.npmjs.com/package/emittery
-    [ ] Should this emitter be global?
   [ ] Router
-    [ ] Add support for different parameter names - currently when I use /servers/:id and /servers/:name/details things will not work
+    [x] Add support for different parameter names - currently when I use /servers/:id and /servers/:name/details things will not work
     [ ] Add early misconfiguration detection
-  [ ] Actually send only those stats that has changed
 [ ] CleanUp
     [ ] Load Balancer
       [ ] Get rid of ! operator
@@ -116,6 +99,7 @@
   [ ] better abstraction - parsing at least
   [ ] DialogClose should be used in dialog not in form...
   [ ] nested objects update
+  [ ] Send only stats that frontend actually needs. Right now whole object is sent
   [ ] Use NodeToolbar instead of PopoverContent (or together)
   [ ] Expand / Hide pool - pools should appear only after animation has finished
   [ ] Separate position calculation from creating nodes (move it to separate util)
@@ -144,15 +128,25 @@
   [ ] Share types between Bun backend and React frontend
 [ ] Fix mutable config - better types?
 [ ] TESTS
+  [ ] Better error handling for REST actions - currently nothing
 [ ] Global timeout settings
 [ ] Introduce pino for logging
   [ ] Standard access logs on stub server
   [ ] Maybe structured logs
+[ ] Use DI instead of global event emitter
 [ ] ADR
   [ ] Why bun?
   [ ] Why SDK
   [ ] Routing algorithms
+  [ ] Why built in emitter instead of emittery
   [ ] How Servers register themselves
+[ ] SDK - support for pools
+  [ ] Allow to add server to specific pool via SDK
+  [ ] Create pool via SDK
+  [ ] Show shadow node or something on graph to make it easy to create nie pool
+[ ] Allow to easily change returned error code for the server from SDK
+  [ ] CLI
+  [ ] Dashboard
 [ ] Before deployment - do not use * for CORS. Use specific URL instead (maybe add some env for this)
 [ ] Deployment to fly.io (or maybe something with less abstractions where I can simply upload containers....)
   [ ] X-Forwarded-IP header or something - to make sure it works
@@ -161,6 +155,9 @@
 [ ] Stats
   [ ] Show graph with number of requests per second
   [ ] Display aggregated pool stats
+  [ ] Should stats send delta instead of actual values?
+  [ ] More efficient stats sending. In the worker? How often should stats be pushed?
+  [ ] Better algorithm for RPS. Currently it is not possible to go to zero
 [ ] New storage implementation?
 [ ] Stream server logs instead of static display
 [ ] Store stats somewhere
