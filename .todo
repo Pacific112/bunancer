@@ -92,8 +92,7 @@
       [ ] Get rid of ! operator
       [ ] Get rid of hardcoded links
       [ ] Do I want to mix functions with classes?
-      [ ] DO I really want to do dependect injection for server state storage
-      [ ] Replace global emitter with something more local
+      [ ] split bun servers
     [ ] SDK
     [ ] CLI
     [ ] Introduce workspaces

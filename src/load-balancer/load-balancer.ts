@@ -1,15 +1,15 @@
 import { type ServerPool } from "load-balancer/pool/server-pool.ts";
-import { ServerStateStorage } from "load-balancer/storage/server-state-storage.ts";
 import { globalEmitter } from "load-balancer/global-emitter.ts";
+import type { PoolServer } from "load-balancer/pool/server.types.ts";
 
 export const startLoadBalancer = (
 	serverPool: ServerPool,
-	stateStorage: ServerStateStorage,
+	onStateChanged: (servers: PoolServer[]) => void,
 ) => {
 	let counter = -1;
 	const { requestTo } = serverPool;
 
-	const storeState = () => stateStorage.saveState(serverPool.status.servers);
+	const storeState = () => onStateChanged(serverPool.status.servers);
 	globalEmitter.on("pool:new-server", storeState);
 	globalEmitter.on("pool:server-online", storeState);
 	globalEmitter.on("pool:server-offline", storeState);

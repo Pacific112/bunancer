@@ -16,11 +16,14 @@ import {
 import { ServerStateStorage } from "load-balancer/storage/server-state-storage.ts";
 
 const config = await loadConfig();
-
 const serverStateStorage = new ServerStateStorage();
+
 const poolServers = await serverStateStorage.loadState();
 const serverPool = initializePool(poolServers, config);
-const { routeRequest } = startLoadBalancer(serverPool, serverStateStorage);
+
+const { routeRequest } = startLoadBalancer(serverPool, (servers) =>
+	serverStateStorage.saveState(servers),
+);
 
 Bun.serve({
 	fetch(request) {
