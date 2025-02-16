@@ -14,6 +14,7 @@ import {
 	toUrl,
 } from "load-balancer/pool/server.types.ts";
 import { ServerStateStorage } from "load-balancer/storage/server-state-storage.ts";
+import dashboard from "./dashboard.html";
 
 const config = await loadConfig();
 const serverStateStorage = new ServerStateStorage();
@@ -99,6 +100,10 @@ const sseHandler: SseSetup = (enqueue) => {
 
 Bun.serve({
 	port: 41234,
+	static: {
+		"/dashboard": dashboard,
+	},
+	development: true,
 	fetch: cors(
 		router(
 			get("/status", statusHandler),
