@@ -30,7 +30,7 @@ const LoadBalancerNode = ({ data }: NodeProps) => (
 		<Handle
 			type="source"
 			position={Position.Bottom}
-			className="w-16 !bg-stone-400"
+			className="w-16 bg-stone-400!"
 		/>
 	</div>
 );
@@ -66,7 +66,7 @@ const ServerPoolNode = ({ width, height, data }: NodeProps) => {
 				<Handle
 					type="target"
 					position={Position.Top}
-					className="w-16 !bg-stone-400"
+					className="w-16 bg-stone-400!"
 				/>
 			</div>
 		</>
