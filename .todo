@@ -125,6 +125,7 @@
 [ ] Figure out the best way to deploy React app
   [ ] Serve from Bun?
   [ ] Separate deployment?
+  [ ] Probably I should move dashboard server into dashboard itself
   [ ] Do I want to SSR some secrets used to auth with dashboard + initial config?
 [ ] Better handle servers created in Bun:
   [ ] Better endpoint / route matching (no ends with)
