@@ -1,4 +1,4 @@
-import type { PoolServer } from "load-balancer/src/pool/server.types.ts";
+import type { PoolServer } from "@/pool/server.types";
 
 export interface StorageProvider {
   saveState(servers: PoolServer[]): Promise<void>;

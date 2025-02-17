@@ -1,5 +1,5 @@
-import { globalEmitter } from "load-balancer/src/global-emitter.ts";
-import type { PoolServer, ServerStats } from "load-balancer/src/pool/server.types.ts";
+import { globalEmitter } from "@/global-emitter";
+import type { PoolServer, ServerStats } from "@/pool/server.types";
 
 const defaultStats = (): ServerStats => ({
 	totalRequests: 0,

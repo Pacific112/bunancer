@@ -1,8 +1,8 @@
-import type { AppConfig, ServerConfig } from "load-balancer/src/config/config-schema.ts";
-import { globalEmitter } from "load-balancer/src/global-emitter.ts";
-import { type HealthyServer, type PoolServer, toUrl } from "load-balancer/src/pool/server.types.ts";
-import { initStats } from "load-balancer/src/pool/server-stats.ts";
-import { setupHealthCheck } from "load-balancer/src/pool/health-check.ts";
+import type { AppConfig, ServerConfig } from "@/config/config-schema";
+import { globalEmitter } from "@/global-emitter";
+import { type HealthyServer, type PoolServer, toUrl } from "@/pool/server.types";
+import { initStats } from "@/pool/server-stats";
+import { setupHealthCheck } from "@/pool/health-check";
 
 const createPool = (initialServers: PoolServer[]) => {
 	const servers: PoolServer[] = [...initialServers];

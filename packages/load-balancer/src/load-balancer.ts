@@ -1,6 +1,6 @@
-import { type ServerPool } from "load-balancer/src/pool/server-pool.ts";
-import { globalEmitter } from "load-balancer/src/global-emitter.ts";
-import type { PoolServer } from "load-balancer/src/pool/server.types.ts";
+import { type ServerPool } from "@/pool/server-pool";
+import { globalEmitter } from "@/global-emitter";
+import type { PoolServer } from "@/pool/server.types";
 
 export const startLoadBalancer = (
 	serverPool: ServerPool,

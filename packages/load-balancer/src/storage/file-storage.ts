@@ -1,5 +1,5 @@
-import type { StorageProvider } from "load-balancer/src/storage/types.ts";
-import type { PoolServer } from "load-balancer/src/pool/server.types.ts";
+import type { StorageProvider } from "@/storage/types";
+import type { PoolServer } from "@/pool/server.types";
 
 export class FileStorageProvider implements StorageProvider {
   readonly #filePath: string;

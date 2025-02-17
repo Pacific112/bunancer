@@ -7,7 +7,7 @@ import {
 	serverLogs,
 	stopAllServers,
 	stopServer,
-} from "../sdk.ts";
+} from "./sdk.ts";
 
 let runningServers = await revalidateProcesses(await loadRunningServers());
 

@@ -1,24 +1,19 @@
-import { loadConfig } from "load-balancer/src/config/static-config.ts";
-import { initializePool } from "load-balancer/src/pool/server-pool.ts";
-import { startLoadBalancer } from "load-balancer/src/load-balancer.ts";
-import { serverSchema } from "load-balancer/src/config/config-schema.ts";
-import { sse, type SseSetup } from "load-balancer/src/middlewares/sse.ts";
-import { cors } from "load-balancer/src/middlewares/cors.ts";
-import { globalEmitter } from "load-balancer/src/global-emitter.ts";
-import {
-	destroy,
-	get,
-	post,
-	router,
-} from "load-balancer/src/routing/router.ts";
+import { loadConfig } from "@/config/static-config";
+import { initializePool } from "@/pool/server-pool";
+import { startLoadBalancer } from "@/load-balancer";
+import { serverSchema } from "@/config/config-schema";
+import { sse, type SseSetup } from "@/middlewares/sse";
+import { cors } from "@/middlewares/cors";
+import { globalEmitter } from "@/global-emitter";
+import { destroy, get, post, router } from "@/routing/router";
 import { runServer, serverLogs, stopServer } from "stub-server";
 import { z } from "zod";
 import {
 	type PendingServer,
 	type ServerStats,
 	toUrl,
-} from "load-balancer/src/pool/server.types.ts";
-import { ServerStateStorage } from "load-balancer/src/storage/server-state-storage.ts";
+} from "@/pool/server.types";
+import { ServerStateStorage } from "@/storage/server-state-storage";
 import dashboard from "./dashboard.html";
 
 const config = await loadConfig();

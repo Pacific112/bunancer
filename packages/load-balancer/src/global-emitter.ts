@@ -1,5 +1,5 @@
 import { EventEmitter } from "node:events";
-import type { PendingServer, ServerStats } from "load-balancer/src/pool/server.types.ts";
+import type { PendingServer, ServerStats } from "@/pool/server.types";
 
 type EventsMap = {
 	"pool:new-server": [PendingServer];

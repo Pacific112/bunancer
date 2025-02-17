@@ -6,11 +6,10 @@ const STUB_SERVERS_FILE = `${STUBS_DIR}/servers.txt`;
 const pathToLogFile = (instanceId: string) =>
 	`${STUB_LOGS_DIR}/${instanceId}.log`;
 
-const serversFile = Bun.file(STUB_SERVERS_FILE)
-if (!( await serversFile.exists())) {
+const serversFile = Bun.file(STUB_SERVERS_FILE);
+if (!(await serversFile.exists())) {
 	await mkdir(STUB_LOGS_DIR, { recursive: true });
-	await serversFile.write('')
-
+	await serversFile.write("");
 }
 
 type RunningServer = Awaited<ReturnType<typeof loadRunningServers>>[number];
@@ -61,8 +60,8 @@ export const runServer = async ({
 	const logFile = Bun.file(pathToLogFile(instanceId), {});
 	await Bun.write(logFile, " ");
 
-	const s = `${import.meta.dir}/src/server.ts`;
-	const proc = Bun.spawn(["bun", `--port=${port}`, s], {
+	const path = `${import.meta.dir}/server.ts`;
+	const proc = Bun.spawn(["bun", `--port=${port}`, path], {
 		env: {
 			...process.env,
 			SERVER_IDENTIFIER: instanceId,
