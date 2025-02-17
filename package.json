@@ -14,6 +14,7 @@
 	},
 	"dependencies": {
 		"@clack/prompts": "^0.9.1",
+		"bun-plugin-tailwind": "^0.0.14",
 		"zod": "^3.24.1"
 	}
 }
