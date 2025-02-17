@@ -1,6 +1,6 @@
 {
 	"name": "buniter",
-	"module": "src/load-balancer/index.ts",
+	"module": "packages/load-balancer/index.ts",
 	"type": "module",
 	"devDependencies": {
 		"@types/bun": "^1.2.1",
@@ -10,7 +10,7 @@
 		"typescript": "^5.7.3"
 	},
 	"scripts": {
-		"stub-server": "bun src/stub-server/cli.ts"
+		"stub-server": "bun packages/stub-server/cli.ts"
 	},
 	"dependencies": {
 		"@clack/prompts": "^0.9.1",

@@ -55,7 +55,7 @@ export const runServer = async ({
 	await Bun.write(logFile, " ");
 
 	const proc = Bun.spawn(
-		["bun", `--port=${port}`, "./src/stub-server/server.ts"],
+		["bun", `--port=${port}`, "./packages/stub-server/server.ts"],
 		{
 			stdout: detached ? logFile : "inherit",
 			env: {
