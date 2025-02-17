@@ -1,6 +1,6 @@
-import type { StorageProvider } from "load-balancer/storage/types.ts";
-import type { PoolServer } from "load-balancer/pool/server.types.ts";
-import { FileStorageProvider } from "load-balancer/storage/file-storage.ts";
+import type { StorageProvider } from "load-balancer/src/storage/types.ts";
+import type { PoolServer } from "load-balancer/src/pool/server.types.ts";
+import { FileStorageProvider } from "load-balancer/src/storage/file-storage.ts";
 
 const DEFAULT_FLUSH_INTERVAL = 30_000;
 

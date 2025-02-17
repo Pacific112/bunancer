@@ -1,4 +1,4 @@
-import { configSchema } from "load-balancer/config/config-schema.ts";
+import { configSchema } from "load-balancer/src/config/config-schema.ts";
 
 const path = process.env.CONFIG_PATH || "./config.json";
 const configFile = Bun.file(path, { type: "application/json" });
