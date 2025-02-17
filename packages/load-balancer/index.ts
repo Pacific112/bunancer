@@ -5,8 +5,13 @@ import { serverSchema } from "load-balancer/src/config/config-schema.ts";
 import { sse, type SseSetup } from "load-balancer/src/middlewares/sse.ts";
 import { cors } from "load-balancer/src/middlewares/cors.ts";
 import { globalEmitter } from "load-balancer/src/global-emitter.ts";
-import { destroy, get, post, router } from "load-balancer/src/routing/router.ts";
-import { runServer, serverLogs, stopServer } from "stub-server/sdk.ts";
+import {
+	destroy,
+	get,
+	post,
+	router,
+} from "load-balancer/src/routing/router.ts";
+import { runServer, serverLogs, stopServer } from "stub-server";
 import { z } from "zod";
 import {
 	type PendingServer,

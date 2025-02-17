@@ -51,12 +51,14 @@
     },
     "packages/load-balancer": {
       "name": "load-balancer",
+      "dependencies": {
+        "stub-server": "workspace:*",
+      },
     },
     "packages/stub-server": {
       "name": "stub-server",
       "dependencies": {
         "@clack/prompts": "^0.9.1",
-        "zod": "^3.24.1",
       },
     },
   },

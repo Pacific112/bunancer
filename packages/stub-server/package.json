@@ -2,6 +2,9 @@
   "name": "stub-server",
   "type": "module",
   "private": true,
+  "exports": {
+    ".": "./sdk.ts"
+  },
   "dependencies": {
     "@clack/prompts": "^0.9.1"
   }

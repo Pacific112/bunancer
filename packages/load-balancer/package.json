@@ -2,5 +2,8 @@
   "name": "load-balancer",
   "type": "module",
   "module": "./index.ts",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "stub-server": "workspace:*"
+  }
 }

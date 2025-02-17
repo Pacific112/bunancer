@@ -6,6 +6,13 @@ const STUB_SERVERS_FILE = `${STUBS_DIR}/servers.txt`;
 const pathToLogFile = (instanceId: string) =>
 	`${STUB_LOGS_DIR}/${instanceId}.log`;
 
+const serversFile = Bun.file(STUB_SERVERS_FILE)
+if (!( await serversFile.exists())) {
+	await mkdir(STUB_LOGS_DIR, { recursive: true });
+	await serversFile.write('')
+
+}
+
 type RunningServer = Awaited<ReturnType<typeof loadRunningServers>>[number];
 
 export const loadRunningServers = async () => {
@@ -13,7 +20,7 @@ export const loadRunningServers = async () => {
 		.split("\n")
 		.filter((s) => s.length > 0)
 		.map((s) => s.split("|"))
-		.map(([instanceId, pid, port]) => ({instanceId, pid, port}));
+		.map(([instanceId, pid, port]) => ({ instanceId, pid, port }));
 };
 
 export const isRunning = (server: RunningServer) => {
@@ -33,7 +40,7 @@ const findServerById = async (id: string) => {
 export const revalidateProcesses = async (runningServers: RunningServer[]) => {
 	const actuallyRunning = runningServers.filter(isRunning);
 	const content = actuallyRunning.reduce(
-		(s1, {instanceId, pid, port}) => s1 + `${instanceId}|${pid}|${port}\n`,
+		(s1, { instanceId, pid, port }) => s1 + `${instanceId}|${pid}|${port}\n`,
 		"",
 	);
 
@@ -42,28 +49,25 @@ export const revalidateProcesses = async (runningServers: RunningServer[]) => {
 };
 
 export const runServer = async ({
-																	instanceId,
-																	port,
-																	detached = true,
-																}: {
+	instanceId,
+	port,
+	detached = true,
+}: {
 	instanceId: string;
 	port: string;
 	detached?: boolean;
 }) => {
-	await mkdir(STUBS_DIR, {recursive: true});
+	await mkdir(STUBS_DIR, { recursive: true });
 	const logFile = Bun.file(pathToLogFile(instanceId), {});
 	await Bun.write(logFile, " ");
 
-	const proc = Bun.spawn(
-		["bun", `--port=${port}`, "./packages/stub-server/server.ts"],
-		{
-			stdout: detached ? logFile : "inherit",
-			env: {
-				...process.env,
-				SERVER_IDENTIFIER: instanceId,
-			},
+	const s = `${import.meta.dir}/src/server.ts`;
+	const proc = Bun.spawn(["bun", `--port=${port}`, s], {
+		env: {
+			...process.env,
+			SERVER_IDENTIFIER: instanceId,
 		},
-	);
+	});
 
 	await appendFile(STUB_SERVERS_FILE, `${instanceId}|${proc.pid}|${port}\n`);
 
@@ -75,14 +79,14 @@ export const runServer = async ({
 };
 
 export const stopAllServers = async (servers: RunningServer[]) => {
-	servers.filter(isRunning).forEach(({pid}) => process.kill(Number(pid)));
+	servers.filter(isRunning).forEach(({ pid }) => process.kill(Number(pid)));
 	await Bun.write(STUB_SERVERS_FILE, "");
 };
 
 export const stopServer = async (server: RunningServer | string) => {
 	const serverToStop =
 		typeof server === "string" ? await findServerById(server) : server;
-	if (!serverToStop) return {ok: false};
+	if (!serverToStop) return { ok: false };
 
 	if (isRunning(serverToStop)) {
 		process.kill(Number(serverToStop.pid));
@@ -90,16 +94,16 @@ export const stopServer = async (server: RunningServer | string) => {
 		await revalidateProcesses(runningServers);
 	}
 
-	return {ok: true};
+	return { ok: true };
 };
 
 export const serverLogs = async (server: RunningServer | string) => {
 	const selectedServer =
 		typeof server === "string" ? await findServerById(server) : server;
-	if (!selectedServer) return {ok: false};
+	if (!selectedServer) return { ok: false };
 
 	return {
 		ok: true,
-		data: await Bun.file(pathToLogFile(selectedServer.instanceId)).text()
+		data: await Bun.file(pathToLogFile(selectedServer.instanceId)).text(),
 	};
 };
