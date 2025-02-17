@@ -1,0 +1,9 @@
+{
+  "name": "stub-server",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@clack/prompts": "^0.9.1",
+    "zod": "^3.24.1"
+  }
+}

@@ -1,20 +1,21 @@
 {
-	"name": "buniter",
-	"module": "packages/load-balancer/index.ts",
-	"type": "module",
-	"devDependencies": {
-		"@types/bun": "^1.2.1",
-		"prettier": "3.4.2"
-	},
-	"peerDependencies": {
-		"typescript": "^5.7.3"
-	},
-	"scripts": {
-		"stub-server": "bun packages/stub-server/cli.ts"
-	},
-	"dependencies": {
-		"@clack/prompts": "^0.9.1",
-		"bun-plugin-tailwind": "^0.0.14",
-		"zod": "^3.24.1"
-	}
+  "name": "buniter-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "peerDependencies": {
+    "typescript": "^5.7.3"
+  },
+  "scripts": {
+    "stub-server": "bun packages/stub-server/cli.ts"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.1",
+    "bun-plugin-tailwind": "^0.0.14",
+    "prettier": "3.4.2"
+  }
 }

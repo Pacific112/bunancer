@@ -1,0 +1,6 @@
+{
+  "name": "load-balancer",
+  "type": "module",
+  "module": "./index.ts",
+  "private": true
+}
