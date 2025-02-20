@@ -101,7 +101,7 @@
     [ ] bun dev should run tailwind
     [ ] tyescript config
   [ ] improvements:
-    [ ] public folder middleware
+    [x] public folder middleware
     [ ] Add hash and inject it properly to main html. Enable caching
     [ ] SSR middleware to hide complexity
     [ ] Try to use build result in order to generate e-tag value
