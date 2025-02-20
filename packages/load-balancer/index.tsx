@@ -17,10 +17,12 @@ import { ServerStateStorage } from "@/storage/server-state-storage";
 import { renderToReadableStream } from "react-dom/server";
 import App from "ui/App.tsx";
 import { publicFolder } from "@/routing/public-folder.ts";
+import TailwindBunPlugin from "bun-plugin-tailwind";
 
 await Bun.build({
-	entrypoints: ["./packages/load-balancer/ui/main.tsx"],
+	entrypoints: ["./packages/load-balancer/ui/main.tsx", "./packages/load-balancer/ui/index.css"],
 	outdir: "./packages/load-balancer/public",
+	plugins: [TailwindBunPlugin]
 });
 
 const config = await loadConfig();
