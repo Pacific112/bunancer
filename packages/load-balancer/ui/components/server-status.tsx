@@ -1,10 +1,10 @@
-import { Server } from "@/types/types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Server } from "$/types/types";
+import { Card, CardContent, CardHeader, CardTitle } from "$/components/ui/card";
+import { Badge } from "$/components/ui/badge";
 import { ServerIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { DeleteServerDialog } from "@/components/delete-server-dialog.tsx";
-import { ShowLogsDialog } from "@/components/show-logs-dialog.tsx";
+import { cn } from "$/lib/utils";
+import { DeleteServerDialog } from "$/components/delete-server-dialog.tsx";
+import { ShowLogsDialog } from "$/components/show-logs-dialog.tsx";
 
 interface ServerStatusProps {
 	server: Server;

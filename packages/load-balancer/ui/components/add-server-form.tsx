@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { CreateServer } from "@/types/types";
-import { DialogClose } from "@/components/ui/dialog.tsx";
+import { Button } from "$/components/ui/button";
+import { Input } from "$/components/ui/input";
+import { Label } from "$/components/ui/label";
+import { CreateServer } from "$/types/types";
+import { DialogClose } from "$/components/ui/dialog.tsx";
 
 interface AddServerFormProps {
 	onAddServer: (server: CreateServer) => void;

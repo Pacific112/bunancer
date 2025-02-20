@@ -14,7 +14,14 @@ import {
 	toUrl,
 } from "@/pool/server.types";
 import { ServerStateStorage } from "@/storage/server-state-storage";
-import dashboard from "./dashboard.html";
+import { renderToReadableStream } from "react-dom/server";
+import App from "ui/App.tsx";
+
+await Bun.build({
+	naming: '',
+	entrypoints: ["./packages/load-balancer/ui/main.tsx"],
+	outdir: "./packages/load-balancer/public"
+});
 
 const config = await loadConfig();
 const serverStateStorage = new ServerStateStorage();
@@ -100,12 +107,31 @@ const sseHandler: SseSetup = (enqueue) => {
 
 Bun.serve({
 	port: 41234,
-	static: {
-		"/dashboard": dashboard,
-	},
 	development: true,
 	fetch: cors(
 		router(
+			get("/public/main.js", async () => {
+				return new Response(
+					Bun.file("./packages/load-balancer/public/main.js"),
+				);
+			}),
+			get("/public/main.css", async () => {
+				return new Response(
+					Bun.file("./packages/load-balancer/public/main.css"),
+				);
+			}),
+			get("/public/index.css", async () => {
+				return new Response(
+					Bun.file("./packages/load-balancer/public/index.css"),
+				);
+			}),
+			get("/dashboard", async () => {
+				const stream = await renderToReadableStream(<App />, {
+					bootstrapModules: ["/public/main.js"],
+					bootstrapScriptContent: `window.__INITIAL_PROPS__ = ${JSON.stringify({})};`,
+				});
+				return new Response(stream);
+			}),
 			get("/status", statusHandler),
 			get("/sse", sse(sseHandler)),
 			get("/servers/:id/logs", async ({ pathParams }) => {

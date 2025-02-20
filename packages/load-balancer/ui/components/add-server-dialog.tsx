@@ -2,11 +2,11 @@ import {
 	Dialog,
 	DialogContent,
 	DialogTrigger,
-} from "@/components/ui/dialog.tsx";
-import { Button } from "@/components/ui/button.tsx";
+} from "$/components/ui/dialog.tsx";
+import { Button } from "$/components/ui/button.tsx";
 import { PlusCircle } from "lucide-react";
-import { AddServerForm } from "@/components/add-server-form.tsx";
-import { CreateServer } from "@/types/types.ts";
+import { AddServerForm } from "$/components/add-server-form.tsx";
+import type { CreateServer } from "$/types/types.ts";
 import { clsx } from "clsx";
 
 interface Props {

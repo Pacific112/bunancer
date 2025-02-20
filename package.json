@@ -11,10 +11,10 @@
     "stub-server": "bun packages/stub-server/cli.ts"
   },
   "dependencies": {
-    "zod": "^3.24.1"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.1",
+    "@types/bun": "^1.2.2",
     "bun-plugin-tailwind": "^0.0.14",
     "prettier": "3.4.2"
   }

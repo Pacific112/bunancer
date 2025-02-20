@@ -8,15 +8,15 @@ import {
 	ReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { type CreateServer, ServerPool, ServerStats } from "@/types/types.ts";
+import { type CreateServer, ServerPool, ServerStats } from "$/types/types.ts";
 import { useMemo, useState } from "react";
-import { cn } from "@/lib/utils.ts";
-import { Popover, PopoverContent } from "@/components/ui/popover.tsx";
+import { cn } from "$/lib/utils.ts";
+import { Popover, PopoverContent } from "$/components/ui/popover.tsx";
 import { PopoverTrigger } from "@radix-ui/react-popover";
-import { DeleteServerDialog } from "@/components/delete-server-dialog.tsx";
-import { ShowLogsDialog } from "@/components/show-logs-dialog.tsx";
-import { AddServerDialog } from "@/components/add-server-dialog.tsx";
-import { Button } from "@/components/ui/button.tsx";
+import { DeleteServerDialog } from "$/components/delete-server-dialog.tsx";
+import { ShowLogsDialog } from "$/components/show-logs-dialog.tsx";
+import { AddServerDialog } from "$/components/add-server-dialog.tsx";
+import { Button } from "$/components/ui/button.tsx";
 import { Expand, Shrink } from "lucide-react";
 
 const LoadBalancerNode = ({ data }: NodeProps) => (

@@ -1,7 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ServerStatus } from "@/components/server-status";
-import type { CreateServer, ServerPool } from "@/types/types";
-import { AddServerDialog } from "@/components/add-server-dialog.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "$/components/ui/card";
+import { ServerStatus } from "$/components/server-status";
+import type { CreateServer, ServerPool } from "$/types/types";
+import { AddServerDialog } from "$/components/add-server-dialog.tsx";
+import { useRef } from "react";
 
 interface ServerPoolProps {
 	pool: ServerPool;
@@ -9,6 +10,8 @@ interface ServerPoolProps {
 }
 
 export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
+	const ref = useRef(null);
+
 	const onlineServers = pool.servers.filter(
 		(server) => server.status === "healthy",
 	).length;
@@ -22,7 +25,7 @@ export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
 			<CardHeader>
 				<div className="flex items-center justify-between">
 					<CardTitle>{pool.name}</CardTitle>
-					<div className="text-sm text-muted-foreground">
+					<div className="text-sm text-muted-foreground" ref={ref}>
 						{onlineServers} / {totalServers} servers online
 					</div>
 				</div>

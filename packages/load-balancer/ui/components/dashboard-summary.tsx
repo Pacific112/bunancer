@@ -1,5 +1,5 @@
-import { ServerPool } from "@/types/types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { type ServerPool } from "$/types/types";
+import { Card, CardContent, CardHeader, CardTitle } from "$/components/ui/card";
 import { AlertTriangle, CheckCircle, Server } from "lucide-react";
 
 interface DashboardSummaryProps {
@@ -21,7 +21,6 @@ export function DashboardSummary({ serverPools }: DashboardSummaryProps) {
 			acc + pool.servers.filter((s) => s.status === "unhealthy").length,
 		0,
 	);
-
 	return (
 		<div className="grid gap-4 md:grid-cols-3 mb-6">
 			<Card>

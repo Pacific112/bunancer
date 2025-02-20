@@ -96,6 +96,14 @@
     [ ] SDK
     [ ] CLI
     [ ] Introduce workspaces
+[ ] Cleanup react SSR:
+  [ ] DX
+    [ ] bun dev should run tailwind
+  [ ] improvements:
+    [ ] public folder middleware
+    [ ] Add hash and inject it properly to main html. Enable caching
+    [ ] SSR middleware to hide complexity
+  [ ] production mode - make sure it actually works
 [ ] Frontend -
   [ ] Configure base url or just use something better then raw fetch
   [ ] useSyncExternalStore, parsing, at least state should be provided by the server etc.
@@ -167,6 +175,7 @@
 [ ] Would be cool to have dedicated endpoint that will log user (based on magic link) and spin up new env for him...
   [ ] In general access should be invite only
 =============================================
+[ ] Try to separate dashboard from load-balancer
 [ ] Stats
   [ ] Show graph with number of requests per second
   [ ] Display aggregated pool stats

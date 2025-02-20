@@ -1,14 +1,14 @@
-import { Server } from "@/types/types.ts";
+import { Server } from "$/types/types.ts";
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "@/components/ui/dialog.tsx";
-import { Button } from "@/components/ui/button.tsx";
+} from "$/components/ui/dialog.tsx";
+import { Button } from "$/components/ui/button.tsx";
 import { FileText } from "lucide-react";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area.tsx";
+import { ScrollArea, ScrollBar } from "$/components/ui/scroll-area.tsx";
 import { useEffect, useState } from "react";
 
 function LogsArea({ server }: { server: Server }) {

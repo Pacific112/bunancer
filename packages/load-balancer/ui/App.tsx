@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import {
+import type {
 	CreateServer,
-	ServerPool as ServerPoolType,
 	ServerStats,
-} from "@/types/types";
-import { ServerPool } from "@/components/server-pool";
-import { DashboardSummary } from "@/components/dashboard-summary";
-import { ServerFlow } from "@/components/server-flow.tsx";
+	ServerPool as ServerPoolType,
+} from "$/types/types.ts";
+import { DashboardSummary } from "$/components/dashboard-summary.tsx";
+import { ServerPool } from "$/components/server-pool.tsx";
+import { ServerFlow } from "$/components/server-flow.tsx";
 
 function App() {
 	const [serverPools, setServerPools] = useState<ServerPoolType[]>([]);
@@ -19,7 +19,7 @@ function App() {
 			.then((r) => r.json())
 			.then((r) => setServerPools(r.serverPools));
 	}, []);
-
+	//
 	useEffect(() => {
 		const source = new EventSource("http://localhost:41234/sse");
 		source.addEventListener("new-server", (e) => {
@@ -109,23 +109,42 @@ function App() {
 		});
 	};
 
+	console.log(serverPools)
+
 	return (
-		<div className="container mx-auto p-4">
-			<div className="flex justify-between items-center mb-6">
-				<h1 className="text-3xl font-bold">Load Balancer Admin Dashboard</h1>
-			</div>
-			<DashboardSummary serverPools={serverPools} />
-			{serverPools.map((pool) => (
-				<ServerPool key={pool.id} pool={pool} onAddServer={handleAddServer} />
-			))}
-			{serverPools[0] && (
-				<ServerFlow
-					stats={serverStats}
-					serverPools={serverPools}
-					onAddServer={handleAddServer}
-				/>
-			)}
-		</div>
+		<html>
+			<head>
+				<meta charSet="utf-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<link rel="stylesheet" href="/public/index.css"></link>
+				<link rel="stylesheet" href="/public/main.css"></link>
+				<title>My app</title>
+			</head>
+			<body>
+				<div className="container mx-auto p-4">
+					<div className="flex justify-between items-center mb-6">
+						<h1 className="text-3xl font-bold">
+							Load Balancer Admin Dashboard
+						</h1>
+					</div>
+					<DashboardSummary serverPools={serverPools} />
+					{serverPools.map((pool) => (
+						<ServerPool
+							key={pool.id}
+							pool={pool}
+							onAddServer={handleAddServer}
+						/>
+					))}
+					{serverPools[0] && (
+						<ServerFlow
+							stats={serverStats}
+							serverPools={serverPools}
+							onAddServer={handleAddServer}
+						/>
+					)}
+				</div>
+			</body>
+		</html>
 	);
 }
 
