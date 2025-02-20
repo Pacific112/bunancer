@@ -104,6 +104,7 @@
     [ ] public folder middleware
     [ ] Add hash and inject it properly to main html. Enable caching
     [ ] SSR middleware to hide complexity
+    [ ] Try to use build result in order to generate e-tag value
   [ ] production mode - make sure it actually works
 [ ] Frontend -
   [ ] Configure base url or just use something better then raw fetch

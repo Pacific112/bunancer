@@ -16,9 +16,9 @@ import {
 import { ServerStateStorage } from "@/storage/server-state-storage";
 import { renderToReadableStream } from "react-dom/server";
 import App from "ui/App.tsx";
+import { publicFolder } from "@/routing/public-folder.ts";
 
 await Bun.build({
-	naming: "",
 	entrypoints: ["./packages/load-balancer/ui/main.tsx"],
 	outdir: "./packages/load-balancer/public",
 });
@@ -90,21 +90,7 @@ Bun.serve({
 	development: true,
 	fetch: cors(
 		router(
-			get("/public/main.js", async () => {
-				return new Response(
-					Bun.file("./packages/load-balancer/public/main.js"),
-				);
-			}),
-			get("/public/main.css", async () => {
-				return new Response(
-					Bun.file("./packages/load-balancer/public/main.css"),
-				);
-			}),
-			get("/public/index.css", async () => {
-				return new Response(
-					Bun.file("./packages/load-balancer/public/index.css"),
-				);
-			}),
+			publicFolder(),
 			get("/dashboard", async () => {
 				const initialServerPools = [
 					{
