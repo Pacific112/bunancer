@@ -1,25 +1,19 @@
 import { useEffect, useState } from "react";
 import type {
 	CreateServer,
-	ServerStats,
 	ServerPool as ServerPoolType,
+	ServerStats,
 } from "$/types/types.ts";
 import { DashboardSummary } from "$/components/dashboard-summary.tsx";
 import { ServerPool } from "$/components/server-pool.tsx";
 import { ServerFlow } from "$/components/server-flow.tsx";
 
-function App() {
-	const [serverPools, setServerPools] = useState<ServerPoolType[]>([]);
+function App({ initialServerPools }: { initialServerPools: ServerPoolType[] }) {
+	const [serverPools, setServerPools] = useState(initialServerPools);
 	const [serverStats, setServerStats] = useState<Record<string, ServerStats>>(
 		{},
 	);
-	// TODO to be replaced by SSR
-	useEffect(() => {
-		fetch("http://localhost:41234/status")
-			.then((r) => r.json())
-			.then((r) => setServerPools(r.serverPools));
-	}, []);
-	//
+
 	useEffect(() => {
 		const source = new EventSource("http://localhost:41234/sse");
 		source.addEventListener("new-server", (e) => {
@@ -108,8 +102,6 @@ function App() {
 			method: "POST",
 		});
 	};
-
-	console.log(serverPools)
 
 	return (
 		<html>

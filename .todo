@@ -99,6 +99,7 @@
 [ ] Cleanup react SSR:
   [ ] DX
     [ ] bun dev should run tailwind
+    [ ] tyescript config
   [ ] improvements:
     [ ] public folder middleware
     [ ] Add hash and inject it properly to main html. Enable caching

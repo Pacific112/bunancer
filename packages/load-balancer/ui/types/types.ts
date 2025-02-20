@@ -3,8 +3,6 @@ export interface Server {
 	name: string;
 	status: "healthy" | "unhealthy" | "pending" | "dead";
 	ip: string;
-	load: number;
-	responseTime: number;
 }
 
 export interface CreateServer {

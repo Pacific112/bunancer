@@ -18,9 +18,9 @@ import { renderToReadableStream } from "react-dom/server";
 import App from "ui/App.tsx";
 
 await Bun.build({
-	naming: '',
+	naming: "",
 	entrypoints: ["./packages/load-balancer/ui/main.tsx"],
-	outdir: "./packages/load-balancer/public"
+	outdir: "./packages/load-balancer/public",
 });
 
 const config = await loadConfig();
@@ -50,26 +50,6 @@ Bun.serve({
 		}),
 	),
 });
-
-const statusHandler = () => {
-	return new Response(
-		JSON.stringify({
-			serverPools: [
-				{
-					id: "pool1",
-					name: "Test",
-					servers: serverPool.status.servers.map((s) => ({
-						id: s.id,
-						name: s.id,
-						status: s.status,
-						ip: toUrl(s),
-						stats: serverPool.status.stats.get(s.id),
-					})),
-				},
-			],
-		}),
-	);
-};
 
 const sseHandler: SseSetup = (enqueue) => {
 	const newServerListener = (s: PendingServer) =>
@@ -126,13 +106,28 @@ Bun.serve({
 				);
 			}),
 			get("/dashboard", async () => {
-				const stream = await renderToReadableStream(<App />, {
-					bootstrapModules: ["/public/main.js"],
-					bootstrapScriptContent: `window.__INITIAL_PROPS__ = ${JSON.stringify({})};`,
-				});
+				const initialServerPools = [
+					{
+						id: "pool1",
+						name: "Test",
+						servers: serverPool.status.servers.map((s) => ({
+							id: s.id,
+							name: s.id,
+							status: s.status,
+							ip: toUrl(s),
+							stats: serverPool.status.stats.get(s.id),
+						})),
+					},
+				];
+				const stream = await renderToReadableStream(
+					<App initialServerPools={initialServerPools} />,
+					{
+						bootstrapModules: ["/public/main.js"],
+						bootstrapScriptContent: `window.__INITIAL_PROPS__ = ${JSON.stringify({ initialServerPools })};`,
+					},
+				);
 				return new Response(stream);
 			}),
-			get("/status", statusHandler),
 			get("/sse", sse(sseHandler)),
 			get("/servers/:id/logs", async ({ pathParams }) => {
 				const result = await serverLogs(pathParams.id);
