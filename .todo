@@ -96,16 +96,15 @@
     [ ] SDK
     [ ] CLI
     [ ] Introduce workspaces
-[ ] Cleanup react SSR:
-  [ ] DX
-    [ ] bun dev should run tailwind
-    [ ] tyescript config
-  [ ] improvements:
+[x] Cleanup react SSR:
+  [x] DX
+    [x] bun dev should run tailwind
+    [x] tyescript config
+  [x] improvements:
     [x] public folder middleware
-    [ ] Add hash and inject it properly to main html. Enable caching
-    [ ] SSR middleware to hide complexity
-    [ ] Try to use build result in order to generate e-tag value
-  [ ] production mode - make sure it actually works
+    [x] Add hash and inject it properly to main html. Enable caching
+    [x] SSR middleware to hide complexity
+    [x] Try to use build result in order to generate e-tag value
 [ ] Frontend -
   [ ] Configure base url or just use something better then raw fetch
   [ ] useSyncExternalStore, parsing, at least state should be provided by the server etc.
@@ -172,6 +171,7 @@
   [ ] Dashboard
 [ ] Before deployment - do not use * for CORS. Use specific URL instead (maybe add some env for this)
 [ ] Deployment to fly.io (or maybe something with less abstractions where I can simply upload containers....)
+  [ ] production build - make sure it actually works
   [ ] X-Forwarded-IP header or something - to make sure it works
   [ ] Fly launch for
 [ ] Would be cool to have dedicated endpoint that will log user (based on magic link) and spin up new env for him...

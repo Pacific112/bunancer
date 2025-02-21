@@ -1,18 +1,15 @@
 {
   "extends": "../../tsconfig.json",
-  "references": [
-    { "path": "./tsconfig.client.json"},
-    { "path": "./tsconfig.bun.json"}
-  ],
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      "$/*": [
-        "./ui/*"
       ]
     }
-  }
+  },
+  "include": [
+    "src",
+    "index.tsx"
+  ]
 }
