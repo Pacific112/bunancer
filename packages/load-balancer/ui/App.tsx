@@ -8,7 +8,13 @@ import { DashboardSummary } from "$/components/dashboard-summary.tsx";
 import { ServerPool } from "$/components/server-pool.tsx";
 import { ServerFlow } from "$/components/server-flow.tsx";
 
-function App({ initialServerPools }: { initialServerPools: ServerPoolType[] }) {
+function App({
+	stylesheets = [],
+	initialServerPools,
+}: {
+	stylesheets: string[];
+	initialServerPools: ServerPoolType[];
+}) {
 	const [serverPools, setServerPools] = useState(initialServerPools);
 	const [serverStats, setServerStats] = useState<Record<string, ServerStats>>(
 		{},
@@ -108,8 +114,9 @@ function App({ initialServerPools }: { initialServerPools: ServerPoolType[] }) {
 			<head>
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<link rel="stylesheet" href="/public/index.css"></link>
-				<link rel="stylesheet" href="/public/main.css"></link>
+				{stylesheets.map((s) => (
+					<link rel="stylesheet" key={s} href={s}></link>
+				))}
 				<title>My app</title>
 			</head>
 			<body>

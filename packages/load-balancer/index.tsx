@@ -14,15 +14,18 @@ import {
 	toUrl,
 } from "@/pool/server.types";
 import { ServerStateStorage } from "@/storage/server-state-storage";
-import { renderToReadableStream } from "react-dom/server";
-import App from "ui/App.tsx";
 import { publicFolder } from "@/routing/public-folder.ts";
 import TailwindBunPlugin from "bun-plugin-tailwind";
+import { renderDashboardApp } from "@/middlewares/renderDashboardApp.tsx";
 
-await Bun.build({
-	entrypoints: ["./packages/load-balancer/ui/main.tsx", "./packages/load-balancer/ui/index.css"],
+const buildResult = await Bun.build({
+	entrypoints: [
+		"./packages/load-balancer/ui/main.tsx",
+		"./packages/load-balancer/ui/index.css",
+	],
 	outdir: "./packages/load-balancer/public",
-	plugins: [TailwindBunPlugin]
+	plugins: [TailwindBunPlugin],
+	naming: "[dir]/[name]-[hash].[ext]",
 });
 
 const config = await loadConfig();
@@ -92,30 +95,25 @@ Bun.serve({
 	development: true,
 	fetch: cors(
 		router(
-			publicFolder(),
-			get("/dashboard", async () => {
-				const initialServerPools = [
-					{
-						id: "pool1",
-						name: "Test",
-						servers: serverPool.status.servers.map((s) => ({
-							id: s.id,
-							name: s.id,
-							status: s.status,
-							ip: toUrl(s),
-							stats: serverPool.status.stats.get(s.id),
-						})),
-					},
-				];
-				const stream = await renderToReadableStream(
-					<App initialServerPools={initialServerPools} />,
-					{
-						bootstrapModules: ["/public/main.js"],
-						bootstrapScriptContent: `window.__INITIAL_PROPS__ = ${JSON.stringify({ initialServerPools })};`,
-					},
-				);
-				return new Response(stream);
-			}),
+			publicFolder(buildResult),
+			get(
+				"/dashboard",
+				renderDashboardApp(buildResult, () => ({
+					initialServerPools: [
+						{
+							id: "pool1",
+							name: "Test",
+							servers: serverPool.status.servers.map((s) => ({
+								id: s.id,
+								name: s.id,
+								status: s.status,
+								ip: toUrl(s),
+								stats: serverPool.status.stats.get(s.id),
+							})),
+						},
+					],
+				})),
+			),
 			get("/sse", sse(sseHandler)),
 			get("/servers/:id/logs", async ({ pathParams }) => {
 				const result = await serverLogs(pathParams.id);
