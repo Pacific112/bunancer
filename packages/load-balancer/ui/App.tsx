@@ -7,6 +7,7 @@ import type {
 import { DashboardSummary } from "$/components/dashboard-summary.tsx";
 import { ServerPool } from "$/components/server-pool.tsx";
 import { ServerFlow } from "$/components/server-flow.tsx";
+import { useServerPools } from "$/useServerPools.ts";
 
 function App({
 	stylesheets = [],
@@ -15,60 +16,37 @@ function App({
 	stylesheets: string[];
 	initialServerPools: ServerPoolType[];
 }) {
-	const [serverPools, setServerPools] = useState(initialServerPools);
+	const [{ serverPools }, dispatch] = useServerPools(initialServerPools);
 	const [serverStats, setServerStats] = useState<Record<string, ServerStats>>(
 		{},
 	);
 
 	useEffect(() => {
-		const source = new EventSource("http://localhost:41234/sse");
+		const source = new EventSource("/sse");
 		source.addEventListener("new-server", (e) => {
 			const parsedServer = JSON.parse(e.data);
-			return setServerPools(([ss]) => {
-				const servIndex = ss.servers.findIndex((s) => s.id === parsedServer.id);
-				return [
-					{
-						...ss,
-						servers:
-							servIndex === -1
-								? [...ss.servers, parsedServer]
-								: ss.servers.toSpliced(servIndex, 1, parsedServer),
-					},
-				];
-			});
+			dispatch({ name: "new_server", payload: parsedServer });
 		});
 		source.addEventListener("server-online", (e) => {
-			const eid = JSON.parse(e.data);
-			setServerPools((ss) =>
-				ss.map((p) => ({
-					...p,
-					servers: p.servers.map((s) =>
-						s.id === eid ? { ...s, status: "healthy" } : s,
-					),
-				})),
-			);
+			const serverId = JSON.parse(e.data);
+			dispatch({
+				name: "mark_healthy",
+				payload: { poolId: serverPools[0].id, serverId },
+			});
 		});
 		source.addEventListener("server-offline", (e) => {
-			const eid = JSON.parse(e.data);
-			setServerPools((ss) =>
-				ss.map((p) => ({
-					...p,
-					servers: p.servers.map((s) => {
-						return s.id === eid ? { ...s, status: "unhealthy" } : s;
-					}),
-				})),
-			);
+			const serverId = JSON.parse(e.data);
+			dispatch({
+				name: "mark_unhealthy",
+				payload: { poolId: serverPools[0].id, serverId },
+			});
 		});
 		source.addEventListener("server-dead", (e) => {
-			const eid = JSON.parse(e.data);
-			setServerPools((ss) =>
-				ss.map((p) => ({
-					...p,
-					servers: p.servers.map((s) => {
-						return s.id === eid ? { ...s, status: "dead" } : s;
-					}),
-				})),
-			);
+			const serverId = JSON.parse(e.data);
+			dispatch({
+				name: "mark_dead",
+				payload: { poolId: serverPools[0].id, serverId },
+			});
 		});
 		source.addEventListener("stats-update", (e) => {
 			const statsUpdate = JSON.parse(e.data);
@@ -82,28 +60,20 @@ function App({
 		serverPool: ServerPoolType,
 		newServer: CreateServer,
 	) => {
-		setServerPools((prevPools) =>
-			prevPools.map((pool) =>
-				pool.id === serverPool.id
-					? {
-							...pool,
-							servers: [
-								...pool.servers,
-								{
-									id: newServer.instanceId,
-									responseTime: 0,
-									ip: `http://localhost:${newServer.port}`,
-									status: "pending",
-									name: newServer.instanceId,
-									load: 0,
-								},
-							],
-						}
-					: pool,
-			),
-		);
+		dispatch({
+			name: "new_server",
+			payload: {
+				poolId: serverPool.id,
+				server: {
+					id: newServer.instanceId,
+					ip: `http://localhost:${newServer.port}`,
+					status: "pending",
+					name: newServer.instanceId,
+				},
+			},
+		});
 
-		fetch(`http://localhost:41234/pools/${serverPool.id}/servers`, {
+		fetch(`/pools/${serverPool.id}/servers`, {
 			body: JSON.stringify(newServer),
 			method: "POST",
 		});
@@ -114,10 +84,10 @@ function App({
 			<head>
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				{stylesheets.map((s) => (
-					<link rel="stylesheet" key={s} href={s}></link>
+				{stylesheets.map((link) => (
+					<link rel="stylesheet" key={link} href={link}></link>
 				))}
-				<title>My app</title>
+				<title>Buniter</title>
 			</head>
 			<body>
 				<div className="container mx-auto p-4">
