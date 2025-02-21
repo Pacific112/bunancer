@@ -1,13 +1,17 @@
-import { useEffect, useState } from "react";
-import type {
-	CreateServer,
-	ServerPool as ServerPoolType,
-	ServerStats,
+import { useState } from "react";
+import {
+	type CreateServer,
+	type ServerPool as ServerPoolType,
+	serverSchema,
+	type ServerStats,
+	serverStatsSchema,
 } from "$/types/types.ts";
 import { DashboardSummary } from "$/components/dashboard-summary.tsx";
 import { ServerPool } from "$/components/server-pool.tsx";
 import { ServerFlow } from "$/components/server-flow.tsx";
-import { useServerPools } from "$/useServerPools.ts";
+import { useServerPools } from "$/lib/useServerPools.ts";
+import { useServerSentEvent } from "$/lib/useServerSentEvent.ts";
+import z from "zod";
 
 function App({
 	stylesheets = [],
@@ -21,40 +25,38 @@ function App({
 		{},
 	);
 
-	useEffect(() => {
-		const source = new EventSource("/sse");
-		source.addEventListener("new-server", (e) => {
-			const parsedServer = JSON.parse(e.data);
-			dispatch({ name: "new_server", payload: parsedServer });
-		});
-		source.addEventListener("server-online", (e) => {
-			const serverId = JSON.parse(e.data);
-			dispatch({
-				name: "mark_healthy",
-				payload: { poolId: serverPools[0].id, serverId },
-			});
-		});
-		source.addEventListener("server-offline", (e) => {
-			const serverId = JSON.parse(e.data);
-			dispatch({
-				name: "mark_unhealthy",
-				payload: { poolId: serverPools[0].id, serverId },
-			});
-		});
-		source.addEventListener("server-dead", (e) => {
-			const serverId = JSON.parse(e.data);
-			dispatch({
-				name: "mark_dead",
-				payload: { poolId: serverPools[0].id, serverId },
-			});
-		});
-		source.addEventListener("stats-update", (e) => {
-			const statsUpdate = JSON.parse(e.data);
-			setServerStats((stats) => ({ ...stats, ...statsUpdate }));
-		});
+	const poolId = serverPools[0].id;
 
-		return () => source.close();
-	}, []);
+	useServerSentEvent({
+		url: "/sse",
+		events: {
+			"new-server": {
+				schema: serverSchema,
+				handler: (server) =>
+					dispatch({ name: "new_server", payload: { poolId, server } }),
+			},
+			"server-online": {
+				schema: z.string(),
+				handler: (serverId) =>
+					dispatch({ name: "mark_healthy", payload: { poolId, serverId } }),
+			},
+			"server-offline": {
+				schema: z.string(),
+				handler: (serverId) =>
+					dispatch({ name: "mark_unhealthy", payload: { poolId, serverId } }),
+			},
+			"server-dead": {
+				schema: z.string(),
+				handler: (serverId) =>
+					dispatch({ name: "mark_dead", payload: { poolId, serverId } }),
+			},
+			"stats-update": {
+				schema: z.record(z.string(), serverStatsSchema),
+				handler: (statsUpdate) =>
+					setServerStats((stats) => ({ ...stats, ...statsUpdate })),
+			},
+		},
+	});
 
 	const handleAddServer = (
 		serverPool: ServerPoolType,

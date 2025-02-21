@@ -118,6 +118,9 @@
     [ ] Maybe I should use lib for this? Not sure, I have rather simple case
   [ ] better sse event names
   [ ] Figure out typing between server and frontend
+  [ ] useSSe
+    [ ] Make sure it handles all connections and schema errors
+    [ ] Make sure typing actually works there. It looks like there are any everywhere
   [ ] Introduce state for storing stats on the frontend. Currently every update causes whole app to rerender
   [ ] In general - split component and code improvements
   [ ] Try to make look and feel between flow and dashboard rectangles similar...

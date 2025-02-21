@@ -1,9 +1,18 @@
-export interface Server {
-	id: string;
-	name: string;
-	status: "healthy" | "unhealthy" | "pending" | "dead";
-	ip: string;
-}
+import z from "zod";
+
+export const serverSchema = z.object({
+	id: z.string(),
+	name: z.string(),
+	status: z.union([
+		z.literal("healthy"),
+		z.literal("unhealthy"),
+		z.literal("pending"),
+		z.literal("dead"),
+	]),
+	ip: z.string(),
+});
+
+export type Server = z.infer<typeof serverSchema>;
 
 export interface CreateServer {
 	instanceId: string;
@@ -16,10 +25,12 @@ export interface ServerPool {
 	servers: Server[];
 }
 
-export type ServerStats = {
-	totalRequests: number;
-	requestsPerSecond: number;
-	errorCount: number;
-	errorRate: number;
-	lastRequestTimestamp: number;
-};
+export const serverStatsSchema = z.object({
+	totalRequests: z.number(),
+	requestsPerSecond: z.number(),
+	errorCount: z.number(),
+	errorRate: z.number(),
+	lastRequestTimestamp: z.number(),
+});
+
+export type ServerStats = z.infer<typeof serverStatsSchema>;
