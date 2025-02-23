@@ -29,11 +29,13 @@ const reducer = (state: State, action: ServerPoolActions) => {
 			return produce(state, (draft) => {
 				const { poolId, server } = action.payload;
 				const serverPool = draft.serverPools.find((sp) => sp.id === poolId);
+				console.log({ poolId, server, serverPool });
 				if (!serverPool) return;
 
 				const serverIndex = serverPool.servers.findIndex(
 					(s) => s.id === server.id,
 				);
+				console.log({ serverIndex });
 				if (serverIndex === -1) {
 					serverPool.servers.push(server);
 				} else {
