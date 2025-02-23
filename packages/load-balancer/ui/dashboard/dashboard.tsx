@@ -9,9 +9,9 @@ import {
 } from "$/types/types.ts";
 import { useServerSentEvent } from "$/lib/useServerSentEvent.ts";
 import z from "zod";
-import { DashboardSummary } from "$/components/summary.tsx";
-import { ServerPool } from "$/components/server-pools.tsx";
-import { ServerFlow } from "$/components/server-flow.tsx";
+import { ServerPool } from "$/dashboard/pools/server-pool.tsx";
+import { ServerFlow } from "$/dashboard/graph/server-flow.tsx";
+import { Summary } from "$/dashboard/summary.tsx";
 
 export const Dashboard = ({
 	initialServerPools,
@@ -84,7 +84,7 @@ export const Dashboard = ({
 			<div className="flex justify-between items-center mb-6">
 				<h1 className="text-3xl font-bold">Load Balancer Dashboard</h1>
 			</div>
-			<DashboardSummary serverPools={serverPools} />
+			<Summary serverPools={serverPools} />
 			{serverPools.map((pool) => (
 				<ServerPool key={pool.id} pool={pool} onAddServer={handleAddServer} />
 			))}

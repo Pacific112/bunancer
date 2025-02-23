@@ -92,7 +92,6 @@ const sseHandler: SseSetup = (enqueue) => {
 
 Bun.serve({
 	port: 41234,
-	development: true,
 	fetch: cors(
 		router(
 			publicFolder(buildResult),
