@@ -6,7 +6,7 @@ interface DashboardSummaryProps {
 	serverPools: ServerPool[];
 }
 
-export function DashboardSummary({ serverPools }: DashboardSummaryProps) {
+export function Summary({ serverPools }: DashboardSummaryProps) {
 	const totalServers = serverPools.reduce(
 		(acc, pool) => acc + pool.servers.length,
 		0,

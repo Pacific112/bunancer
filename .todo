@@ -131,6 +131,7 @@
   [ ] Add Server dialog should display ServerPool name
   [ ] Move dashboard bun server to dashboard package
     [ ] Figure out types - they should be common between server and client
+    [ ] I want to useServerSentEvents hook to properly use types for events.
   [ ] CleanUp
 [ ] Use StatsD for stats
 [ ] Use Redis pub sub instead of event emitter

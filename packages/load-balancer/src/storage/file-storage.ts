@@ -4,7 +4,7 @@ import type { PoolServer } from "@/pool/server.types";
 export class FileStorageProvider implements StorageProvider {
   readonly #filePath: string;
 
-  constructor(filePath: string = "./server-pool-state.json") {
+  constructor(filePath: string = "./server-pools-state.json") {
     this.#filePath = filePath;
   }
 
