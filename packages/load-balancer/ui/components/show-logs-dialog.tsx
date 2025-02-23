@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 function LogsArea({ server }: { server: Server }) {
 	const [serverLogs, setServerLogs] = useState("");
 	useEffect(() => {
-		fetch(`http://localhost:41234/servers/${server.id}/logs`)
+		fetch(`/servers/${server.id}/logs`)
 			.then((r) => r.json())
 			.then((r) => r.logs)
 			.then(setServerLogs);

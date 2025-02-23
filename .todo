@@ -106,11 +106,11 @@
     [x] SSR middleware to hide complexity
     [x] Try to use build result in order to generate e-tag value
 [ ] Frontend -
-  [ ] Configure base url or just use something better then raw fetch
-  [ ] useSyncExternalStore, parsing, at least state should be provided by the server etc.
-  [ ] better abstraction - parsing at least
+  [x] Configure base url or just use something better then raw fetch
+  [x] useSyncExternalStore, parsing, at least state should be provided by the server etc.
+  [x] better abstraction - parsing at least
   [ ] DialogClose should be used in dialog not in form...
-  [ ] nested objects update
+  [x] nested objects update
   [ ] Send only stats that frontend actually needs. Right now whole object is sent
   [ ] Use NodeToolbar instead of PopoverContent (or together)
   [ ] Expand / Hide pool - pools should appear only after animation has finished
@@ -132,6 +132,8 @@
   [ ] Move dashboard bun server to dashboard package
     [ ] Figure out types - they should be common between server and client
   [ ] CleanUp
+[ ] Use StatsD for stats
+[ ] Use Redis pub sub instead of event emitter
 [ ] Was dark -> redark was actually necessary? It looks like after renaming some different mode triggered. Would be good to understand how dark mode is actually handling
 [ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect
   [ ] I need to at least use something better then fetch...

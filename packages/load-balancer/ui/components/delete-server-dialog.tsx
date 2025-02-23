@@ -31,11 +31,7 @@ export const DeleteServerDialog = ({ server }: { server: Server }) => {
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
 					<AlertDialogAction
-						onClick={() => {
-							fetch(`http://localhost:41234/servers/${server.id}`, {
-								method: "DELETE",
-							});
-						}}
+						onClick={() => fetch(`/servers/${server.id}`, { method: "DELETE" })}
 					>
 						Continue
 					</AlertDialogAction>
