@@ -31,7 +31,7 @@ export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
 			</CardHeader>
 			<CardContent>
 				<AddServerDialog handleAddServer={handleAddServer} />
-				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 					{pool.servers.map((server) => (
 						<ServerStatus key={server.id} server={server} />
 					))}

@@ -177,3 +177,4 @@ dist
 **/stubs/*
 **/public/*
 server-pool-state.json
+server-pools-state.json

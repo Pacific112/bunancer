@@ -111,7 +111,6 @@
   [x] better abstraction - parsing at least
   [ ] DialogClose should be used in dialog not in form...
   [x] nested objects update
-  [ ] Send only stats that frontend actually needs. Right now whole object is sent
   [ ] Use NodeToolbar instead of PopoverContent (or together)
   [ ] Expand / Hide pool - pools should appear only after animation has finished
   [ ] Separate position calculation from creating nodes (move it to separate util)
@@ -186,6 +185,7 @@
 [ ] Try to separate dashboard from load-balancer
 [ ] Stats
   [ ] Show graph with number of requests per second
+  [ ] Send only stats that frontend actually needs. Right now whole object is sent
   [ ] Display aggregated pool stats
   [ ] Should stats send delta instead of actual values?
   [ ] More efficient stats sending. In the worker? How often should stats be pushed?
