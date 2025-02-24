@@ -55,13 +55,13 @@ export const ServerFlow = ({ serverPools, onAddServer, stats }: Props) => {
 	const nodes = useMemo(() => {
 		return [
 			loadBalancerNode,
-			...serverPools.flatMap((sp) => {
-				const expanded = expandedIds.includes(sp.id);
+			...serverPools.flatMap((pool) => {
+				const expanded = expandedIds.includes(pool.id);
 				return [
-					buildServerPoolNode(sp, expanded, onAddServer, toggleExpand),
-					...sp.servers.map((server, i) =>
+					buildServerPoolNode(pool, expanded, onAddServer, toggleExpand),
+					...pool.servers.map((server, i) =>
 						buildServerNode(server, stats[server.id], {
-							parentId: sp.id,
+							parentId: pool.id,
 							hidden: !expanded,
 							extent: "parent",
 							position: positionForServerNode(i),

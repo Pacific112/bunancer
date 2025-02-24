@@ -111,15 +111,16 @@
   [x] better abstraction - parsing at least
   [x] DialogClose should be used in dialog not in form...
   [x] nested objects update
-  [ ] Use NodeToolbar instead of PopoverContent (or together)
-  [ ] Expand / Hide pool - pools should appear only after animation has finished
+  [x] Use NodeToolbar instead of PopoverContent (or together)
   [x] Separate position calculation from creating nodes (move it to separate util)
     [x] Maybe I should use lib for this? Not sure, I have rather simple case
-  [ ] better sse event names
   [ ] Figure out typing between server and frontend
+  [ ] better sse event names
+  [ ] separate tabs for table and graph
   [ ] useSSe
     [ ] Make sure it handles all connections and schema errors
     [ ] Make sure typing actually works there. It looks like there are any everywhere
+  [ ] stats are not working
   [ ] Introduce state for storing stats on the frontend. Currently every update causes whole app to rerender
   [ ] In general - split component and code improvements
   [ ] Try to make look and feel between flow and dashboard rectangles similar...
@@ -128,10 +129,12 @@
     [ ] https://github.com/tisoap/react-flow-smart-edge - maybe?
   [ ] Make sure that padding in ServerPool is correctly calculated for all positions
   [ ] Add Server dialog should display ServerPool name
+  [ ] Expand / Hide pool - pools should appear only after animation has finished
   [ ] Move dashboard bun server to dashboard package
     [ ] Figure out types - they should be common between server and client
     [ ] I want to useServerSentEvents hook to properly use types for events.
   [ ] CleanUp
+[ ] Fully inferred API types would be cool
 [ ] Use StatsD for stats
 [ ] Use Redis pub sub instead of event emitter
 [ ] Was dark -> redark was actually necessary? It looks like after renaming some different mode triggered. Would be good to understand how dark mode is actually handling

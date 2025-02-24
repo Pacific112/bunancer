@@ -2,12 +2,8 @@ import { Handle, Node, NodeProps, Position } from "@xyflow/react";
 import { AddServerDialog } from "$/components/add-server-dialog.tsx";
 import { Button } from "$/components/ui/button.tsx";
 import { Expand, Shrink } from "lucide-react";
-import { type CreateServer, ServerPool, ServerStats } from "$/types/types.ts";
-import { buildServerNode } from "$/dashboard/graph/server-node.tsx";
-import {
-	positionForServerNode,
-	serverPoolDimensions,
-} from "$/dashboard/graph/position-calculator.tsx";
+import { type CreateServer, ServerPool } from "$/types/types.ts";
+import { serverPoolDimensions } from "$/dashboard/graph/position-calculator.tsx";
 
 export type ServerPoolNode = Node<
 	{
@@ -41,27 +37,6 @@ export const buildServerPoolNode = (
 	};
 };
 
-export const buildServerPoolNodes = (
-	pool: ServerPool,
-	expanded: boolean,
-	stats: Record<string, ServerStats>,
-	onAddServer: (pool: ServerPool, server: CreateServer) => void,
-	onExpand: () => void,
-) => {
-	const { id, servers } = pool;
-	return [
-		buildServerPoolNode(pool, expanded, onAddServer, onExpand),
-		...servers.map((server, i) =>
-			buildServerNode(server, stats[server.id], {
-				parentId: id,
-				hidden: !expanded,
-				extent: "parent",
-				position: positionForServerNode(i),
-			}),
-		),
-	];
-};
-
 export const ServerPoolNode = ({
 	width,
 	height,
@@ -70,7 +45,7 @@ export const ServerPoolNode = ({
 	return (
 		<>
 			<div
-				className="px-4 shadow-md rounded-md bg-white border-2 border-stone-400 transition-all"
+				className="px-4 shadow-md rounded-md bg-white border-2 border-stone-400 transition-all duration-300 overflow-hidden"
 				style={{
 					width,
 					height,
