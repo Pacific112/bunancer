@@ -109,12 +109,12 @@
   [x] Configure base url or just use something better then raw fetch
   [x] useSyncExternalStore, parsing, at least state should be provided by the server etc.
   [x] better abstraction - parsing at least
-  [ ] DialogClose should be used in dialog not in form...
+  [x] DialogClose should be used in dialog not in form...
   [x] nested objects update
   [ ] Use NodeToolbar instead of PopoverContent (or together)
   [ ] Expand / Hide pool - pools should appear only after animation has finished
-  [ ] Separate position calculation from creating nodes (move it to separate util)
-    [ ] Maybe I should use lib for this? Not sure, I have rather simple case
+  [x] Separate position calculation from creating nodes (move it to separate util)
+    [x] Maybe I should use lib for this? Not sure, I have rather simple case
   [ ] better sse event names
   [ ] Figure out typing between server and frontend
   [ ] useSSe
