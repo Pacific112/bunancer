@@ -1,5 +1,4 @@
 import { Node, NodeProps } from "@xyflow/react";
-import { Server, ServerStats } from "$/types/types.ts";
 import { cn } from "$/lib/utils.ts";
 import { DeleteServerDialog } from "$/components/delete-server-dialog.tsx";
 import { ShowLogsDialog } from "$/components/show-logs-dialog.tsx";
@@ -7,6 +6,7 @@ import {
 	SERVER_NODE_HEIGHT,
 	SERVER_NODE_WIDTH,
 } from "$/dashboard/graph/position-calculator.tsx";
+import { Server, ServerStats } from "api/schema.ts";
 
 export type ServerNode = Node<
 	{

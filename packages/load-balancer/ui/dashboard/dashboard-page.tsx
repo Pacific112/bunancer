@@ -1,7 +1,7 @@
-import { type ServerPool as ServerPoolType } from "$/types/types.ts";
 import { ViewMode } from "$/lib/useViewMode.ts";
 import PageLayout from "$/PageLayout.tsx";
 import { Dashboard } from "$/dashboard/dashboard.tsx";
+import { ServerPool } from "api/schema.ts";
 
 function DashboardPage({
 	stylesheets = [],
@@ -10,7 +10,7 @@ function DashboardPage({
 }: {
 	stylesheets: string[];
 	initialMode: ViewMode;
-	initialServerPools: ServerPoolType[];
+	initialServerPools: ServerPool[];
 }) {
 	return (
 		<PageLayout stylesheets={stylesheets}>

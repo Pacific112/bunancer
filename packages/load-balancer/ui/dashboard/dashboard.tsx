@@ -1,14 +1,12 @@
 import { useServerPools } from "$/lib/useServerPools.ts";
 import { useState } from "react";
+import type { ServerEvent } from "api/schema.ts";
 import {
 	type CreateServer,
 	type ServerPool as ServerPoolType,
-	serverSchema,
 	type ServerStats,
-	serverStatsSchema,
-} from "$/types/types.ts";
+} from "api/schema.ts";
 import { useServerSentEvent } from "$/lib/useServerSentEvent.ts";
-import z from "zod";
 import { ServerPool } from "$/dashboard/pools/server-pool.tsx";
 import { ServerFlow } from "$/dashboard/graph/server-flow.tsx";
 import { Summary } from "$/dashboard/summary.tsx";
@@ -22,9 +20,9 @@ import {
 import { useViewMode, ViewMode } from "$/lib/useViewMode.ts";
 
 export const Dashboard = ({
-																initialMode,
-																initialServerPools,
-															}: {
+	initialMode,
+	initialServerPools,
+}: {
 	initialMode: ViewMode;
 	initialServerPools: ServerPoolType[];
 }) => {
@@ -36,34 +34,19 @@ export const Dashboard = ({
 
 	const poolId = serverPools[0].id;
 
-	useServerSentEvent({
+	useServerSentEvent<ServerEvent>({
 		url: "/sse",
 		events: {
-			"new-server": {
-				schema: serverSchema,
-				handler: (server) =>
-					dispatch({ name: "new_server", payload: { poolId, server } }),
-			},
-			"server-online": {
-				schema: z.string(),
-				handler: (serverId) =>
-					dispatch({ name: "mark_healthy", payload: { poolId, serverId } }),
-			},
-			"server-offline": {
-				schema: z.string(),
-				handler: (serverId) =>
-					dispatch({ name: "mark_unhealthy", payload: { poolId, serverId } }),
-			},
-			"server-dead": {
-				schema: z.string(),
-				handler: (serverId) =>
-					dispatch({ name: "mark_dead", payload: { poolId, serverId } }),
-			},
-			"stats-update": {
-				schema: z.record(z.string(), serverStatsSchema),
-				handler: (statsUpdate) =>
-					setServerStats((stats) => ({ ...stats, ...statsUpdate })),
-			},
+			"new-server": (server) =>
+				dispatch({ name: "new_server", payload: { poolId, server } }),
+			"server-online": (serverId) =>
+				dispatch({ name: "mark_healthy", payload: { poolId, serverId } }),
+			"server-offline": (serverId) =>
+				dispatch({ name: "mark_unhealthy", payload: { poolId, serverId } }),
+			"server-dead": (serverId) =>
+				dispatch({ name: "mark_dead", payload: { poolId, serverId } }),
+			"stats-update": (statsUpdate) =>
+				setServerStats((stats) => ({ ...stats, ...statsUpdate })),
 		},
 	});
 

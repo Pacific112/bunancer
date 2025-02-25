@@ -1,4 +1,4 @@
-import { Server } from "$/types/types.ts";
+import { Server } from "api/schema.ts";
 import {
 	Dialog,
 	DialogContent,

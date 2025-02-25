@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "$/components/ui/card";
 import { ServerStatus } from "./server-status";
-import type { CreateServer, ServerPool } from "$/types/types";
 import { AddServerDialog } from "$/components/add-server-dialog.tsx";
 import { useRef } from "react";
+import type { CreateServer, ServerPool } from "api/schema.ts";
 
 interface ServerPoolProps {
 	pool: ServerPool;

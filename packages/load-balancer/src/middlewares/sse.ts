@@ -3,8 +3,10 @@ type ServerSentEvent = {
 	data: unknown;
 };
 type CleanUp = () => void;
-type EnqueueEvent = (event: ServerSentEvent) => void;
-export type SseSetup = (enqueue: EnqueueEvent) => CleanUp;
+type EnqueueEvent<EVENT extends ServerSentEvent> = (event: EVENT) => void;
+export type SseSetup<EVENT extends ServerSentEvent> = (
+	enqueue: EnqueueEvent<EVENT>,
+) => CleanUp;
 
 const toPayload = (event: ServerSentEvent) => {
 	return `event: ${event.name}\ndata: ${JSON.stringify(event.data)}\n\n`;
@@ -18,7 +20,7 @@ const encoder = () => {
 	};
 };
 
-export const sse = (setup: SseSetup) => {
+export const sse = <EVENT extends ServerSentEvent>(setup: SseSetup<EVENT>) => {
 	const { encode } = encoder();
 	let pingTimerId: Timer | undefined;
 	let cleanUp: () => void = () => {};

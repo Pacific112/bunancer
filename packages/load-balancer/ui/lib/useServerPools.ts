@@ -1,9 +1,9 @@
-import type { Server, ServerPool as ServerPoolType } from "$/types/types.ts";
 import { useReducer } from "react";
 import { produce } from "immer";
+import type { Server, ServerPool } from "api/schema.ts";
 
 type State = {
-	serverPools: ServerPoolType[];
+	serverPools: ServerPool[];
 };
 
 type Action<NAME, PAYLOAD> = { name: NAME; payload: PAYLOAD };
@@ -15,7 +15,7 @@ type ServerPoolActions =
 	| Action<"mark_dead", { poolId: string; serverId: string }>;
 
 const findServer = (
-	serverPools: ServerPoolType[],
+	serverPools: ServerPool[],
 	poolId: string,
 	serverId: string,
 ) =>
@@ -65,7 +65,7 @@ const reducer = (state: State, action: ServerPoolActions) => {
 	}
 };
 
-export const useServerPools = (initialServerPools: ServerPoolType[]) => {
+export const useServerPools = (initialServerPools: ServerPool[]) => {
 	return useReducer(reducer, {
 		serverPools: initialServerPools,
 	});

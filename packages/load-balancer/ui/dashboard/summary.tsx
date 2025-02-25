@@ -1,6 +1,6 @@
-import { type ServerPool } from "$/types/types";
 import { Card, CardContent, CardHeader, CardTitle } from "$/components/ui/card";
 import { AlertTriangle, CheckCircle, Server } from "lucide-react";
+import { ServerPool } from "api/schema.ts";
 
 interface DashboardSummaryProps {
 	serverPools: ServerPool[];

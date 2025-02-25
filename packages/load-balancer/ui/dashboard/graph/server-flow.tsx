@@ -1,6 +1,6 @@
 import { Background, Edge, ReactFlow } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { type CreateServer, ServerPool, ServerStats } from "$/types/types.ts";
+import { type CreateServer, ServerPool, ServerStats } from "api/schema.ts";
 import { useCallback, useMemo, useState } from "react";
 import { buildServerNode, ServerNode } from "$/dashboard/graph/server-node.tsx";
 import {

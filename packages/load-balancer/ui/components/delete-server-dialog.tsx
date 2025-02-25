@@ -11,7 +11,7 @@ import {
 } from "$/components/ui/alert-dialog.tsx";
 import { Button } from "$/components/ui/button.tsx";
 import { StopCircle } from "lucide-react";
-import { Server } from "$/types/types.ts";
+import { Server } from "api/schema.ts";
 
 export const DeleteServerDialog = ({ server }: { server: Server }) => {
 	return (

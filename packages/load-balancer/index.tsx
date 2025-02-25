@@ -7,7 +7,6 @@ import { cors } from "@/middlewares/cors";
 import { globalEmitter } from "@/global-emitter";
 import { destroy, get, post, router } from "@/routing/router";
 import { runServer, serverLogs, stopServer } from "stub-server";
-import { z } from "zod";
 import {
 	type PendingServer,
 	type ServerStats,
@@ -21,6 +20,7 @@ import {
 import TailwindBunPlugin from "bun-plugin-tailwind";
 import { renderPage } from "@/middlewares/renderPage.tsx";
 import { auth, serializeAuthCookie } from "@/middlewares/auth.ts";
+import { createServerSchema, type ServerEvent } from "api/schema.ts";
 
 const buildResult = await Bun.build({
 	entrypoints: [
@@ -61,7 +61,7 @@ Bun.serve({
 	),
 });
 
-const sseHandler: SseSetup = (enqueue) => {
+const sseHandler: SseSetup<ServerEvent> = (enqueue) => {
 	const newServerListener = (s: PendingServer) =>
 		enqueue({
 			name: "new-server",
@@ -95,20 +95,21 @@ const sseHandler: SseSetup = (enqueue) => {
 	};
 };
 
+const ALLOWED_PATHS = [
+	"/",
+	"/unauthorized",
+	"/not-found",
+	"/invitations/*",
+	`${DEFAULT_PUBLIC_FOLDER_PATH}/*`,
+];
 Bun.serve({
 	port: 41234,
 	fetch: auth(
-		[
-			"/",
-			"/unauthorized",
-			"/not-found",
-			"/invitations/*",
-			`${DEFAULT_PUBLIC_FOLDER_PATH}/*`,
-		],
+		ALLOWED_PATHS,
 		cors(
 			router(
 				publicFolder(buildResult),
-				renderPage("/", buildResult, () => ({})),
+				renderPage("/", buildResult),
 				renderPage("/dashboard", buildResult, (request) => ({
 					initialServerPools: [
 						{
@@ -125,10 +126,10 @@ Bun.serve({
 					],
 					initialMode: new URL(request.url).searchParams.get("mode") || "table",
 				})),
-				renderPage("/faq", buildResult, () => ({})),
-				renderPage("/roadmap", buildResult, () => ({})),
-				renderPage("/not-found", buildResult, () => ({})),
-				renderPage("/unauthorized", buildResult, () => ({})),
+				renderPage("/faq", buildResult),
+				renderPage("/roadmap", buildResult),
+				renderPage("/not-found", buildResult),
+				renderPage("/unauthorized", buildResult),
 				get("/sse", sse(sseHandler)),
 				get("/invitations/:id", ({ pathParams }) => {
 					return new Response(null, {
@@ -148,10 +149,7 @@ Bun.serve({
 				}),
 				post(
 					"/pools/:poolId/servers",
-					z.object({
-						instanceId: z.string(),
-						port: z.string().regex(/\d+/),
-					}),
+					createServerSchema,
 					async (body, { pathParams: { poolId } }) => {
 						// TODO Figure out how to support poolId
 						await runServer(body);

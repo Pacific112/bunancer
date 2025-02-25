@@ -107,13 +107,14 @@
     [x] Maybe I should use lib for this? Not sure, I have rather simple case
   [x] separate tabs for table and graph
   [x] support for routing for tables
-  [ ] useSSe
+  [ ] useSSE
     [ ] Make sure it handles all connections and schema errors
     [ ] Make sure typing actually works there. It looks like there are any everywhere
   [ ] stats are not working
   [ ] Differentiate between 404 for API and for the router
   [ ] Introduce state for storing stats on the frontend. Currently every update causes whole app to rerender
   [ ] In general - split component and code improvements
+  [ ] Would be good to change theme to more orange / brown / claude like
   [ ] Try to make look and feel between flow and dashboard rectangles similar...
   [ ] Probably square edges will look nicer and cleaner...
   [ ] Do servers need edges? Or maybe it's enough to connect LoadBalancer with server pool?
@@ -128,6 +129,7 @@
   [ ] Add Active Link
   [ ] I think it will be better to just have left side bar and no header
   [ ] Better TS support for props
+  [ ] Maybe view transitions?
   [ ] Move dashboard bun server to dashboard package
     [ ] Figure out types - they should be common between server and client
     [ ] I want to useServerSentEvents hook to properly use types for events.

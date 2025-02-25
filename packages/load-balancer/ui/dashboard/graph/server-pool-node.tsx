@@ -2,7 +2,7 @@ import { Handle, Node, NodeProps, Position } from "@xyflow/react";
 import { AddServerDialog } from "$/components/add-server-dialog.tsx";
 import { Button } from "$/components/ui/button.tsx";
 import { Expand, Shrink } from "lucide-react";
-import { type CreateServer, ServerPool } from "$/types/types.ts";
+import { type CreateServer, ServerPool } from "api/schema.ts";
 import { serverPoolDimensions } from "$/dashboard/graph/position-calculator.tsx";
 
 export type ServerPoolNode = Node<

@@ -1,25 +1,24 @@
-import z, { ZodSchema } from "zod";
 import { useEffect } from "react";
+import type { ServerEvent } from "api/schema.ts";
 
-type SseConfig<T extends Record<string, ZodSchema>> = {
+type SseConfig<T extends ServerEvent> = {
 	url: `/${string}`;
 	events: {
-		[K in keyof T]: { schema: T[K]; handler: (data: z.infer<T[K]>) => void };
+		[K in T["name"]]: (data: Extract<T, { name: K }>["data"]) => void;
 	};
 };
 
-export const useServerSentEvent = <T extends Record<string, ZodSchema>>(
+export const useServerSentEvent = <T extends ServerEvent>(
 	config: SseConfig<T>,
 ) => {
 	useEffect(() => {
 		const source = new EventSource(config.url);
 		const eventDefinitions = Object.entries(config.events);
 
-		for (const [eventName, { schema, handler }] of eventDefinitions) {
+		for (const [eventName, handler] of eventDefinitions) {
 			source.addEventListener(eventName, (event) => {
 				const data = JSON.parse(event.data);
-				const result = schema.safeParse(data);
-				handler(result.data);
+				handler(data);
 			});
 		}
 

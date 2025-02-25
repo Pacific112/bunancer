@@ -6,15 +6,15 @@ import {
 } from "$/components/ui/dialog.tsx";
 import { Button } from "$/components/ui/button.tsx";
 import { PlusCircle } from "lucide-react";
-import type { CreateServer } from "$/types/types.ts";
 import { clsx } from "clsx";
 import { Label } from "$/components/ui/label.tsx";
 import { Input } from "$/components/ui/input.tsx";
 import { useForm } from "react-hook-form";
+import { CreateServer } from "api/schema.ts";
 
 interface Props {
 	className?: string;
-	handleAddServer: (server: CreateServer) => void;
+	handleAddServer: (server: CreatełServer) => void;
 }
 
 interface AddServerFormProps {

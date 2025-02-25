@@ -28,7 +28,7 @@ const categorizeOutputs = (buildResult: BuildOutput) =>
 export const renderPage = <PATH extends keyof DashboardPages>(
 	path: PATH,
 	buildOutput: BuildOutput,
-	getProps: (
+	getProps?: (
 		request: Request,
 	) => Omit<ComponentProps<DashboardPages[PATH]>, "stylesheets">,
 ) => {
@@ -36,7 +36,7 @@ export const renderPage = <PATH extends keyof DashboardPages>(
 	const Page = pages[path];
 
 	return get(path, async ({ req }: { req: Request }) => {
-		const initialProps = getProps(req);
+		const initialProps = getProps ? getProps(req) : {};
 		const stream = await renderToReadableStream(
 			<Page stylesheets={groupedOutput.stylesheets} {...initialProps} />,
 			{
