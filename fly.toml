@@ -9,7 +9,7 @@ primary_region = 'ams'
 [build]
 
 [http_service]
-  internal_port = 3000
+  internal_port = 41234
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
@@ -18,10 +18,10 @@ primary_region = 'ams'
 
 [[services]]
   protocol = "tcp"
-  internal_port = 41234
+  internal_port = 3000
   
   [[services.ports]]
-    port = 41234
+    port = 3000
 
 [[vm]]
   memory = '1gb'
