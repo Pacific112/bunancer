@@ -20,7 +20,7 @@ export const serializeAuthCookie = (value: string) => {
 	return cookie.serialize(
 		COOKIE_NAME,
 		cookieSignature.sign(value, COOKIE_SECRET),
-		{ httpOnly: true, sameSite: "lax", maxAge: 2000, path: '/' },
+		{ httpOnly: true, sameSite: "lax", maxAge: 2000, path: "/" },
 	);
 };
 export const parseAuthCookie = (cookieString: string) => {
@@ -48,14 +48,16 @@ export const auth = (
 
 		const cookieHeader = req.headers.get("Cookie");
 		if (!cookieHeader) {
-			return new Response(null, {
-				status: 401,
+			return new Response(undefined, {
+				status: 302,
+				headers: { Location: "/unauthorized" },
 			});
 		}
 		const auth = parseAuthCookie(cookieHeader);
 		if (!auth || !WHITELISTED_COOKIES.includes(auth)) {
-			return new Response(null, {
-				status: 401,
+			return new Response(undefined, {
+				status: 302,
+				headers: { Location: "/unauthorized" },
 			});
 		}
 

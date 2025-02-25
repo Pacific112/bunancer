@@ -118,7 +118,7 @@ const buildTrieRouter = (routes: RouteDefinition<string>[]) => {
 		if (currentNode.route) {
 			throw new Error("Duplicated route");
 		}
-		if (new Set(params.map(p => p.name)).size < params.length) {
+		if (new Set(params.map((p) => p.name)).size < params.length) {
 			throw new Error("Duplicated path param name");
 		}
 		currentNode.route = route;
@@ -170,7 +170,10 @@ export const router = (...routes: RouteDefinition<string>[]) => {
 	return async (req: Request) => {
 		const reqHandler = findRequestHandler(trieRouter, req);
 		if (!reqHandler || !reqHandler.route) {
-			return new Response(undefined, { status: 404 });
+			return new Response(undefined, {
+				status: 302,
+				headers: { Location: "/not-found" },
+			});
 		}
 
 		const pathParams = extractParamsFromPath(req, reqHandler.params || []);
