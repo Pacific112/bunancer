@@ -102,6 +102,7 @@ Bun.serve({
 		cors(
 			router(
 				publicFolder(buildResult),
+				renderPage("/", buildResult, () => ({})),
 				renderPage("/dashboard", buildResult, (request) => ({
 					initialServerPools: [
 						{
