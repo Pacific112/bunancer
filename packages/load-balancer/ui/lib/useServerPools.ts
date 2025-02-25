@@ -34,7 +34,6 @@ const reducer = (state: State, action: ServerPoolActions) => {
 				const serverIndex = serverPool.servers.findIndex(
 					(s) => s.id === server.id,
 				);
-				console.log({ serverIndex });
 				if (serverIndex === -1) {
 					serverPool.servers.push(server);
 				} else {

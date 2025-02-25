@@ -20,16 +20,16 @@ export const buildServerNode = (
 	server: Server,
 	stats: ServerStats,
 	nodeProps: Pick<Node, "extent" | "position" | "parentId" | "hidden">,
-): ServerNode => ({
-	...nodeProps,
-	id: server.id,
-	type: "server",
-	data: { server, stats },
-	style: {
+): ServerNode => {
+	return {
+		...nodeProps,
+		id: server.id,
+		type: "server",
+		data: { server, stats },
 		width: SERVER_NODE_WIDTH,
 		height: SERVER_NODE_HEIGHT,
-	},
-});
+	};
+};
 
 export const ServerNode = ({
 	data: { server, stats },

@@ -15,6 +15,8 @@ const loadBalancerNode: LoadBalancerNode = {
 	type: "loadBalancer",
 	data: { label: "Load Balancer" },
 	position: { x: 260, y: 0 },
+	width: 173.5,
+	height: 71,
 };
 
 const nodeTypes = {
@@ -70,7 +72,7 @@ export const ServerFlow = ({ serverPools, onAddServer, stats }: Props) => {
 				];
 			}),
 		];
-	}, [serverPools, expandedIds, toggleExpand]);
+	}, [serverPools, stats, expandedIds, toggleExpand]);
 	const edges = useMemo(
 		(): Edge[] =>
 			serverPools.map((sp) => ({

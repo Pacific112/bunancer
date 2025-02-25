@@ -109,16 +109,10 @@
   [x] support for routing for tables
   [ ] useSSE
     [ ] Make sure it handles all connections and schema errors
-    [ ] Make sure typing actually works there. It looks like there are any everywhere
-  [ ] stats are not working
+    [x] Make sure typing actually works there. It looks like there are any everywhere
+  [x] stats are not working
   [ ] Differentiate between 404 for API and for the router
-  [ ] Introduce state for storing stats on the frontend. Currently every update causes whole app to rerender
-  [ ] In general - split component and code improvements
-  [ ] Would be good to change theme to more orange / brown / claude like
   [ ] Try to make look and feel between flow and dashboard rectangles similar...
-  [ ] Probably square edges will look nicer and cleaner...
-  [ ] Do servers need edges? Or maybe it's enough to connect LoadBalancer with server pool?
-    [ ] https://github.com/tisoap/react-flow-smart-edge - maybe?
   [ ] Make sure that padding in ServerPool is correctly calculated for all positions
   [ ] Add Server dialog should display ServerPool name
   [ ] Expand / Hide pool - pools should appear only after animation has finished
@@ -191,6 +185,10 @@
   [ ] Fly launch for
 =============================================
 [ ] render page should only accept components with stylesheets props
+[ ] Would be good to change theme to more orange / brown / claude like
+[ ] Probably square edges will look nicer and cleaner...
+[ ] Do servers need edges? Or maybe it's enough to connect LoadBalancer with server pool?
+[ ] https://github.com/tisoap/react-flow-smart-edge - maybe?
 [ ] TESTS
   [ ] Better error handling for REST actions - currently nothing
 [ ] Try to separate dashboard from load-balancer
@@ -199,6 +197,7 @@
 [ ] Stats
   [ ] Show graph with number of requests per second
   [ ] Send only stats that frontend actually needs. Right now whole object is sent
+  [ ] It would be nice to not rerender whole app when stats are updated
   [ ] Display aggregated pool stats
   [ ] Should stats send delta instead of actual values?
   [ ] More efficient stats sending. In the worker? How often should stats be pushed?

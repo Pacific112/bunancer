@@ -21,6 +21,10 @@ export const buildServerPoolNode = (
 	onAddServer: (pool: ServerPool, server: CreateServer) => void,
 	onExpand: (serverPool: ServerPool) => void,
 ): ServerPoolNode => {
+	const dimensions = expanded
+		? serverPoolDimensions(pool.servers.length)
+		: { width: 260, height: 55 };
+
 	return {
 		id: pool.id,
 		type: "serverPool",
@@ -31,9 +35,8 @@ export const buildServerPoolNode = (
 			onExpand: () => onExpand(pool),
 			onAddServer: (server: CreateServer) => onAddServer(pool, server),
 		},
-		style: expanded
-			? serverPoolDimensions(pool.servers.length)
-			: { width: 260, height: 55 },
+		width: dimensions.width,
+		height: dimensions.height,
 	};
 };
 
