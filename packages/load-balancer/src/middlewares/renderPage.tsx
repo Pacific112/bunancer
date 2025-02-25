@@ -1,6 +1,8 @@
 import type { BuildOutput } from "bun";
 import { renderToReadableStream } from "react-dom/server";
-import type { ComponentProps, JSXElementConstructor } from "react";
+import type { ComponentProps } from "react";
+import { type DashboardPages, pages } from "ui/pages.ts";
+import { get } from "@/routing/router.ts";
 
 type GroupedOutputs = {
 	stylesheets: string[];
@@ -23,16 +25,17 @@ const categorizeOutputs = (buildResult: BuildOutput) =>
 			{ stylesheets: [], main: "" },
 		);
 
-export const renderPage = (
-	Page: JSXElementConstructor<any>,
+export const renderPage = <PATH extends keyof DashboardPages>(
+	path: PATH,
 	buildOutput: BuildOutput,
 	getProps: (
 		request: Request,
-	) => Omit<ComponentProps<typeof Page>, "stylesheets">,
+	) => Omit<ComponentProps<DashboardPages[PATH]>, "stylesheets">,
 ) => {
 	const groupedOutput = categorizeOutputs(buildOutput);
+	const Page = pages[path];
 
-	return async ({ req }: { req: Request }) => {
+	return get(path, async ({ req }: { req: Request }) => {
 		const initialProps = getProps(req);
 		const stream = await renderToReadableStream(
 			<Page stylesheets={groupedOutput.stylesheets} {...initialProps} />,
@@ -46,5 +49,5 @@ export const renderPage = (
 		);
 
 		return new Response(stream);
-	};
+	});
 };

@@ -126,6 +126,7 @@
   [ ] Make sure that all error states are handled + add global error handler
   [ ] Add Active Link
   [ ] I think it will be better to just have left side bar and no header
+  [ ] Better TS support for props
   [ ] Move dashboard bun server to dashboard package
     [ ] Figure out types - they should be common between server and client
     [ ] I want to useServerSentEvents hook to properly use types for events.

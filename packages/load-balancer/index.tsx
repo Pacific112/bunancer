@@ -16,9 +16,7 @@ import {
 import { ServerStateStorage } from "@/storage/server-state-storage";
 import { publicFolder } from "@/routing/public-folder.ts";
 import TailwindBunPlugin from "bun-plugin-tailwind";
-import { renderPage } from "@/middlewares/renderDashboardApp.tsx";
-import DashboardPage from "ui/dashboard/dashboard-page.tsx";
-import FAQPage from "ui/faq/faq-page.tsx";
+import { renderPage } from "@/middlewares/renderPage.tsx";
 
 const buildResult = await Bun.build({
 	entrypoints: [
@@ -97,29 +95,23 @@ Bun.serve({
 	fetch: cors(
 		router(
 			publicFolder(buildResult),
-			get(
-				"/dashboard",
-				renderPage(DashboardPage, buildResult, (request) => ({
-					initialServerPools: [
-						{
-							id: "pool1",
-							name: "Test",
-							servers: serverPool.status.servers.map((s) => ({
-								id: s.id,
-								name: s.id,
-								status: s.status,
-								ip: toUrl(s),
-								stats: serverPool.status.stats.get(s.id),
-							})),
-						},
-					],
-					initialMode: new URL(request.url).searchParams.get("mode") || "table",
-				})),
-			),
-			get(
-				"/faq",
-				renderPage(FAQPage, buildResult, () => ({})),
-			),
+			renderPage("/dashboard", buildResult, (request) => ({
+				initialServerPools: [
+					{
+						id: "pool1",
+						name: "Test",
+						servers: serverPool.status.servers.map((s) => ({
+							id: s.id,
+							name: s.id,
+							status: s.status,
+							ip: toUrl(s),
+							stats: serverPool.status.stats.get(s.id),
+						})),
+					},
+				],
+				initialMode: new URL(request.url).searchParams.get("mode") || "table",
+			})),
+			renderPage("/faq", buildResult, () => ({})),
 			get("/sse", sse(sseHandler)),
 			get("/servers/:id/logs", async ({ pathParams }) => {
 				const result = await serverLogs(pathParams.id);
