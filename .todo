@@ -133,7 +133,9 @@
   [ ] Move dashboard bun server to dashboard package
     [ ] Figure out types - they should be common between server and client
     [ ] I want to useServerSentEvents hook to properly use types for events.
-[x] I think I should figure out how to load initial state via SSR instead of ugly useEffect
+  [x] CleanUp
+[ ] Was dark -> redark was actually necessary? It looks like after renaming some different mode triggered. Would be good to understand how dark mode is actually handling
+[ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect
   [x] I need to at least use something better then fetch...
 [x] Figure out the best way to deploy React app
   [x] Serve from Bun?
