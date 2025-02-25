@@ -14,9 +14,13 @@ import {
 	toUrl,
 } from "@/pool/server.types";
 import { ServerStateStorage } from "@/storage/server-state-storage";
-import { publicFolder } from "@/routing/public-folder.ts";
+import {
+	DEFAULT_PUBLIC_FOLDER_PATH,
+	publicFolder,
+} from "@/routing/public-folder.ts";
 import TailwindBunPlugin from "bun-plugin-tailwind";
 import { renderPage } from "@/middlewares/renderPage.tsx";
+import { auth, serializeAuthCookie } from "@/middlewares/auth.ts";
 
 const buildResult = await Bun.build({
 	entrypoints: [
@@ -92,54 +96,66 @@ const sseHandler: SseSetup = (enqueue) => {
 
 Bun.serve({
 	port: 41234,
-	fetch: cors(
-		router(
-			publicFolder(buildResult),
-			renderPage("/dashboard", buildResult, (request) => ({
-				initialServerPools: [
-					{
-						id: "pool1",
-						name: "Test",
-						servers: serverPool.status.servers.map((s) => ({
-							id: s.id,
-							name: s.id,
-							status: s.status,
-							ip: toUrl(s),
-							stats: serverPool.status.stats.get(s.id),
-						})),
-					},
-				],
-				initialMode: new URL(request.url).searchParams.get("mode") || "table",
-			})),
-			renderPage("/faq", buildResult, () => ({})),
-			get("/sse", sse(sseHandler)),
-			get("/servers/:id/logs", async ({ pathParams }) => {
-				const result = await serverLogs(pathParams.id);
-				if (!result.ok) {
-					return new Response(null, { status: 404 });
-				}
-				return Response.json({ logs: result.data });
-			}),
-			post(
-				"/pools/:poolId/servers",
-				z.object({
-					instanceId: z.string(),
-					port: z.string().regex(/\d+/),
+	fetch: auth(
+		["/", "/invitations/*", `${DEFAULT_PUBLIC_FOLDER_PATH}/*`],
+		cors(
+			router(
+				publicFolder(buildResult),
+				renderPage("/dashboard", buildResult, (request) => ({
+					initialServerPools: [
+						{
+							id: "pool1",
+							name: "Test",
+							servers: serverPool.status.servers.map((s) => ({
+								id: s.id,
+								name: s.id,
+								status: s.status,
+								ip: toUrl(s),
+								stats: serverPool.status.stats.get(s.id),
+							})),
+						},
+					],
+					initialMode: new URL(request.url).searchParams.get("mode") || "table",
+				})),
+				renderPage("/faq", buildResult, () => ({})),
+				get("/sse", sse(sseHandler)),
+				get("/invitations/:id", ({ pathParams }) => {
+					return new Response(null, {
+						status: 307,
+						headers: {
+							"Set-Cookie": serializeAuthCookie(pathParams.id),
+							"Location": "/dashboard"
+						},
+					});
 				}),
-				async (body, { pathParams: { poolId } }) => {
-					// TODO Figure out how to support poolId
-					await runServer(body);
-					return new Response();
-				},
-			),
-			destroy("/servers/:id", async ({ pathParams }) => {
-				const result = await stopServer(pathParams.id);
-				if (result.ok) {
-					return new Response();
-				}
+				get("/servers/:id/logs", async ({ pathParams }) => {
+					const result = await serverLogs(pathParams.id);
+					if (!result.ok) {
+						return new Response(null, { status: 404 });
+					}
+					return Response.json({ logs: result.data });
+				}),
+				post(
+					"/pools/:poolId/servers",
+					z.object({
+						instanceId: z.string(),
+						port: z.string().regex(/\d+/),
+					}),
+					async (body, { pathParams: { poolId } }) => {
+						// TODO Figure out how to support poolId
+						await runServer(body);
+						return new Response();
+					},
+				),
+				destroy("/servers/:id", async ({ pathParams }) => {
+					const result = await stopServer(pathParams.id);
+					if (result.ok) {
+						return new Response();
+					}
 
-				return new Response(null, { status: 404 });
-			}),
+					return new Response(null, { status: 404 });
+				}),
+			),
 		),
 	),
 });

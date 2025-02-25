@@ -182,6 +182,7 @@
   [ ] CLI
   [ ] DashboardPage
 [ ] Before deployment - do not use * for CORS. Use specific URL instead (maybe add some env for this)
+[ ] Auth should support home page access for non authed users
 [ ] Deployment to fly.io (or maybe something with less abstractions where I can simply upload containers....)
   [ ] production build - make sure it actually works
   [ ] X-Forwarded-IP header or something - to make sure it works
