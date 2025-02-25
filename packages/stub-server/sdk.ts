@@ -1,4 +1,5 @@
 import { appendFile, mkdir } from "node:fs/promises";
+import { log } from "@clack/prompts";
 
 const STUBS_DIR = "./stubs";
 const STUB_LOGS_DIR = `${STUBS_DIR}/logs`;
@@ -62,6 +63,7 @@ export const runServer = async ({
 
 	const path = `${import.meta.dir}/server.ts`;
 	const proc = Bun.spawn(["bun", `--port=${port}`, path], {
+		stdout: logFile,
 		env: {
 			...process.env,
 			SERVER_IDENTIFIER: instanceId,

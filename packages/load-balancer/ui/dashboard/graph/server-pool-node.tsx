@@ -57,7 +57,7 @@ export const ServerPoolNode = ({
 				<div className="pt-2 flex items-center">
 					<div>{data.serverPool.name}</div>
 					<AddServerDialog
-						className="ml-auto"
+						className="ml-auto mr-2"
 						handleAddServer={data.onAddServer}
 					/>
 					<Button
