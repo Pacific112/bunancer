@@ -134,6 +134,7 @@
 [ ] Was dark -> redark was actually necessary? It looks like after renaming some different mode triggered. Would be good to understand how dark mode is actually handling
 [ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect
   [ ] I need to at least use something better then fetch...
+  [ ] Do I really need to have tailwind in normal dependencies? I could probably pre build whole frontend
 [ ] Figure out the best way to deploy React app
   [ ] Serve from Bun?
   [ ] Separate deployment?
