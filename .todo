@@ -87,15 +87,6 @@
       [x] Duplicated parameters names
       [x] /test/:id, /test/mk
       [x] /test/:id, /test/:userId
-[ ] CleanUp
-    [ ] Load Balancer
-      [ ] Get rid of ! operator
-      [ ] Get rid of hardcoded links
-      [ ] Do I want to mix functions with classes?
-      [ ] split bun servers
-    [ ] SDK
-    [ ] CLI
-    [ ] Introduce workspaces
 [x] Cleanup react SSR:
   [x] DX
     [x] bun dev should run tailwind
@@ -114,9 +105,8 @@
   [x] Use NodeToolbar instead of PopoverContent (or together)
   [x] Separate position calculation from creating nodes (move it to separate util)
     [x] Maybe I should use lib for this? Not sure, I have rather simple case
-  [ ] Figure out typing between server and frontend
-  [ ] better sse event names
-  [ ] separate tabs for table and graph
+  [x] separate tabs for table and graph
+  [ ] support for routing for tables
   [ ] useSSe
     [ ] Make sure it handles all connections and schema errors
     [ ] Make sure typing actually works there. It looks like there are any everywhere
@@ -130,13 +120,14 @@
   [ ] Make sure that padding in ServerPool is correctly calculated for all positions
   [ ] Add Server dialog should display ServerPool name
   [ ] Expand / Hide pool - pools should appear only after animation has finished
+  [ ] Figure out typing between server and frontend
+    [ ] better sse event names
+  [ ] Maybe I should add link to the graph node
+  [ ] Make sure that all error states are handled + add global error handler
   [ ] Move dashboard bun server to dashboard package
     [ ] Figure out types - they should be common between server and client
     [ ] I want to useServerSentEvents hook to properly use types for events.
   [ ] CleanUp
-[ ] Fully inferred API types would be cool
-[ ] Use StatsD for stats
-[ ] Use Redis pub sub instead of event emitter
 [ ] Was dark -> redark was actually necessary? It looks like after renaming some different mode triggered. Would be good to understand how dark mode is actually handling
 [ ] I think I should figure out how to load initial state via SSR instead of ugly useEffect
   [ ] I need to at least use something better then fetch...
@@ -145,15 +136,25 @@
   [ ] Separate deployment?
   [ ] Probably I should move dashboard server into dashboard itself
   [ ] Do I want to SSR some secrets used to auth with dashboard + initial config?
+[ ] CleanUp
+    [ ] Load Balancer
+      [ ] Get rid of ! operator
+      [ ] Get rid of hardcoded links
+      [ ] Do I want to mix functions with classes?
+      [ ] split bun servers
+    [ ] SDK
+    [ ] CLI
+    [ ] Introduce workspaces
 [ ] Better handle servers created in Bun:
   [ ] Better endpoint / route matching (no ends with)
   [ ] Separate route handling from fetch method
 [ ] Monorepo
   [ ] Share types between Bun backend and React frontend
 [ ] Fix mutable config - better types?
-[ ] TESTS
-  [ ] Better error handling for REST actions - currently nothing
 [ ] Global timeout settings
+[ ] Fully inferred API types would be cool
+[ ] Use StatsD for stats
+[ ] Use Redis pub sub instead of event emitter
 [ ] Introduce pino for logging
   [ ] Standard access logs on stub server
   [ ] Maybe structured logs
@@ -182,10 +183,12 @@
   [ ] production build - make sure it actually works
   [ ] X-Forwarded-IP header or something - to make sure it works
   [ ] Fly launch for
+=============================================
+[ ] TESTS
+  [ ] Better error handling for REST actions - currently nothing
+[ ] Try to separate dashboard from load-balancer
 [ ] Would be cool to have dedicated endpoint that will log user (based on magic link) and spin up new env for him...
   [ ] In general access should be invite only
-=============================================
-[ ] Try to separate dashboard from load-balancer
 [ ] Stats
   [ ] Show graph with number of requests per second
   [ ] Send only stats that frontend actually needs. Right now whole object is sent

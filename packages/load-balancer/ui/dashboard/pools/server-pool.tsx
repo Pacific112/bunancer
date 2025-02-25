@@ -20,7 +20,7 @@ export function ServerPool({ pool, onAddServer }: ServerPoolProps) {
 	const handleAddServer = (server: CreateServer) => onAddServer(pool, server);
 
 	return (
-		<Card className="mb-6">
+		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
 					<CardTitle>{pool.name}</CardTitle>

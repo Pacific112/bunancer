@@ -119,7 +119,7 @@ Bun.serve({
 				if (!result.ok) {
 					return new Response(null, { status: 404 });
 				}
-				return new Response(JSON.stringify({ logs: result.data }));
+				return Response.json({ logs: result.data });
 			}),
 			post(
 				"/pools/:poolId/servers",

@@ -12,6 +12,13 @@ import z from "zod";
 import { ServerPool } from "$/dashboard/pools/server-pool.tsx";
 import { ServerFlow } from "$/dashboard/graph/server-flow.tsx";
 import { Summary } from "$/dashboard/summary.tsx";
+import { NetworkIcon, TableIcon } from "lucide-react";
+import {
+	Tabs,
+	TabsContent,
+	TabsList,
+	TabsTrigger,
+} from "$/components/ui/tabs.tsx";
 
 export const Dashboard = ({
 	initialServerPools,
@@ -81,20 +88,42 @@ export const Dashboard = ({
 
 	return (
 		<main className="container mx-auto p-4">
-			<div className="flex justify-between items-center mb-6">
-				<h1 className="text-3xl font-bold">Load Balancer Dashboard</h1>
+			<div className="flex justify-between items-center mb-8">
+				<h1 className="text-3xl font-bold tracking-tight">
+					Load Balancer Dashboard
+				</h1>
 			</div>
 			<Summary serverPools={serverPools} />
-			{serverPools.map((pool) => (
-				<ServerPool key={pool.id} pool={pool} onAddServer={handleAddServer} />
-			))}
-			{serverPools[0] && (
-				<ServerFlow
-					stats={serverStats}
-					serverPools={serverPools}
-					onAddServer={handleAddServer}
-				/>
-			)}
+			<Tabs defaultValue="table" className="w-full">
+				<TabsList className="w-full justify-start border-b">
+					<TabsTrigger value="table">
+						<TableIcon className="h-4 w-4 mr-2" />
+						<span>Table View</span>
+					</TabsTrigger>
+					<TabsTrigger value="flow">
+						<NetworkIcon className="h-4 w-4 mr-2" />
+						<span>Flow View</span>
+					</TabsTrigger>
+				</TabsList>
+				<TabsContent value="table" className="space-y-4 mt-4">
+					{serverPools.map((pool) => (
+						<ServerPool
+							key={pool.id}
+							pool={pool}
+							onAddServer={handleAddServer}
+						/>
+					))}
+				</TabsContent>
+				<TabsContent value="flow" className="mt-4">
+					{serverPools[0] && (
+						<ServerFlow
+							stats={serverStats}
+							serverPools={serverPools}
+							onAddServer={handleAddServer}
+						/>
+					)}
+				</TabsContent>
+			</Tabs>
 		</main>
 	);
 };

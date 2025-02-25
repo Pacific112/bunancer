@@ -14,7 +14,7 @@ const loadBalancerNode: LoadBalancerNode = {
 	id: "lb",
 	type: "loadBalancer",
 	data: { label: "Load Balancer" },
-	position: { x: 500, y: 0 },
+	position: { x: 260, y: 0 },
 };
 
 const nodeTypes = {
