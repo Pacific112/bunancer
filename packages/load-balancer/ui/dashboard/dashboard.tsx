@@ -19,12 +19,16 @@ import {
 	TabsList,
 	TabsTrigger,
 } from "$/components/ui/tabs.tsx";
+import { useViewMode, ViewMode } from "$/lib/useViewMode.ts";
 
 export const Dashboard = ({
+	initialMode,
 	initialServerPools,
 }: {
+	initialMode: ViewMode;
 	initialServerPools: ServerPoolType[];
 }) => {
+	const [mode, updateMode] = useViewMode(initialMode);
 	const [{ serverPools }, dispatch] = useServerPools(initialServerPools);
 	const [serverStats, setServerStats] = useState<Record<string, ServerStats>>(
 		{},
@@ -94,7 +98,7 @@ export const Dashboard = ({
 				</h1>
 			</div>
 			<Summary serverPools={serverPools} />
-			<Tabs defaultValue="table" className="w-full">
+			<Tabs defaultValue={mode} className="w-full" onValueChange={updateMode}>
 				<TabsList className="w-full justify-start border-b">
 					<TabsTrigger value="table">
 						<TableIcon className="h-4 w-4 mr-2" />

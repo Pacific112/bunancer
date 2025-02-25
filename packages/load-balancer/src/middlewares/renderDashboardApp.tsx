@@ -26,12 +26,14 @@ const categorizeOutputs = (buildResult: BuildOutput) =>
 
 export const renderDashboardApp = (
 	buildOutput: BuildOutput,
-	getProps: () => Omit<ComponentProps<typeof App>, "stylesheets">,
+	getProps: (
+		request: Request,
+	) => Omit<ComponentProps<typeof App>, "stylesheets">,
 ) => {
 	const groupedOutput = categorizeOutputs(buildOutput);
 
-	return async () => {
-		const initialProps = getProps();
+	return async ({ req }: { req: Request }) => {
+		const initialProps = getProps(req);
 		const stream = await renderToReadableStream(
 			<App stylesheets={groupedOutput.stylesheets} {...initialProps} />,
 			{

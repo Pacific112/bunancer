@@ -1,11 +1,14 @@
 import { type ServerPool as ServerPoolType } from "$/types/types.ts";
 import { Dashboard } from "$/dashboard/dashboard.tsx";
+import { ViewMode } from "$/lib/useViewMode.ts";
 
 function App({
 	stylesheets = [],
+	initialMode,
 	initialServerPools,
 }: {
 	stylesheets: string[];
+	initialMode: ViewMode;
 	initialServerPools: ServerPoolType[];
 }) {
 	return (
@@ -19,7 +22,10 @@ function App({
 				<title>Buniter</title>
 			</head>
 			<body>
-				<Dashboard initialServerPools={initialServerPools} />
+				<Dashboard
+					initialMode={initialMode}
+					initialServerPools={initialServerPools}
+				/>
 			</body>
 		</html>
 	);

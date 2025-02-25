@@ -97,7 +97,7 @@ Bun.serve({
 			publicFolder(buildResult),
 			get(
 				"/dashboard",
-				renderDashboardApp(buildResult, () => ({
+				renderDashboardApp(buildResult, (request) => ({
 					initialServerPools: [
 						{
 							id: "pool1",
@@ -111,6 +111,7 @@ Bun.serve({
 							})),
 						},
 					],
+					initialMode: new URL(request.url).searchParams.get("mode"),
 				})),
 			),
 			get("/sse", sse(sseHandler)),

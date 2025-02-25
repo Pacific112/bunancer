@@ -29,7 +29,6 @@ const reducer = (state: State, action: ServerPoolActions) => {
 			return produce(state, (draft) => {
 				const { poolId, server } = action.payload;
 				const serverPool = draft.serverPools.find((sp) => sp.id === poolId);
-				console.log({ poolId, server, serverPool });
 				if (!serverPool) return;
 
 				const serverIndex = serverPool.servers.findIndex(
