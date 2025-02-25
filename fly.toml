@@ -24,9 +24,8 @@ primary_region = 'ams'
   min_machines_running = 0
   
   [[services.ports]]
-    handlers = ["http"]
+    handlers = ["http", 'tls']
     port = 3000
-    force_https = true
 
 [[vm]]
   memory = '1gb'
