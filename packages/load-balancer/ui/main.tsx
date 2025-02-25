@@ -1,4 +1,19 @@
 import { hydrateRoot } from "react-dom/client";
-import App from "./App.tsx";
+import DashboardPage from "$/dashboard/dashboard-page.tsx";
+import FAQPage from "$/faq/faq-page.tsx";
 
-hydrateRoot(document, (<App {...window.__INITIAL_PROPS__} />));
+const path = window.location.pathname;
+let Component;
+
+switch (path) {
+	case "/dashboard":
+		Component = DashboardPage;
+		break;
+	case "/faq":
+		Component = FAQPage;
+		break;
+	default:
+		Component = DashboardPage;
+}
+
+hydrateRoot(document, <Component {...window.__INITIAL_PROPS__} />);

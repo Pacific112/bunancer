@@ -16,7 +16,9 @@ import {
 import { ServerStateStorage } from "@/storage/server-state-storage";
 import { publicFolder } from "@/routing/public-folder.ts";
 import TailwindBunPlugin from "bun-plugin-tailwind";
-import { renderDashboardApp } from "@/middlewares/renderDashboardApp.tsx";
+import { renderPage } from "@/middlewares/renderDashboardApp.tsx";
+import DashboardPage from "ui/dashboard/dashboard-page.tsx";
+import FAQPage from "ui/faq/faq-page.tsx";
 
 const buildResult = await Bun.build({
 	entrypoints: [
@@ -97,7 +99,7 @@ Bun.serve({
 			publicFolder(buildResult),
 			get(
 				"/dashboard",
-				renderDashboardApp(buildResult, (request) => ({
+				renderPage(DashboardPage, buildResult, (request) => ({
 					initialServerPools: [
 						{
 							id: "pool1",
@@ -111,8 +113,12 @@ Bun.serve({
 							})),
 						},
 					],
-					initialMode: new URL(request.url).searchParams.get("mode") || 'table',
+					initialMode: new URL(request.url).searchParams.get("mode") || "table",
 				})),
+			),
+			get(
+				"/faq",
+				renderPage(FAQPage, buildResult, () => ({})),
 			),
 			get("/sse", sse(sseHandler)),
 			get("/servers/:id/logs", async ({ pathParams }) => {

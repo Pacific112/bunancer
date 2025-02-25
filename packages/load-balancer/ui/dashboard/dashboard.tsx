@@ -22,9 +22,9 @@ import {
 import { useViewMode, ViewMode } from "$/lib/useViewMode.ts";
 
 export const Dashboard = ({
-	initialMode,
-	initialServerPools,
-}: {
+																initialMode,
+																initialServerPools,
+															}: {
 	initialMode: ViewMode;
 	initialServerPools: ServerPoolType[];
 }) => {

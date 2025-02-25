@@ -1,7 +1,6 @@
 import type { BuildOutput } from "bun";
 import { renderToReadableStream } from "react-dom/server";
-import App from "$/App.tsx";
-import type { ComponentProps } from "react";
+import type { ComponentProps, JSXElementConstructor } from "react";
 
 type GroupedOutputs = {
 	stylesheets: string[];
@@ -24,18 +23,19 @@ const categorizeOutputs = (buildResult: BuildOutput) =>
 			{ stylesheets: [], main: "" },
 		);
 
-export const renderDashboardApp = (
+export const renderPage = (
+	Page: JSXElementConstructor<any>,
 	buildOutput: BuildOutput,
 	getProps: (
 		request: Request,
-	) => Omit<ComponentProps<typeof App>, "stylesheets">,
+	) => Omit<ComponentProps<typeof Page>, "stylesheets">,
 ) => {
 	const groupedOutput = categorizeOutputs(buildOutput);
 
 	return async ({ req }: { req: Request }) => {
 		const initialProps = getProps(req);
 		const stream = await renderToReadableStream(
-			<App stylesheets={groupedOutput.stylesheets} {...initialProps} />,
+			<Page stylesheets={groupedOutput.stylesheets} {...initialProps} />,
 			{
 				bootstrapModules: [groupedOutput.main],
 				bootstrapScriptContent: `window.__INITIAL_PROPS__ = ${JSON.stringify({

@@ -26,7 +26,7 @@
     [x] Add Server -> full config
     [x] Quit
 [x] Setup Vite
-[x] Dashboard with stats:
+[x] DashboardPage with stats:
   [x] Pool / config management
     [x] Display pools and server statuses
     [x] Make sure statuses are displayed dynamically via SSE
@@ -179,13 +179,14 @@
   [ ] Show shadow node or something on graph to make it easy to create nie pool
 [ ] Allow to easily change returned error code for the server from SDK
   [ ] CLI
-  [ ] Dashboard
+  [ ] DashboardPage
 [ ] Before deployment - do not use * for CORS. Use specific URL instead (maybe add some env for this)
 [ ] Deployment to fly.io (or maybe something with less abstractions where I can simply upload containers....)
   [ ] production build - make sure it actually works
   [ ] X-Forwarded-IP header or something - to make sure it works
   [ ] Fly launch for
 =============================================
+[ ] render page should only accept components with stylesheets props
 [ ] TESTS
   [ ] Better error handling for REST actions - currently nothing
 [ ] Try to separate dashboard from load-balancer
