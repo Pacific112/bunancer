@@ -29,6 +29,7 @@ const buildResult = await Bun.build({
 	],
 	outdir: "./packages/load-balancer/public",
 	plugins: [TailwindBunPlugin],
+	minify: process.env.NODE_ENV === "production",
 	naming: "[dir]/[name]-[hash].[ext]",
 });
 
@@ -124,7 +125,7 @@ Bun.serve({
 						status: 307,
 						headers: {
 							"Set-Cookie": serializeAuthCookie(pathParams.id),
-							"Location": "/dashboard"
+							Location: "/dashboard",
 						},
 					});
 				}),
