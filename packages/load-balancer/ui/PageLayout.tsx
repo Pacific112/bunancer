@@ -40,6 +40,12 @@ export default function PageLayout({
 								>
 									FAQ
 								</a>
+								<a
+									href="/roadmap"
+									className="text-sm font-medium text-gray-600 hover:text-gray-900 hover:underline"
+								>
+									Roadmap
+								</a>
 								<Button variant="outline" asChild>
 									<a href="/dashboard">
 									Dashboard

@@ -98,7 +98,13 @@ const sseHandler: SseSetup = (enqueue) => {
 Bun.serve({
 	port: 41234,
 	fetch: auth(
-		["/", "/unauthorized", "/not-found", "/invitations/*", `${DEFAULT_PUBLIC_FOLDER_PATH}/*`],
+		[
+			"/",
+			"/unauthorized",
+			"/not-found",
+			"/invitations/*",
+			`${DEFAULT_PUBLIC_FOLDER_PATH}/*`,
+		],
 		cors(
 			router(
 				publicFolder(buildResult),
@@ -120,6 +126,7 @@ Bun.serve({
 					initialMode: new URL(request.url).searchParams.get("mode") || "table",
 				})),
 				renderPage("/faq", buildResult, () => ({})),
+				renderPage("/roadmap", buildResult, () => ({})),
 				renderPage("/not-found", buildResult, () => ({})),
 				renderPage("/unauthorized", buildResult, () => ({})),
 				get("/sse", sse(sseHandler)),
