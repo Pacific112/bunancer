@@ -16,6 +16,13 @@ primary_region = 'ams'
   min_machines_running = 0
   processes = ['app']
 
+[[services]]
+  protocol = "tcp"
+  internal_port = 41234
+  
+  [[services.ports]]
+    port = 41234
+
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
