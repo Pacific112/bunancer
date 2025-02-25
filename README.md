@@ -1,4 +1,4 @@
-# buniter
+# bunancer
 
 To install dependencies:
 
