@@ -111,7 +111,7 @@ Bun.serve({
 							})),
 						},
 					],
-					initialMode: new URL(request.url).searchParams.get("mode"),
+					initialMode: new URL(request.url).searchParams.get("mode") || 'table',
 				})),
 			),
 			get("/sse", sse(sseHandler)),

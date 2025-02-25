@@ -1,5 +1,5 @@
 {
-  "name": "buniter-monorepo",
+  "name": "bunancer-monorepo",
   "private": true,
   "workspaces": [
     "packages/*"

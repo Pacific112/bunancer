@@ -91,12 +91,7 @@ export const Dashboard = ({
 	};
 
 	return (
-		<main className="container mx-auto p-4">
-			<div className="flex justify-between items-center mb-8">
-				<h1 className="text-3xl font-bold tracking-tight">
-					Load Balancer Dashboard
-				</h1>
-			</div>
+		<div className="container mx-auto">
 			<Summary serverPools={serverPools} />
 			<Tabs defaultValue={mode} className="w-full" onValueChange={updateMode}>
 				<TabsList className="w-full justify-start border-b">
@@ -128,6 +123,6 @@ export const Dashboard = ({
 					)}
 				</TabsContent>
 			</Tabs>
-		</main>
+		</div>
 	);
 };

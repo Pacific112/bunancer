@@ -106,7 +106,7 @@
   [x] Separate position calculation from creating nodes (move it to separate util)
     [x] Maybe I should use lib for this? Not sure, I have rather simple case
   [x] separate tabs for table and graph
-  [ ] support for routing for tables
+  [x] support for routing for tables
   [ ] useSSe
     [ ] Make sure it handles all connections and schema errors
     [ ] Make sure typing actually works there. It looks like there are any everywhere
@@ -124,6 +124,8 @@
     [ ] better sse event names
   [ ] Maybe I should add link to the graph node
   [ ] Make sure that all error states are handled + add global error handler
+  [ ] Add Active Link
+  [ ] I think it will be better to just have left side bar and no header
   [ ] Move dashboard bun server to dashboard package
     [ ] Figure out types - they should be common between server and client
     [ ] I want to useServerSentEvents hook to properly use types for events.

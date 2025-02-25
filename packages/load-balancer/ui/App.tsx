@@ -1,6 +1,7 @@
 import { type ServerPool as ServerPoolType } from "$/types/types.ts";
 import { Dashboard } from "$/dashboard/dashboard.tsx";
 import { ViewMode } from "$/lib/useViewMode.ts";
+import Layout from "$/Layout.tsx";
 
 function App({
 	stylesheets = [],
@@ -19,13 +20,15 @@ function App({
 				{stylesheets.map((link) => (
 					<link rel="stylesheet" key={link} href={link}></link>
 				))}
-				<title>Buniter</title>
+				<title>Bunancer</title>
 			</head>
 			<body>
-				<Dashboard
-					initialMode={initialMode}
-					initialServerPools={initialServerPools}
-				/>
+				<Layout>
+					<Dashboard
+						initialMode={initialMode}
+						initialServerPools={initialServerPools}
+					/>
+				</Layout>
 			</body>
 		</html>
 	);
