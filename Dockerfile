@@ -26,8 +26,10 @@ COPY --from=install /temp/prod/config.json config.json
 
 RUN mkdir stubs
 RUN mkdir packages/load-balancer/public
+RUN touch server-pools-state.json && echo [] > server-pools-state.json
 RUN chown -R bun:bun stubs
 RUN chown -R bun:bun packages/load-balancer/public
+RUN chown bun:bun server-pools-state.json
 
 
 # run the app
