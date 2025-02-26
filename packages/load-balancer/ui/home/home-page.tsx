@@ -14,7 +14,7 @@ import { Building2, Mail } from "lucide-react";
 export default function HomePage({ stylesheets }: { stylesheets: string[] }) {
 	return (
 		<PageLayout stylesheets={stylesheets}>
-			<div className="grid items-center gap-6 px-4 py-12 md:px-6 md:py-24">
+			<div className="grid items-center gap-6">
 				<div className="flex flex-col items-center gap-4 text-center">
 					<span className="rounded-lg bg-gray-100 px-3 py-1 text-sm text-gray-600">
 						Educational Project

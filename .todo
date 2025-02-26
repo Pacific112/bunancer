@@ -111,6 +111,7 @@
     [ ] Make sure it handles all connections and schema errors
     [x] Make sure typing actually works there. It looks like there are any everywhere
   [x] stats are not working
+  [ ] Stats should be provided as well during initial render
   [ ] Differentiate between 404 for API and for the router
   [ ] Try to make look and feel between flow and dashboard rectangles similar...
   [ ] Make sure that padding in ServerPool is correctly calculated for all positions

@@ -35,31 +35,29 @@ export default function FAQPage({ stylesheets }: { stylesheets: string[] }) {
 
 	return (
 		<PageLayout stylesheets={stylesheets}>
-			<div className="mx-auto max-w-3xl px-4 py-8">
-				<h1 className="mb-8 text-2xl font-semibold">
-					Frequently Asked Questions
-				</h1>
+			<h1 className="text-2xl font-semibold">
+				Frequently Asked Questions
+			</h1>
 
-				<div className="space-y-4">
-					{faqItems.map((item, index) => (
-						<div key={index} className="rounded-lg border bg-white">
-							<button
-								onClick={() => setOpenItem(openItem === index ? null : index)}
-								className="flex w-full items-center justify-between p-4 text-left"
-							>
-								<span className="font-medium">{item.question}</span>
-								<ChevronDown
-									className={`h-5 w-5 transition-transform ${openItem === index ? "rotate-180" : ""}`}
-								/>
-							</button>
-							{openItem === index && (
-								<div className="border-t p-4 text-sm text-gray-600">
-									{item.answer}
-								</div>
-							)}
-						</div>
-					))}
-				</div>
+			<div className="mt-8 space-y-4">
+				{faqItems.map((item, index) => (
+					<div key={index} className="rounded-lg border bg-white">
+						<button
+							onClick={() => setOpenItem(openItem === index ? null : index)}
+							className="flex w-full items-center justify-between p-4 text-left"
+						>
+							<span className="font-medium">{item.question}</span>
+							<ChevronDown
+								className={`h-5 w-5 transition-transform ${openItem === index ? "rotate-180" : ""}`}
+							/>
+						</button>
+						{openItem === index && (
+							<div className="border-t p-4 text-sm text-gray-600">
+								{item.answer}
+							</div>
+						)}
+					</div>
+				))}
 			</div>
 		</PageLayout>
 	);

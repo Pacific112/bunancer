@@ -54,8 +54,8 @@ export default function PageLayout({
 							</nav>
 						</div>
 					</header>
-					<main className="flex-1">
-						<div className="w-full py-6 px-4">{children}</div>
+					<main className="flex-1 ">
+						<div className="container mx-auto px-4 py-12 md:px-6">{children}</div>
 					</main>
 					<footer className="border-t py-6 w-full">
 						<div className="px-4">

@@ -22,15 +22,15 @@ import { useViewMode, ViewMode } from "$/lib/useViewMode.ts";
 export const Dashboard = ({
 	initialMode,
 	initialServerPools,
+	initialStats,
 }: {
 	initialMode: ViewMode;
 	initialServerPools: ServerPoolType[];
+	initialStats: Record<string, ServerStats>;
 }) => {
 	const [mode, updateMode] = useViewMode(initialMode);
 	const [{ serverPools }, dispatch] = useServerPools(initialServerPools);
-	const [serverStats, setServerStats] = useState<Record<string, ServerStats>>(
-		{},
-	);
+	const [serverStats, setServerStats] = useState(initialStats);
 
 	const poolId = serverPools[0].id;
 
@@ -74,7 +74,7 @@ export const Dashboard = ({
 	};
 
 	return (
-		<div className="container mx-auto">
+		<>
 			<Summary serverPools={serverPools} />
 			<Tabs defaultValue={mode} className="w-full" onValueChange={updateMode}>
 				<TabsList className="w-full justify-start border-b">
@@ -106,6 +106,6 @@ export const Dashboard = ({
 					)}
 				</TabsContent>
 			</Tabs>
-		</div>
+		</>
 	);
 };

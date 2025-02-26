@@ -70,43 +70,39 @@ function RoadmapPoint({
 	const [isExpanded, setIsExpanded] = useState(false);
 
 	return (
-		<div className="mb-4">
-			<Card>
-				<CardHeader className="flex flex-row items-center gap-4 space-y-0">
-					<div className={`rounded-full ${statusColors[item.status]}`}>
-						{item.status === "completed" ? (
-							<CheckCircle className="w-4 h-4" />
-						) : (
-							<Circle className="w-4 h-4" />
-						)}
+		<Card>
+			<CardHeader className="flex flex-row items-center gap-4 space-y-0">
+				<div className={`rounded-full ${statusColors[item.status]}`}>
+					{item.status === "completed" ? (
+						<CheckCircle className="w-4 h-4" />
+					) : (
+						<Circle className="w-4 h-4" />
+					)}
+				</div>
+				<div className="flex-1">
+					<div className="flex justify-between items-center">
+						<CardTitle className="text-lg">{item.title}</CardTitle>
+						<Badge
+							variant={item.status === "completed" ? "default" : "secondary"}
+							className="text-xs"
+						>
+							{item.status}
+						</Badge>
 					</div>
-					<div className="flex-1">
-						<div className="flex justify-between items-center">
-							<CardTitle className="text-lg">{item.title}</CardTitle>
-							<Badge
-								variant={item.status === "completed" ? "default" : "secondary"}
-								className="text-xs"
-							>
-								{item.status}
-							</Badge>
-						</div>
-					</div>
-				</CardHeader>
-				<CardContent>
-					<p className="text-sm text-muted-foreground">{item.details}</p>
-				</CardContent>
-			</Card>
-		</div>
+				</div>
+			</CardHeader>
+			<CardContent>
+				<p className="text-sm text-muted-foreground">{item.details}</p>
+			</CardContent>
+		</Card>
 	);
 }
 
 export const RoadmapPage = ({ stylesheets }: { stylesheets: string[] }) => {
 	return (
 		<PageLayout stylesheets={stylesheets}>
-			<div className="max-w-3xl mx-auto flex-grow px-4 py-12 md:px-6">
-				<h1 className="text-3xl font-bold text-gray-900 mb-8">
-					Project Roadmap
-				</h1>
+			<h1 className="text-2xl font-semibold">Roadmap</h1>
+			<div className="mt-8 space-y-4">
 				{roadmapItems.map((item, index) => (
 					<RoadmapPoint
 						key={index}
