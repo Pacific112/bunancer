@@ -99,6 +99,9 @@ const ALLOWED_PATHS = [
 	"/",
 	"/unauthorized",
 	"/not-found",
+	"/faq",
+	"/roadmap",
+	"/not-found",
 	"/invitations/*",
 	`${DEFAULT_PUBLIC_FOLDER_PATH}/*`,
 ];
