@@ -148,8 +148,8 @@
 [ ] Better handle servers created in Bun:
   [ ] Better endpoint / route matching (no ends with)
   [ ] Separate route handling from fetch method
-[ ] Monorepo
-  [ ] Share types between Bun backend and React frontend
+[x] Monorepo
+  [x] Share types between Bun backend and React frontend
 [ ] Fix mutable config - better types?
 [ ] Global timeout settings
 [ ] Fully inferred API types would be cool
@@ -171,6 +171,7 @@
   [ ] Why not built in router
   [ ] Why not vite
   [ ] Why it was built in general (to experiment with Bun)
+  [ ] How to get access to it
 [ ] SDK - support for pools
   [ ] Allow to add server to specific pool via SDK
   [ ] Create pool via SDK
@@ -179,11 +180,11 @@
   [ ] CLI
   [ ] DashboardPage
 [ ] Before deployment - do not use * for CORS. Use specific URL instead (maybe add some env for this)
-[ ] Auth should support home page access for non authed users
-[ ] Deployment to fly.io (or maybe something with less abstractions where I can simply upload containers....)
-  [ ] production build - make sure it actually works
-  [ ] X-Forwarded-IP header or something - to make sure it works
-  [ ] Fly launch for
+[x] Auth should support home page access for non authed users
+[x] Deployment to fly.io (or maybe something with less abstractions where I can simply upload containers....)
+  [x] production build - make sure it actually works
+  [x] X-Forwarded-IP header or something - to make sure it works
+  [x] Fly launch for
 =============================================
 [ ] render page should only accept components with stylesheets props
 [ ] Would be good to change theme to more orange / brown / claude like
