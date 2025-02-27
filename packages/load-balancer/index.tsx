@@ -128,6 +128,7 @@ Bun.serve({
 						},
 					],
 					initialMode: new URL(request.url).searchParams.get("mode") || "table",
+					initialStats: serverPool.status.stats,
 				})),
 				renderPage("/faq", buildResult),
 				renderPage("/roadmap", buildResult),
