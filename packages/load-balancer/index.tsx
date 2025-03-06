@@ -18,7 +18,7 @@ import {
 	publicFolder,
 } from "@/routing/public-folder.ts";
 import TailwindBunPlugin from "bun-plugin-tailwind";
-import { renderPage } from "@/middlewares/renderPage.tsx";
+import { renderPage } from "@/routing/render-page.tsx";
 import { auth, serializeAuthCookie } from "@/middlewares/auth.ts";
 import { createServerSchema, type ServerEvent } from "api/schema.ts";
 
