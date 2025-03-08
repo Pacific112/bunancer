@@ -19,7 +19,7 @@ import {
 } from "@/routing/public-folder.ts";
 import TailwindBunPlugin from "bun-plugin-tailwind";
 import { renderPage } from "@/routing/render-page.tsx";
-import { auth, serializeAuthCookie } from "@/middlewares/auth.ts";
+import { serializeAuthCookie } from "@/middlewares/auth.ts";
 import { createServerSchema, type ServerEvent } from "api/schema.ts";
 
 const buildResult = await Bun.build({
@@ -107,68 +107,65 @@ const ALLOWED_PATHS = [
 ];
 Bun.serve({
 	port: 41234,
-	fetch: auth(
-		ALLOWED_PATHS,
-		cors(
-			router(
-				publicFolder(buildResult),
-				renderPage("/", buildResult),
-				renderPage("/dashboard", buildResult, (request) => ({
-					initialServerPools: [
-						{
-							id: "pool1",
-							name: "Test",
-							servers: serverPool.status.servers.map((s) => ({
-								id: s.id,
-								name: s.id,
-								status: s.status,
-								ip: toUrl(s),
-								stats: serverPool.status.stats.get(s.id),
-							})),
-						},
-					],
-					initialMode: new URL(request.url).searchParams.get("mode") || "table",
-					initialStats: serverPool.status.stats,
-				})),
-				renderPage("/faq", buildResult),
-				renderPage("/roadmap", buildResult),
-				renderPage("/not-found", buildResult),
-				renderPage("/unauthorized", buildResult),
-				get("/sse", sse(sseHandler)),
-				get("/invitations/:id", ({ pathParams }) => {
-					return new Response(null, {
-						status: 307,
-						headers: {
-							"Set-Cookie": serializeAuthCookie(pathParams.id),
-							Location: "/dashboard",
-						},
-					});
-				}),
-				get("/servers/:id/logs", async ({ pathParams }) => {
-					const result = await serverLogs(pathParams.id);
-					if (!result.ok) {
-						return new Response(null, { status: 404 });
-					}
-					return Response.json({ logs: result.data });
-				}),
-				post(
-					"/pools/:poolId/servers",
-					createServerSchema,
-					async (body, { pathParams: { poolId } }) => {
-						// TODO Figure out how to support poolId
-						await runServer(body);
-						return new Response();
+	fetch: cors(
+		router(
+			publicFolder(buildResult),
+			renderPage("/", buildResult),
+			renderPage("/dashboard", buildResult, (request) => ({
+				initialServerPools: [
+					{
+						id: "pool1",
+						name: "Test",
+						servers: serverPool.status.servers.map((s) => ({
+							id: s.id,
+							name: s.id,
+							status: s.status,
+							ip: toUrl(s),
+							stats: serverPool.status.stats.get(s.id),
+						})),
 					},
-				),
-				destroy("/servers/:id", async ({ pathParams }) => {
-					const result = await stopServer(pathParams.id);
-					if (result.ok) {
-						return new Response();
-					}
-
+				],
+				initialMode: new URL(request.url).searchParams.get("mode") || "table",
+				initialStats: serverPool.status.stats,
+			})),
+			renderPage("/faq", buildResult),
+			renderPage("/roadmap", buildResult),
+			renderPage("/not-found", buildResult),
+			renderPage("/unauthorized", buildResult),
+			get("/sse", sse(sseHandler)),
+			get("/invitations/:id", ({ pathParams }) => {
+				return new Response(null, {
+					status: 307,
+					headers: {
+						"Set-Cookie": serializeAuthCookie(pathParams.id),
+						Location: "/dashboard",
+					},
+				});
+			}),
+			get("/servers/:id/logs", async ({ pathParams }) => {
+				const result = await serverLogs(pathParams.id);
+				if (!result.ok) {
 					return new Response(null, { status: 404 });
-				}),
+				}
+				return Response.json({ logs: result.data });
+			}),
+			post(
+				"/pools/:poolId/servers",
+				createServerSchema,
+				async (body, { pathParams: { poolId } }) => {
+					// TODO Figure out how to support poolId
+					await runServer(body);
+					return new Response();
+				},
 			),
+			destroy("/servers/:id", async ({ pathParams }) => {
+				const result = await stopServer(pathParams.id);
+				if (result.ok) {
+					return new Response();
+				}
+
+				return new Response(null, { status: 404 });
+			}),
 		),
 	),
 });
