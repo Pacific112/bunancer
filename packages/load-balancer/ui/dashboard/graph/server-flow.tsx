@@ -84,8 +84,13 @@ export const ServerFlow = ({ serverPools, onAddServer, stats }: Props) => {
 	);
 
 	return (
-		<div className="w-full h-96">
-			<ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView>
+		<div className="w-full h-108">
+			<ReactFlow
+				nodes={nodes}
+				edges={edges}
+				nodeTypes={nodeTypes}
+				defaultViewport={{ zoom: 1, x: 150, y: 40 }}
+			>
 				<Background />
 			</ReactFlow>
 		</div>

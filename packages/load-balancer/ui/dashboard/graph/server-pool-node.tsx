@@ -33,7 +33,12 @@ export const buildServerPoolNode = (
 			expanded,
 			serverPool: pool,
 			onExpand: () => onExpand(pool),
-			onAddServer: (server: CreateServer) => onAddServer(pool, server),
+			onAddServer: (server: CreateServer) => {
+				onAddServer(pool, server);
+				if (pool.servers.length === 0) {
+					onExpand(pool);
+				}
+			},
 		},
 		width: dimensions.width,
 		height: dimensions.height,
@@ -64,6 +69,7 @@ export const ServerPoolNode = ({
 						variant="outline"
 						size="icon"
 						className="h-8 w-8"
+						disabled={data.serverPool.servers.length === 0}
 						onClick={data.onExpand}
 					>
 						{data.expanded ? <Shrink /> : <Expand />}
