@@ -1,6 +1,6 @@
 declare module "bun" {
 	interface Env {
-		SERVER_IDENTIFIER: number;
+		SERVER_IDENTIFIER: string;
 		CONFIG_PATH?: string;
 	}
 }
