@@ -2,14 +2,13 @@ import { cancel, confirm, group, isCancel, select, text } from "@clack/prompts";
 import * as crypto from "node:crypto";
 import {
 	loadRunningServers,
-	revalidateProcesses,
 	runServer,
 	serverLogs,
 	stopAllServers,
 	stopServer,
 } from "./sdk.ts";
 
-let runningServers = await revalidateProcesses(await loadRunningServers());
+let runningServers = await loadRunningServers();
 
 while (true) {
 	console.clear();
@@ -62,13 +61,12 @@ while (true) {
 			detached: config.detached === "y",
 		});
 		runningServers.push({ instanceId, pid: pid + "", port });
-		runningServers = await loadRunningServers();
 		continue;
 	}
 
 	if (selectedOption === "stop-all") {
 		await confirm({ message: "Are you sure?" });
-		await stopAllServers(runningServers);
+		await stopAllServers();
 		runningServers = [];
 	}
 	if (selectedOption === "quit") {
